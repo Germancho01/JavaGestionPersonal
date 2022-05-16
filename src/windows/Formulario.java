@@ -17,6 +17,8 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map.Entry;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
@@ -45,8 +47,7 @@ public class Formulario {
 	private JComboBox<String> comboBoxMes;
 	private JCheckBox chckbxSoloConHijos;
 	private JCheckBox chckbxMayoresDeEdad;
-	private ArrayList<Persona> personas = new ArrayList<Persona>();
-	private ArrayList<Integer> ids = new ArrayList<Integer>();
+	private HashMap<Integer, Persona> mapaPersonas = new HashMap<Integer, Persona>();
 	private String[] datos;
 	private String nombre, apellido, dptoResidencia;
 	private Byte cantHijos;
@@ -226,7 +227,7 @@ public class Formulario {
 		btnEliminarTodo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				eliminarTodo();
-				personas.clear(); // limpia el arrayList de personas
+				mapaPersonas.clear();; // limpia el arrayList de personas
 			}
 		});
 		btnEliminarTodo.setBounds(306, 178, 115, 23);
@@ -348,11 +349,9 @@ public class Formulario {
 		}
 		
 		fecNacimiento = LocalDate.of(anio, mes, dia); // se genera una fecha LocalDate a partir de los datos ingresados
-
-		ids.add(Persona.getId()); // se agrea la ID de la persona a la lista de IDs
-
-		// crear instancia de persona y almcanearla en una lista de objetos
-		personas.add(new Persona(nombre, apellido, dptoResidencia, cantHijos, fecNacimiento));
+		
+		// crear instancia de persona y almcanearla en una lista de objetos con su ID
+		mapaPersonas.put(Persona.getId(), new Persona(nombre, apellido, dptoResidencia, cantHijos, fecNacimiento));
 
 		cargarTodasLasPersonas();
 
@@ -376,38 +375,37 @@ public class Formulario {
 		// obtener ID de la persona a partir de la tabla y luego obtener la posición de esa persona
 		// en el arrayList de las IDs
 		int idTabla = Integer.parseInt((String) table.getValueAt(fila, 0));
-		int index = ids.indexOf(idTabla);
 
 		// modificar los datos dependiendo de la columna seleccionada
 		if (columna == 1) {
 			String nuevoNombre = JOptionPane.showInputDialog("Ingrese nuevo nombre: ");
-			personas.get(index).setNombre(nuevoNombre); // cambia el valor de la persona en el arrayList personas
-			table.setValueAt(nuevoNombre, index, 1); // setea el nuevo valor en la tabla, en la fila y columna seleccionadas
+			mapaPersonas.get(idTabla).setNombre(nuevoNombre); // cambia el valor de la persona en el arrayList personas
+			table.setValueAt(nuevoNombre, fila, 1); // setea el nuevo valor en la tabla, en la fila y columna seleccionadas
 		} else if (columna == 2) {
 			String nuevoApellido = JOptionPane.showInputDialog("Ingrese nuevo apellido: ");
-			personas.get(index).setNombre(nuevoApellido);
-			table.setValueAt(nuevoApellido, index, 2);
+			mapaPersonas.get(idTabla).setNombre(nuevoApellido);
+			table.setValueAt(nuevoApellido, fila, 2);
 		} else if (columna == 3) {
 			try {
 				Byte nuevoCantHijos = Byte.parseByte(JOptionPane.showInputDialog("Ingrese cantidad de hijos: "));
-				personas.get(index).setCantHijos(nuevoCantHijos);
-				table.setValueAt(nuevoCantHijos, index, 3);
+				mapaPersonas.get(idTabla).setCantHijos(nuevoCantHijos);
+				table.setValueAt(nuevoCantHijos, fila, 3);
 			} catch (Exception e2) {
 				JOptionPane.showMessageDialog(null, "Formato de dato inválido.");
 			}
 
 		} else if (columna == 4) {
 			String nuevoDptoResidencia = JOptionPane.showInputDialog("Ingrese nuevo dpto de residencia: ");
-			personas.get(index).setNombre(nuevoDptoResidencia);
-			table.setValueAt(nuevoDptoResidencia, index, 4);
+			mapaPersonas.get(idTabla).setNombre(nuevoDptoResidencia);
+			table.setValueAt(nuevoDptoResidencia, fila, 4);
 		} else if (columna == 5) {
 			// modifica la fecha de nacimiento con un Exeption, 
 			// en caso de que el formato de la fecha no sea correcto
 			try {
 				String nuevoDateString = JOptionPane.showInputDialog("Ingrese nueva fecha: ");
 				LocalDate nuevoDate = LocalDate.parse(nuevoDateString); //transforma el String ingresado en un tipo LocalDate
-				personas.get(index).setFechaNacimiento(nuevoDate);
-				table.setValueAt(nuevoDate, index, 5);
+				mapaPersonas.get(idTabla).setFechaNacimiento(nuevoDate);
+				table.setValueAt(nuevoDate, fila, 5);
 			} catch (Exception e2) {
 				JOptionPane.showMessageDialog(null, "Formato de fecha inválido. Use: yyyy-mm-dd");
 			}
@@ -424,11 +422,10 @@ public class Formulario {
 		}
 
 		int idTabla = Integer.parseInt((String) table.getValueAt(fila, 0));
-		int index = ids.indexOf(idTabla);
+		mapaPersonas.get(idTabla);
 
 		model.removeRow(fila); // elimina fila de la tabla
-		personas.remove(index); // elimina persona en el arrayList personas
-		ids.remove(index); // elimina el ID de la persona en el arrayList ids
+		mapaPersonas.remove(idTabla); // elimina persona en el arrayList personas
 	}
 	
 	// ---------------  Método Eliminar Todo  --------------------
@@ -447,13 +444,15 @@ public class Formulario {
 		eliminarTodo();
 
 		// recorrer la lista de personas e irlas agregando a la tabla
-		for (int i = 0; i < personas.size(); i++) {
-			datos[0] = Integer.toString(personas.get(i).getIdPersona());
-			datos[1] = personas.get(i).getNombre();
-			datos[2] = personas.get(i).getApellido();
-			datos[3] = personas.get(i).getCantHijos().toString();
-			datos[4] = personas.get(i).getDptoResidencia();
-			datos[5] = personas.get(i).getFechaNacimiento().toString();
+
+		// for mapas entrySet
+		for (Entry<Integer, Persona> entry : mapaPersonas.entrySet()) {
+			datos[0] = Integer.toString(entry.getKey());
+			datos[1] = entry.getValue().getNombre();
+			datos[2] = entry.getValue().getApellido();
+			datos[3] = entry.getValue().getCantHijos().toString();
+			datos[4] = entry.getValue().getDptoResidencia();
+			datos[5] = entry.getValue().getFechaNacimiento().toString();
 			model.addRow(datos);
 		}
 	}
@@ -463,63 +462,62 @@ public class Formulario {
 	public void cargarSoloPersonasConHijos() {
 		eliminarTodo();
 		
-		for (int i = 0; i < personas.size(); i++) {
+		for (Entry<Integer, Persona> entry : mapaPersonas.entrySet()) {
 
-			if (personas.get(i).getCantHijos() > 0) {
-				datos[0] = Integer.toString(personas.get(i).getIdPersona());
-				datos[1] = personas.get(i).getNombre();
-				datos[2] = personas.get(i).getApellido();
-				datos[3] = personas.get(i).getCantHijos().toString();
-				datos[4] = personas.get(i).getDptoResidencia();
-				datos[5] = personas.get(i).getFechaNacimiento().toString();
+			if (entry.getValue().getCantHijos() > 0) {
+				datos[0] = Integer.toString(entry.getKey());
+				datos[1] = entry.getValue().getNombre();
+				datos[2] = entry.getValue().getApellido();
+				datos[3] = entry.getValue().getCantHijos().toString();
+				datos[4] = entry.getValue().getDptoResidencia();
+				datos[5] = entry.getValue().getFechaNacimiento().toString();
 				model.addRow(datos);
 			}
-
 		}
 	}
 
 	// ---------------  Método Cargar Solo Mayores de Edad  --------------------
-	
+
 	public void cargarSoloMayoresDeEdad() {
 		eliminarTodo();
 		LocalDate hoy = LocalDate.now();
 
-		for (int i = 0; i < personas.size(); i++) {
+		for (Entry<Integer, Persona> entry : mapaPersonas.entrySet()) {
 
-			if (personas.get(i).getFechaNacimiento().isBefore(hoy.plusYears(-18))) {
-				datos[0] = Integer.toString(personas.get(i).getIdPersona());
-				datos[1] = personas.get(i).getNombre();
-				datos[2] = personas.get(i).getApellido();
-				datos[3] = personas.get(i).getCantHijos().toString();
-				datos[4] = personas.get(i).getDptoResidencia();
-				datos[5] = personas.get(i).getFechaNacimiento().toString();
+			if (entry.getValue().getFechaNacimiento().isBefore(hoy.plusYears(-18))) {
+				datos[0] = Integer.toString(entry.getKey());
+				datos[1] = entry.getValue().getNombre();
+				datos[2] = entry.getValue().getApellido();
+				datos[3] = entry.getValue().getCantHijos().toString();
+				datos[4] = entry.getValue().getDptoResidencia();
+				datos[5] = entry.getValue().getFechaNacimiento().toString();
 				model.addRow(datos);
 			}
 
 		}
 	}
-	
+
 	// ---------------  Método Cargar Personas Mayores de Edad Con Hijos  --------------------
 
 	public void cargarPersonasMayoresDeEdadConHijos() {
 		eliminarTodo();
 		LocalDate hoy = LocalDate.now();
 
-		for (int i = 0; i < personas.size(); i++) {
-			boolean esMayor = personas.get(i).getFechaNacimiento().isBefore(hoy.plusYears(-18));
-			boolean tieneHijos = personas.get(i).getCantHijos() > 0;
+		for (Entry<Integer, Persona> entry : mapaPersonas.entrySet()) {
+			boolean esMayor = entry.getValue().getFechaNacimiento().isBefore(hoy.plusYears(-18));
+			boolean tieneHijos = entry.getValue().getCantHijos() > 0;
 
 			if (esMayor && tieneHijos) {
-				datos[0] = Integer.toString(personas.get(i).getIdPersona());
-				datos[1] = personas.get(i).getNombre();
-				datos[2] = personas.get(i).getApellido();
-				datos[3] = personas.get(i).getCantHijos().toString();
-				datos[4] = personas.get(i).getDptoResidencia();
-				datos[5] = personas.get(i).getFechaNacimiento().toString();
+				datos[0] = Integer.toString(entry.getKey());
+				datos[1] = entry.getValue().getNombre();
+				datos[2] = entry.getValue().getApellido();
+				datos[3] = entry.getValue().getCantHijos().toString();
+				datos[4] = entry.getValue().getDptoResidencia();
+				datos[5] = entry.getValue().getFechaNacimiento().toString();
 				model.addRow(datos);
 			}
-
 		}
+
 	}
 	
 	// ---------------  Método Filtros  --------------------
