@@ -47,6 +47,13 @@ public class Formulario extends JFrame {
 	private JTextField textFieldNombreVehiculo;
 	private JTextField textFieldColor;
 	private JLabel lblTipoVehiculo;
+	private JRadioButton rdbtnNo;
+	private JRadioButton rdbtnSi;
+	private JLabel lblAtributo1;
+	private JLabel lblAtributo2;
+	private JTextField textFieldAtributo1;
+	private JTextField textFieldAtributo2;
+	private JButton btnAgregar;
 
 	/**
 	 * 
@@ -76,16 +83,18 @@ public class Formulario extends JFrame {
 		frmGestinDePersonas.setIconImage(
 				Toolkit.getDefaultToolkit().getImage(Formulario.class.getResource("/images/logoPerson.png")));
 		frmGestinDePersonas.getContentPane().setForeground(SystemColor.textHighlight); // color del JPane
-		frmGestinDePersonas.setBounds(100, 100, 600, 622); // tamaño del frame
+		frmGestinDePersonas.setBounds(0,0, 600,300); // tamaño del frame
 		frmGestinDePersonas.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // purgar el frame al apretar x
 		frmGestinDePersonas.setLocationRelativeTo(null); // aparecer frame en el centro de la pantalla
 		frmGestinDePersonas.setVisible(true); // hacer visible el frame
+		frmGestinDePersonas.setResizable(false); // impide que se cambie el tamaño del frame
 		frmGestinDePersonas.getContentPane().setLayout(null); // colocar absolute layout al panel
 
 		JPanel panel = new JPanel();
-		panel.setBounds(20, 209, 539, 311);
+		panel.setBounds(20, 209, 539, 238);
 		frmGestinDePersonas.getContentPane().add(panel);
 		panel.setLayout(null);
+		panel.setVisible(false);
 		// --------------- Labels --------------------
 
 		JLabel lblNombre = new JLabel("Nombre"); // nueva JLabel
@@ -120,6 +129,18 @@ public class Formulario extends JFrame {
 		lblColor.setBounds(10, 63, 46, 14);
 		panel.add(lblColor);
 
+		JLabel lblVehiculo = new JLabel("Veh\u00EDculo");
+		lblVehiculo.setBounds(29, 128, 60, 14);
+		frmGestinDePersonas.getContentPane().add(lblVehiculo);
+		
+		lblAtributo1 = new JLabel("Nombre");
+		lblAtributo1.setBounds(10, 106, 77, 14);
+		panel.add(lblAtributo1);
+		
+		lblAtributo2 = new JLabel("Color");
+		lblAtributo2.setBounds(10, 172, 139, 14);
+		panel.add(lblAtributo2);
+
 		// --------------- TexFields --------------------
 
 		textFieldNombre = new JTextField(); // nuevo JTextField
@@ -151,10 +172,16 @@ public class Formulario extends JFrame {
 		textFieldColor.setColumns(10);
 		textFieldColor.setBounds(66, 60, 139, 20);
 		panel.add(textFieldColor);
-
-		JLabel lblVehiculo = new JLabel("Veh\u00EDculo");
-		lblVehiculo.setBounds(29, 128, 60, 14);
-		frmGestinDePersonas.getContentPane().add(lblVehiculo);
+		
+		textFieldAtributo1 = new JTextField();
+		textFieldAtributo1.setBounds(10, 131, 46, 20);
+		panel.add(textFieldAtributo1);
+		textFieldAtributo1.setColumns(10);
+		
+		textFieldAtributo2 = new JTextField();
+		textFieldAtributo2.setBounds(10, 197, 46, 20);
+		panel.add(textFieldAtributo2);
+		textFieldAtributo2.setColumns(10);
 
 		/**
 		 * 
@@ -164,17 +191,37 @@ public class Formulario extends JFrame {
 
 		// --------------- Radio Button --------------------
 
-		JRadioButton rdbtnNo = new JRadioButton("No");
+		rdbtnNo = new JRadioButton("No");
+		rdbtnNo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rdbtnSi.setSelected(false);
+				panel.setVisible(false);
+				frmGestinDePersonas.setBounds(0,0, 600,300);
+				frmGestinDePersonas.setLocationRelativeTo(null);
+				btnAgregar.setBounds(470, 169, 89, 23);
+			}
+		});
 		rdbtnNo.setBounds(133, 124, 46, 23);
+		rdbtnNo.setFocusable(false);
 		frmGestinDePersonas.getContentPane().add(rdbtnNo);
 
-		JRadioButton rdbtnSi = new JRadioButton("Si");
+		rdbtnSi = new JRadioButton("Si");
+		rdbtnSi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rdbtnNo.setSelected(false);
+				panel.setVisible(true);
+				frmGestinDePersonas.setBounds(0,0, 600,600);
+				frmGestinDePersonas.setLocationRelativeTo(null);
+				btnAgregar.setBounds(470, 500, 89, 23);
+			}
+		});
 		rdbtnSi.setBounds(85, 124, 46, 23);
+		rdbtnSi.setFocusable(false);
 		frmGestinDePersonas.getContentPane().add(rdbtnSi);
 
 		// --------------- Botón Agregar --------------------
 
-		JButton btnAgregar = new JButton("Agregar"); // nuevo botón
+		btnAgregar = new JButton("Agregar"); // nuevo botón
 
 		// Agregar función al botón
 		btnAgregar.addActionListener(new ActionListener() {
@@ -254,11 +301,7 @@ public class Formulario extends JFrame {
 		comboBoxAnio = new JComboBox<String>();
 		comboBoxAnio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					anio = Integer.parseInt(comboBoxAnio.getSelectedItem().toString());
-				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(null, "Dato inválido");
-				}
+				anio = Integer.parseInt(comboBoxAnio.getSelectedItem().toString());
 			}
 		});
 		comboBoxAnio.setModel(new DefaultComboBoxModel<String>(anios));
@@ -270,9 +313,23 @@ public class Formulario extends JFrame {
 		// --------------- ComboBox Tipo de Vehículo --------------------
 
 		JComboBox comboBoxTipo = new JComboBox();
+		comboBoxTipo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (comboBoxTipo.getSelectedIndex() == 0) {
+					lblAtributo1.setText("Eslora: ");
+					lblAtributo2.setText("Manga: ");
+				}if (comboBoxTipo.getSelectedIndex() == 1) {
+					lblAtributo1.setText("Longitud: ");
+					lblAtributo2.setText("Cantidad de Pasajeros: ");
+				} else {
+
+				}
+			}
+		});
 		comboBoxTipo.setModel(new DefaultComboBoxModel(new String[] { "Barco", "Avi\u00F3n" }));
 		comboBoxTipo.setSelectedIndex(0);
 		comboBoxTipo.setBounds(362, 10, 120, 22);
+		comboBoxTipo.setFocusable(false);
 		panel.add(comboBoxTipo);
 
 	}
