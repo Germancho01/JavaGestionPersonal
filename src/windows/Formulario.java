@@ -198,7 +198,7 @@ public class Formulario extends JFrame {
 				panel.setVisible(false);
 				frmGestinDePersonas.setBounds(0,0, 600,300);
 				frmGestinDePersonas.setLocationRelativeTo(null);
-				btnAgregar.setBounds(470, 169, 89, 23);
+				btnAgregar.setBounds(470, 185, 89, 23);
 			}
 		});
 		rdbtnNo.setBounds(133, 124, 46, 23);
@@ -238,7 +238,7 @@ public class Formulario extends JFrame {
 				}
 			}
 		});
-		btnAgregar.setBounds(470, 169, 89, 23); // setea las coordenadas y tamaño del botón
+		btnAgregar.setBounds(470, 185, 89, 23); // setea las coordenadas y tamaño del botón
 		btnAgregar.setFocusable(false); // quita el recuadro en el texto cuando se selecciona el botón
 		frmGestinDePersonas.getContentPane().add(btnAgregar); // agregar botón al panel
 
