@@ -3,8 +3,7 @@ package windows;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map.Entry;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -17,7 +16,7 @@ import javax.swing.table.DefaultTableModel;
 import classes.Persona;
 import exceptions.CellNoSelectedException;
 
-public class Listado extends JFrame{
+public class Listado extends JFrame {
 
 	private JFrame frame;
 	private JTable table;
@@ -29,16 +28,15 @@ public class Listado extends JFrame{
 	/**
 	 * Create the application.
 	 */
-	public Listado(HashMap<Integer, Persona> mapaPersonas) {
+	public Listado(ArrayList<Persona> personas) {
 
-		initialize(mapaPersonas);
+		initialize(personas);
 
 		limpiarTabla();
 
 		// Cargar todas las personas en la tabla
-		for (Entry<Integer, Persona> entry : mapaPersonas.entrySet()) {
-			int id = entry.getKey();
-			cargarPersona(mapaPersonas, id);
+		for (int i = 0; i < personas.size(); i++) {
+			cargarPersona(personas, i);
 		}
 
 	}
@@ -46,10 +44,10 @@ public class Listado extends JFrame{
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize(HashMap<Integer, Persona> mapaPersonas) {
+	private void initialize(ArrayList<Persona> personas) {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 600, 622);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		// frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setVisible(true);
 
@@ -98,7 +96,7 @@ public class Listado extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				// Eliminar registros con la excepción de celda no seleccionada
 				try {
-					eliminarPersona(mapaPersonas);
+					eliminarPersona(personas);
 				} catch (CellNoSelectedException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage());
 				}
@@ -114,7 +112,7 @@ public class Listado extends JFrame{
 		btnEliminarTodo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				limpiarTabla();
-				mapaPersonas.clear(); // limpia el mapa de personas
+				personas.clear(); // limpia el mapa de personas
 			}
 		});
 		btnEliminarTodo.setBounds(39, 366, 115, 23);
@@ -128,7 +126,7 @@ public class Listado extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				// Modificar datos con la excepción de celda no seleccionada
 				try {
-					modificarDatos(mapaPersonas);
+					modificarDatos(personas);
 				} catch (CellNoSelectedException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage());
 				}
@@ -144,7 +142,7 @@ public class Listado extends JFrame{
 		chckbxMayoresDeEdad = new JCheckBox("Mostrar solo mayores de edad");
 		chckbxMayoresDeEdad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				filtros(mapaPersonas);
+				filtros(personas);
 			}
 		});
 		chckbxMayoresDeEdad.setBounds(29, 535, 229, 23);
@@ -156,7 +154,7 @@ public class Listado extends JFrame{
 		chckbxConHijos = new JCheckBox("Mostrar solo personas con hijos");
 		chckbxConHijos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				filtros(mapaPersonas);
+				filtros(personas);
 			}
 		});
 		chckbxConHijos.setBounds(283, 535, 229, 23);
@@ -168,23 +166,23 @@ public class Listado extends JFrame{
 	/**
 	 * Create methods.
 	 */
-	
+
 	// --------------- Método Cargar Persona --------------------
 
-	public void cargarPersona(HashMap<Integer, Persona> mapaPersonas, int id) {
+	public void cargarPersona(ArrayList<Persona> personas, int i) {
 
-		datos[0] = Integer.toString(id);
-		datos[1] = mapaPersonas.get(id).getNombre();
-		datos[2] = mapaPersonas.get(id).getApellido();
-		datos[3] = mapaPersonas.get(id).getCantHijos().toString();
-		datos[4] = mapaPersonas.get(id).getDptoResidencia();
-		datos[5] = mapaPersonas.get(id).getFechaNacimiento().toString();
+		datos[0] = Integer.toString(personas.get(i).getId());
+		datos[1] = personas.get(i).getNombre();
+		datos[2] = personas.get(i).getApellido();
+		datos[3] = personas.get(i).getCantHijos().toString();
+		datos[4] = personas.get(i).getDptoResidencia();
+		datos[5] = personas.get(i).getFechaNacimiento().toString();
 		model.addRow(datos);
 	}
 
 	// --------------- Método Modificar Dato --------------------
 
-	public void modificarDatos(HashMap<Integer, Persona> mapaPersonas) throws CellNoSelectedException {
+	public void modificarDatos(ArrayList<Persona> personas) throws CellNoSelectedException {
 		// obtener celda seleccionada
 		int fila = table.getSelectedRow();
 
@@ -201,17 +199,17 @@ public class Listado extends JFrame{
 		// modificar los datos dependiendo de la columna seleccionada
 		if (columna == 1) {
 			String nuevoNombre = JOptionPane.showInputDialog("Ingrese nuevo nombre: ");
-			mapaPersonas.get(id).setNombre(nuevoNombre); // cambia el valor de la persona en el mapa personas
+			personas.get(fila).setNombre(nuevoNombre); // cambia el valor de la persona en el mapa personas
 			table.setValueAt(nuevoNombre, fila, 1); // setea el nuevo valor en la tabla, en la fila y columna
 													// seleccionadas
 		} else if (columna == 2) {
 			String nuevoApellido = JOptionPane.showInputDialog("Ingrese nuevo apellido: ");
-			mapaPersonas.get(id).setNombre(nuevoApellido);
+			personas.get(fila).setNombre(nuevoApellido);
 			table.setValueAt(nuevoApellido, fila, 2);
 		} else if (columna == 3) {
 			try {
 				Byte nuevoCantHijos = Byte.parseByte(JOptionPane.showInputDialog("Ingrese cantidad de hijos: "));
-				mapaPersonas.get(id).setCantHijos(nuevoCantHijos);
+				personas.get(fila).setCantHijos(nuevoCantHijos);
 				table.setValueAt(nuevoCantHijos, fila, 3);
 			} catch (Exception e2) {
 				JOptionPane.showMessageDialog(null, "Formato de dato inválido.");
@@ -219,7 +217,7 @@ public class Listado extends JFrame{
 
 		} else if (columna == 4) {
 			String nuevoDptoResidencia = JOptionPane.showInputDialog("Ingrese nuevo dpto de residencia: ");
-			mapaPersonas.get(id).setNombre(nuevoDptoResidencia);
+			personas.get(fila).setNombre(nuevoDptoResidencia);
 			table.setValueAt(nuevoDptoResidencia, fila, 4);
 		} else if (columna == 5) {
 			// modifica la fecha de nacimiento con un Exeption,
@@ -228,7 +226,7 @@ public class Listado extends JFrame{
 				String nuevoDateString = JOptionPane.showInputDialog("Ingrese nueva fecha: ");
 				LocalDate nuevoDate = LocalDate.parse(nuevoDateString); // transforma el String ingresado en un tipo
 																		// LocalDate
-				mapaPersonas.get(id).setFechaNacimiento(nuevoDate);
+				personas.get(fila).setFechaNacimiento(nuevoDate);
 				table.setValueAt(nuevoDate, fila, 5);
 			} catch (Exception e2) {
 				JOptionPane.showMessageDialog(null, "Formato de fecha inválido. Use: yyyy-mm-dd");
@@ -238,7 +236,7 @@ public class Listado extends JFrame{
 
 	// --------------- Método Eliminar Persona Seleccionada --------------------
 
-	public void eliminarPersona(HashMap<Integer, Persona> mapaPersonas) throws CellNoSelectedException {
+	public void eliminarPersona(ArrayList<Persona> personas) throws CellNoSelectedException {
 		int fila = table.getSelectedRow();
 
 		if (fila < 0) {
@@ -248,7 +246,7 @@ public class Listado extends JFrame{
 		int id = Integer.parseInt((String) table.getValueAt(fila, 0));
 
 		model.removeRow(fila); // elimina fila de la tabla
-		mapaPersonas.remove(id); // elimina persona en el mapa personas
+		personas.remove(fila);
 	}
 
 	// --------------- Método Limpiar Tabla --------------------
@@ -263,49 +261,45 @@ public class Listado extends JFrame{
 	// --------------- Método Filtros --------------------
 
 	// filtros de los checkBox
-	public void filtros(HashMap<Integer, Persona> mapaPersonas) {
+	public void filtros(ArrayList<Persona> personas) {
 		limpiarTabla();
-		
+
 		if (chckbxMayoresDeEdad.isSelected() && chckbxConHijos.isSelected()) {
-			
+
 			LocalDate hoy = LocalDate.now();
 
-			for (Entry<Integer, Persona> entry : mapaPersonas.entrySet()) {
-				int id = entry.getKey();
-				
-				boolean esMayor = mapaPersonas.get(id).getFechaNacimiento().isBefore(hoy.plusYears(-18));
-				boolean tieneHijos = mapaPersonas.get(id).getCantHijos() > 0;
+			for (int i = 0; i < personas.size(); i++) {
+				boolean esMayor = personas.get(i).getFechaNacimiento().isBefore(hoy.plusYears(-18));
+				boolean tieneHijos = personas.get(i).getCantHijos() > 0;
 
 				if (esMayor && tieneHijos) {
-					cargarPersona(mapaPersonas, id);
+					cargarPersona(personas, i);
 				}
 			}
+
 		} else if (chckbxMayoresDeEdad.isSelected() && !chckbxConHijos.isSelected()) {
 
 			LocalDate hoy = LocalDate.now();
 
-			for (Entry<Integer, Persona> entry : mapaPersonas.entrySet()) {
-				int id = entry.getKey();
+			for (int i = 0; i < personas.size(); i++) {
 
-				if (mapaPersonas.get(id).getFechaNacimiento().isBefore(hoy.plusYears(-18))) {
-					cargarPersona(mapaPersonas, id);
+				if (personas.get(i).getFechaNacimiento().isBefore(hoy.plusYears(-18))) {
+					cargarPersona(personas, i);
 				}
 			}
 
 		} else if (!chckbxMayoresDeEdad.isSelected() && chckbxConHijos.isSelected()) {
 
-			for (Entry<Integer, Persona> entry : mapaPersonas.entrySet()) {
-				int id = entry.getKey();
+			for (int i = 0; i < personas.size(); i++) {
 
-				if (mapaPersonas.get(id).getCantHijos() > 0) {
-					cargarPersona(mapaPersonas, id);
+				if (personas.get(i).getCantHijos() > 0) {
+					cargarPersona(personas, i);
 				}
 			}
 
 		} else if (!chckbxMayoresDeEdad.isSelected() && !chckbxConHijos.isSelected()) {
-			for (Entry<Integer, Persona> entry : mapaPersonas.entrySet()) {
-				int id = entry.getKey();
-				cargarPersona(mapaPersonas, id);
+			for (int i = 0; i < personas.size(); i++) {
+				cargarPersona(personas, i);
 			}
 		}
 	}

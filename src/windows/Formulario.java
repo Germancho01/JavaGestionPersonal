@@ -12,7 +12,7 @@ import exceptions.ItemNoSelectedException;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
@@ -38,12 +38,13 @@ public class Formulario extends JFrame {
 	private JComboBox<String> comboBoxDia;
 	private JComboBox<String> comboBoxMes;
 	private JComboBox<String> comboBoxAnio;
-	private HashMap<Integer, Persona> mapaPersonas = new HashMap<Integer, Persona>();
+	private ArrayList<Persona> personas = new ArrayList<Persona>();
 
 	private String nombre, apellido, dptoResidencia;
 	private Byte cantHijos;
 	private LocalDate fecNacimiento;
 	private Integer anio, mes, dia;
+	private Integer id = -1;
 	private JTextField textFieldNombreVehiculo;
 	private JTextField textFieldColor;
 	private JLabel lblTipoVehiculo;
@@ -83,7 +84,7 @@ public class Formulario extends JFrame {
 		frmGestinDePersonas.setIconImage(
 				Toolkit.getDefaultToolkit().getImage(Formulario.class.getResource("/images/logoPerson.png")));
 		frmGestinDePersonas.getContentPane().setForeground(SystemColor.textHighlight); // color del JPane
-		frmGestinDePersonas.setBounds(0,0, 600,300); // tamaño del frame
+		frmGestinDePersonas.setBounds(0, 0, 600, 300); // tamaño del frame
 		frmGestinDePersonas.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // purgar el frame al apretar x
 		frmGestinDePersonas.setLocationRelativeTo(null); // aparecer frame en el centro de la pantalla
 		frmGestinDePersonas.setVisible(true); // hacer visible el frame
@@ -132,11 +133,11 @@ public class Formulario extends JFrame {
 		JLabel lblVehiculo = new JLabel("Veh\u00EDculo");
 		lblVehiculo.setBounds(29, 128, 60, 14);
 		frmGestinDePersonas.getContentPane().add(lblVehiculo);
-		
+
 		lblAtributo1 = new JLabel("Nombre");
 		lblAtributo1.setBounds(10, 106, 77, 14);
 		panel.add(lblAtributo1);
-		
+
 		lblAtributo2 = new JLabel("Color");
 		lblAtributo2.setBounds(10, 172, 139, 14);
 		panel.add(lblAtributo2);
@@ -172,12 +173,12 @@ public class Formulario extends JFrame {
 		textFieldColor.setColumns(10);
 		textFieldColor.setBounds(66, 60, 139, 20);
 		panel.add(textFieldColor);
-		
+
 		textFieldAtributo1 = new JTextField();
 		textFieldAtributo1.setBounds(10, 131, 46, 20);
 		panel.add(textFieldAtributo1);
 		textFieldAtributo1.setColumns(10);
-		
+
 		textFieldAtributo2 = new JTextField();
 		textFieldAtributo2.setBounds(10, 197, 46, 20);
 		panel.add(textFieldAtributo2);
@@ -196,7 +197,7 @@ public class Formulario extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				rdbtnSi.setSelected(false);
 				panel.setVisible(false);
-				frmGestinDePersonas.setBounds(0,0, 600,300);
+				frmGestinDePersonas.setBounds(0, 0, 600, 300);
 				frmGestinDePersonas.setLocationRelativeTo(null);
 				btnAgregar.setBounds(470, 185, 89, 23);
 			}
@@ -210,7 +211,7 @@ public class Formulario extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				rdbtnNo.setSelected(false);
 				panel.setVisible(true);
-				frmGestinDePersonas.setBounds(0,0, 600,600);
+				frmGestinDePersonas.setBounds(0, 0, 600, 600);
 				frmGestinDePersonas.setLocationRelativeTo(null);
 				btnAgregar.setBounds(470, 500, 89, 23);
 			}
@@ -230,7 +231,6 @@ public class Formulario extends JFrame {
 				// no seleccionados
 				try {
 					ingresarDatos();
-					new Listado(mapaPersonas);
 				} catch (NumberFormatException e2) {
 					JOptionPane.showMessageDialog(null, "Revise que haya ingresado correctamente todos los datos.");
 				} catch (ItemNoSelectedException e2) {
@@ -241,6 +241,16 @@ public class Formulario extends JFrame {
 		btnAgregar.setBounds(470, 185, 89, 23); // setea las coordenadas y tamaño del botón
 		btnAgregar.setFocusable(false); // quita el recuadro en el texto cuando se selecciona el botón
 		frmGestinDePersonas.getContentPane().add(btnAgregar); // agregar botón al panel
+
+		JButton btnListar = new JButton("Listar");
+		btnListar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new Listado(personas);
+			}
+		});
+		btnListar.setFocusable(false);
+		btnListar.setBounds(20, 185, 89, 23);
+		frmGestinDePersonas.getContentPane().add(btnListar);
 
 		// --------------- ComboBox Dia --------------------
 
@@ -318,7 +328,8 @@ public class Formulario extends JFrame {
 				if (comboBoxTipo.getSelectedIndex() == 0) {
 					lblAtributo1.setText("Eslora: ");
 					lblAtributo2.setText("Manga: ");
-				}if (comboBoxTipo.getSelectedIndex() == 1) {
+				}
+				if (comboBoxTipo.getSelectedIndex() == 1) {
 					lblAtributo1.setText("Longitud: ");
 					lblAtributo2.setText("Cantidad de Pasajeros: ");
 				} else {
@@ -352,8 +363,11 @@ public class Formulario extends JFrame {
 
 		fecNacimiento = LocalDate.of(anio, mes, dia); // se genera una fecha LocalDate a partir de los datos ingresados
 
+		// aumentar id
+		id++;
+
 		// crear instancia de persona y almcanearla en una lista de objetos con su ID
-		mapaPersonas.put(Persona.getId(), new Persona(nombre, apellido, dptoResidencia, cantHijos, fecNacimiento));
+		personas.add(new Persona(id, nombre, apellido, dptoResidencia, cantHijos, fecNacimiento));
 
 		// resetear los componentes
 		resetearCampos();
@@ -366,11 +380,7 @@ public class Formulario extends JFrame {
 		textFieldApellido.setText("");
 		textFieldCantHijos.setText("");
 		textFieldDptoResidencia.setText("");
-		comboBoxDia.setSelectedIndex(1);
-		comboBoxMes.setSelectedIndex(1);
-	}
-
-	public HashMap<Integer, Persona> getMapaPersonas() {
-		return mapaPersonas;
+		comboBoxDia.setSelectedIndex(0);
+		comboBoxMes.setSelectedIndex(0);
 	}
 }
