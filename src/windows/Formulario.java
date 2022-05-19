@@ -5,8 +5,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import javax.swing.JTextField;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 
 import classes.Persona;
 import exceptions.ItemNoSelectedException;
@@ -20,10 +18,11 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
 import java.awt.Toolkit;
-import javax.swing.JCheckBox;
 import java.awt.SystemColor;
+import javax.swing.JRadioButton;
+import javax.swing.JPanel;
 
-public class Formulario extends JFrame{
+public class Formulario extends JFrame {
 
 	/**
 	 * 
@@ -36,19 +35,18 @@ public class Formulario extends JFrame{
 	private JTextField textFieldApellido;
 	private JTextField textFieldDptoResidencia;
 	private JTextField textFieldCantHijos;
-	private JTextField textFieldAnio;
-	private JTable table;
-	private DefaultTableModel model;
 	private JComboBox<String> comboBoxDia;
 	private JComboBox<String> comboBoxMes;
-	private JCheckBox chckbxSoloConHijos;
-	private JCheckBox chckbxMayoresDeEdad;
+	private JComboBox<String> comboBoxAnio;
 	private HashMap<Integer, Persona> mapaPersonas = new HashMap<Integer, Persona>();
 
 	private String nombre, apellido, dptoResidencia;
 	private Byte cantHijos;
 	private LocalDate fecNacimiento;
 	private Integer anio, mes, dia;
+	private JTextField textFieldNombreVehiculo;
+	private JTextField textFieldColor;
+	private JLabel lblTipoVehiculo;
 
 	/**
 	 * 
@@ -84,6 +82,10 @@ public class Formulario extends JFrame{
 		frmGestinDePersonas.setVisible(true); // hacer visible el frame
 		frmGestinDePersonas.getContentPane().setLayout(null); // colocar absolute layout al panel
 
+		JPanel panel = new JPanel();
+		panel.setBounds(20, 209, 539, 311);
+		frmGestinDePersonas.getContentPane().add(panel);
+		panel.setLayout(null);
 		// --------------- Labels --------------------
 
 		JLabel lblNombre = new JLabel("Nombre"); // nueva JLabel
@@ -105,6 +107,18 @@ public class Formulario extends JFrame{
 		JLabel lblFecNacimiento = new JLabel("Fecha de nacimiento");
 		lblFecNacimiento.setBounds(256, 128, 124, 14);
 		frmGestinDePersonas.getContentPane().add(lblFecNacimiento);
+
+		lblTipoVehiculo = new JLabel("Tipo de Veh\u00EDculo");
+		lblTipoVehiculo.setBounds(258, 14, 94, 14);
+		panel.add(lblTipoVehiculo);
+
+		JLabel lblNombreVehiculo = new JLabel("Nombre");
+		lblNombreVehiculo.setBounds(10, 14, 46, 14);
+		panel.add(lblNombreVehiculo);
+
+		JLabel lblColor = new JLabel("Color");
+		lblColor.setBounds(10, 63, 46, 14);
+		panel.add(lblColor);
 
 		// --------------- TexFields --------------------
 
@@ -128,10 +142,35 @@ public class Formulario extends JFrame{
 		textFieldCantHijos.setBounds(391, 30, 168, 20);
 		frmGestinDePersonas.getContentPane().add(textFieldCantHijos);
 
-		textFieldAnio = new JTextField();
-		textFieldAnio.setBounds(499, 125, 60, 20);
-		frmGestinDePersonas.getContentPane().add(textFieldAnio);
-		textFieldAnio.setColumns(10);
+		textFieldNombreVehiculo = new JTextField();
+		textFieldNombreVehiculo.setColumns(10);
+		textFieldNombreVehiculo.setBounds(66, 11, 139, 20);
+		panel.add(textFieldNombreVehiculo);
+
+		textFieldColor = new JTextField();
+		textFieldColor.setColumns(10);
+		textFieldColor.setBounds(66, 60, 139, 20);
+		panel.add(textFieldColor);
+
+		JLabel lblVehiculo = new JLabel("Veh\u00EDculo");
+		lblVehiculo.setBounds(29, 128, 60, 14);
+		frmGestinDePersonas.getContentPane().add(lblVehiculo);
+
+		/**
+		 * 
+		 * Components actions.
+		 * 
+		 */
+
+		// --------------- Radio Button --------------------
+
+		JRadioButton rdbtnNo = new JRadioButton("No");
+		rdbtnNo.setBounds(133, 124, 46, 23);
+		frmGestinDePersonas.getContentPane().add(rdbtnNo);
+
+		JRadioButton rdbtnSi = new JRadioButton("Si");
+		rdbtnSi.setBounds(85, 124, 46, 23);
+		frmGestinDePersonas.getContentPane().add(rdbtnSi);
 
 		// --------------- Botón Agregar --------------------
 
@@ -152,22 +191,16 @@ public class Formulario extends JFrame{
 				}
 			}
 		});
-		btnAgregar.setBounds(29, 178, 89, 23); // setea las coordenadas y tamaño del botón
+		btnAgregar.setBounds(470, 169, 89, 23); // setea las coordenadas y tamaño del botón
 		btnAgregar.setFocusable(false); // quita el recuadro en el texto cuando se selecciona el botón
 		frmGestinDePersonas.getContentPane().add(btnAgregar); // agregar botón al panel
-
-		/**
-		 * 
-		 * Components actions.
-		 * 
-		 */
 
 		// --------------- ComboBox Dia --------------------
 
 		// cargar array con la cantidad de días del mes
-		String[] dias = new String[32];
-		for (int i = 1; i < dias.length; i++) {
-			dias[i] = Integer.toString(i);
+		String[] dias = new String[31];
+		for (int i = 0; i < dias.length; i++) {
+			dias[i] = Integer.toString(i + 1);
 		}
 		comboBoxDia = new JComboBox<String>(); // nuevo comboBox con Items tipo String
 		comboBoxDia.addActionListener(new ActionListener() {
@@ -185,15 +218,16 @@ public class Formulario extends JFrame{
 			}
 		});
 		comboBoxDia.setModel(new DefaultComboBoxModel<String>(dias));
+		comboBoxDia.setSelectedIndex(0);
 		comboBoxDia.setBounds(391, 124, 46, 22);
 		comboBoxDia.setFocusable(false);
 		frmGestinDePersonas.getContentPane().add(comboBoxDia);
 
 		// --------------- ComboBox Mes --------------------
 
-		String[] meses = new String[13];
-		for (int i = 1; i < meses.length; i++) {
-			meses[i] = Integer.toString(i);
+		String[] meses = new String[12];
+		for (int i = 0; i < meses.length; i++) {
+			meses[i] = Integer.toString(i + 1);
 		}
 		comboBoxMes = new JComboBox<String>();
 		comboBoxMes.addActionListener(new ActionListener() {
@@ -206,9 +240,41 @@ public class Formulario extends JFrame{
 			}
 		});
 		comboBoxMes.setModel(new DefaultComboBoxModel<String>(meses));
+		comboBoxMes.setSelectedIndex(0);
 		comboBoxMes.setFocusable(false);
 		comboBoxMes.setBounds(447, 124, 46, 22);
 		frmGestinDePersonas.getContentPane().add(comboBoxMes);
+
+		// --------------- ComboBox Año --------------------
+
+		String[] anios = new String[100];
+		for (int i = 0; i < anios.length; i++) {
+			anios[i] = Integer.toString(2022 - i);
+		}
+		comboBoxAnio = new JComboBox<String>();
+		comboBoxAnio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					anio = Integer.parseInt(comboBoxAnio.getSelectedItem().toString());
+				} catch (Exception e2) {
+					JOptionPane.showMessageDialog(null, "Dato inválido");
+				}
+			}
+		});
+		comboBoxAnio.setModel(new DefaultComboBoxModel<String>(anios));
+		comboBoxAnio.setSelectedIndex(0);
+		comboBoxAnio.setFocusable(false);
+		comboBoxAnio.setBounds(503, 124, 56, 22);
+		frmGestinDePersonas.getContentPane().add(comboBoxAnio);
+
+		// --------------- ComboBox Tipo de Vehículo --------------------
+
+		JComboBox comboBoxTipo = new JComboBox();
+		comboBoxTipo.setModel(new DefaultComboBoxModel(new String[] { "Barco", "Avi\u00F3n" }));
+		comboBoxTipo.setSelectedIndex(0);
+		comboBoxTipo.setBounds(362, 10, 120, 22);
+		panel.add(comboBoxTipo);
+
 	}
 
 	/**
@@ -226,12 +292,6 @@ public class Formulario extends JFrame{
 		apellido = textFieldApellido.getText();
 		dptoResidencia = textFieldDptoResidencia.getText();
 		cantHijos = Byte.parseByte(textFieldCantHijos.getText()); // se transforma el dato de tipo String a Byte
-		anio = Integer.parseInt(textFieldAnio.getText()); // se transforma el dato de tipo String a Integer
-
-		// Excepción si no se selecciona ningún item del comboBox
-		if (comboBoxDia.getSelectedIndex() == -1 || comboBoxMes.getSelectedIndex() == -1) {
-			throw new ItemNoSelectedException();
-		}
 
 		fecNacimiento = LocalDate.of(anio, mes, dia); // se genera una fecha LocalDate a partir de los datos ingresados
 
@@ -249,13 +309,11 @@ public class Formulario extends JFrame{
 		textFieldApellido.setText("");
 		textFieldCantHijos.setText("");
 		textFieldDptoResidencia.setText("");
-		textFieldAnio.setText("");
 		comboBoxDia.setSelectedIndex(1);
 		comboBoxMes.setSelectedIndex(1);
 	}
-	
-	public HashMap<Integer, Persona> getMapaPersonas(){
+
+	public HashMap<Integer, Persona> getMapaPersonas() {
 		return mapaPersonas;
 	}
-
 }

@@ -168,6 +168,7 @@ public class Listado extends JFrame{
 	/**
 	 * Create methods.
 	 */
+	
 	// --------------- Método Cargar Persona --------------------
 
 	public void cargarPersona(HashMap<Integer, Persona> mapaPersonas, int id) {
@@ -181,7 +182,7 @@ public class Listado extends JFrame{
 		model.addRow(datos);
 	}
 
-	// --------------- Método Modificar Datos --------------------
+	// --------------- Método Modificar Dato --------------------
 
 	public void modificarDatos(HashMap<Integer, Persona> mapaPersonas) throws CellNoSelectedException {
 		// obtener celda seleccionada
