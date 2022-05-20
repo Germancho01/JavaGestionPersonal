@@ -5,9 +5,10 @@ public class Avion extends Vehiculo {
 	public Double longitud;
 	public Integer cantPasajeros;
 
-	public Avion(Integer idVehiculo, String nombre, String color, Persona duenio, Double longitud, Integer cantPasajeros) {
+	public Avion(Integer idVehiculo, String nombre, String color, Persona duenio, Double longitud,
+			Integer cantPasajeros) {
 		super(idVehiculo, nombre, color, duenio);
-		
+
 		this.longitud = longitud;
 		this.cantPasajeros = cantPasajeros;
 	}
@@ -26,6 +27,16 @@ public class Avion extends Vehiculo {
 
 	public void setCantPasajeros(Integer cantPasajeros) {
 		this.cantPasajeros = cantPasajeros;
+	}
+
+	@Override
+	public String toString() {
+		return "\n--- Avion ---"
+				+ "\nlongitud=" + longitud 
+				+ "\ncantPasajeros=" + cantPasajeros 
+				+ "\nidVehiculo=" + idVehiculo
+				+ "\nnombre=" + nombre 
+				+ "\ncolor=" + color;
 	}
 
 }

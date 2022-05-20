@@ -25,4 +25,14 @@ public class Barco extends Vehiculo {
 		this.manga = manga;
 	}
 
+	@Override
+	public String toString() {
+		return "\n --- Barco ---"
+				+ "\neslora=" + eslora 
+				+ "\nmanga=" + manga
+				+ "\nidVehiculo=" + idVehiculo 
+				+ "\nnombre=" + nombre
+				+ "\ncolor=" + color;
+	}
+
 }
