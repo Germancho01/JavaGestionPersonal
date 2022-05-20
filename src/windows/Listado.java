@@ -14,6 +14,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import classes.Persona;
+import classes.Vehiculo;
 import exceptions.CellNoSelectedException;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -191,11 +192,11 @@ public class Listado extends JFrame {
 		btnListarVehculo = new JButton("Listar Veh\u00EDculo");
 		btnListarVehculo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int fila = table.getSelectedRow();
-
-				new ListadoVehiculo(personas.get(fila).getVehiculos(), personas.get(fila).getBarcos(),
-						personas.get(fila).getAviones(), personas);
-				frame.setVisible(false);
+				try {
+					listarVehiculo(personas);
+				} catch (CellNoSelectedException e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage());
+				}
 			}
 		});
 		btnListarVehculo.setFocusable(false);
@@ -244,18 +245,32 @@ public class Listado extends JFrame {
 	 * 
 	 */
 
+	// --------------- Método Listar Vehiculos --------------------
+
+	public void listarVehiculo(ArrayList<Persona> personas) throws CellNoSelectedException{
+
+		int fila = table.getSelectedRow();
+		if (fila < 0) {
+			throw new CellNoSelectedException();
+		}
+
+		new ListadoVehiculo(personas.get(fila).getVehiculos(), personas.get(fila).getBarcos(),
+				personas.get(fila).getAviones(), personas);
+		frame.setVisible(false);
+	}
+	
 	// --------------- Método Cargar Persona --------------------
 
-	public void cargarPersona(ArrayList<Persona> personas, int i) {
+		public void cargarPersona(ArrayList<Persona> personas, int i) {
 
-		datos[0] = Integer.toString(personas.get(i).getIdPersona());
-		datos[1] = personas.get(i).getNombre();
-		datos[2] = personas.get(i).getApellido();
-		datos[3] = personas.get(i).getCantHijos().toString();
-		datos[4] = personas.get(i).getDptoResidencia();
-		datos[5] = personas.get(i).getFechaNacimiento().toString();
-		model.addRow(datos);
-	}
+			datos[0] = Integer.toString(personas.get(i).getIdPersona());
+			datos[1] = personas.get(i).getNombre();
+			datos[2] = personas.get(i).getApellido();
+			datos[3] = personas.get(i).getCantHijos().toString();
+			datos[4] = personas.get(i).getDptoResidencia();
+			datos[5] = personas.get(i).getFechaNacimiento().toString();
+			model.addRow(datos);
+		}
 
 	// --------------- Método Modificar Dato --------------------
 
