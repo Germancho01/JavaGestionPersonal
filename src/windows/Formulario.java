@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 
 import javax.swing.JTextField;
 
+import classes.Avion;
 import classes.Barco;
 import classes.Persona;
 import classes.Vehiculo;
@@ -250,6 +251,7 @@ public class Formulario extends JFrame {
 
 		ArrayList<Vehiculo> vehiculos = new ArrayList<Vehiculo>();
 		ArrayList<Barco> barcos = new ArrayList<Barco>();
+		ArrayList<Avion> aviones = new ArrayList<Avion>();
 
 		// extraer datos de los textField y almacenarlo en variables
 		nombre = textFieldNombre.getText();
@@ -267,7 +269,7 @@ public class Formulario extends JFrame {
 		}
 
 		// crear instancia de persona y la almacena en un arrayList
-		personas.add(new Persona(idPersona, nombre, apellido, dptoResidencia, cantHijos, fecNacimiento, vehiculos));
+		personas.add(new Persona(idPersona, nombre, apellido, dptoResidencia, cantHijos, fecNacimiento, vehiculos, barcos, aviones));
 
 		// resetear los componentes
 		resetearCampos();

@@ -23,6 +23,8 @@ import javax.swing.JButton;
 public class FormularioVehiculo extends JFrame {
 
 	private ArrayList<Vehiculo> vehiculos = new ArrayList<Vehiculo>();
+	private ArrayList<Barco> barcos = new ArrayList<Barco>();
+	private ArrayList<Avion> aviones = new ArrayList<Avion>();
 
 	private JPanel contentPane;
 	private JTextField textFieldNombre;
@@ -157,14 +159,16 @@ public class FormularioVehiculo extends JFrame {
 			eslora = Double.parseDouble(textFieldAtributo1.getText());
 			manga = Double.parseDouble(textFieldAtributo2.getText());
 			
-			Vehiculo barco = new Barco(idVehiculo, nombre, color, personas.get(fila), eslora, manga);
+			Barco barco = new Barco(idVehiculo, nombre, color, personas.get(fila), eslora, manga);
+			personas.get(fila).getBarcos().add(barco);
 			personas.get(fila).getVehiculos().add(barco);
 			
 		} else if (comboBoxTipo.getSelectedIndex() == 1) {
 			longitud = Double.parseDouble(textFieldAtributo1.getText());
 			cantPasajeros = Integer.parseInt(textFieldAtributo2.getText());
 
-			Vehiculo avion = new Avion(idVehiculo, nombre, color, null, longitud, cantPasajeros);
+			Avion avion = new Avion(idVehiculo, nombre, color, null, longitud, cantPasajeros);
+			personas.get(fila).getAviones().add(avion);
 			personas.get(fila).getVehiculos().add(avion);
 		}
 		

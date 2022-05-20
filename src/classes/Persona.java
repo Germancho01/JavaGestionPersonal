@@ -12,9 +12,11 @@ public class Persona {
 	public int idPersona;
 
 	private ArrayList<Vehiculo> vehiculos = new ArrayList<Vehiculo>();
+	private ArrayList<Barco> barcos = new ArrayList<Barco>();
+	private ArrayList<Avion> aviones = new ArrayList<Avion>();
 
 	public Persona(Integer idPersona, String nombre, String apellido, String dptoResidencia, Byte cantHijos,
-			LocalDate fechaNacimiento, ArrayList<Vehiculo> vehiculos) {
+			LocalDate fechaNacimiento, ArrayList<Vehiculo> vehiculos, ArrayList<Barco> barcos, ArrayList<Avion> aviones) {
 		super();
 
 		id++;
@@ -25,6 +27,8 @@ public class Persona {
 		this.cantHijos = cantHijos;
 		this.fechaNacimiento = fechaNacimiento;
 		this.vehiculos = vehiculos;
+		this.barcos = barcos;
+		this.aviones = aviones;
 	}
 
 	public Persona() {
@@ -35,7 +39,7 @@ public class Persona {
 	public String toString() {
 		return "---Persona--- " + "\nID Persona: " + idPersona + "\nDpto de Residencia: " + dptoResidencia
 				+ "\nCantidad de Hijos: " + cantHijos + "\nFecha de Nacimiento: " + fechaNacimiento + "\n"
-		// + this.getVehiculos().toString()
+				+ this.getVehiculos().toString()
 		;
 	}
 
@@ -101,6 +105,22 @@ public class Persona {
 
 	public void setVehiculos(ArrayList<Vehiculo> vehiculos) {
 		this.vehiculos = vehiculos;
+	}
+
+	public ArrayList<Barco> getBarcos() {
+		return barcos;
+	}
+
+	public void setBarcos(ArrayList<Barco> barcos) {
+		this.barcos = barcos;
+	}
+
+	public ArrayList<Avion> getAviones() {
+		return aviones;
+	}
+
+	public void setAviones(ArrayList<Avion> aviones) {
+		this.aviones = aviones;
 	}
 
 }

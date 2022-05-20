@@ -193,7 +193,8 @@ public class Listado extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int fila = table.getSelectedRow();
 
-				new ListadoVehiculo(personas.get(fila).getVehiculos(), personas);
+				new ListadoVehiculo(personas.get(fila).getVehiculos(), personas.get(fila).getBarcos(),
+						personas.get(fila).getAviones(), personas);
 				frame.setVisible(false);
 			}
 		});
@@ -224,7 +225,7 @@ public class Listado extends JFrame {
 		chckbxConHijos.setBounds(360, 436, 199, 23);
 		chckbxConHijos.setFocusable(false);
 		frame.getContentPane().add(chckbxConHijos);
-		
+
 		btnVolver = new JButton("Volver");
 		btnVolver.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
