@@ -1,6 +1,7 @@
 package classes;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class Persona {
 	
@@ -8,9 +9,10 @@ public class Persona {
 	private Byte cantHijos;
 	private LocalDate fechaNacimiento;
 	public int idPersona;
+	private ArrayList<Vehiculo> vehiculos = new ArrayList<Vehiculo>();
 	
 	public Persona(Integer idPersona,String nombre, String apellido, String dptoResidencia, 
-			Byte cantHijos, LocalDate fechaNacimiento) {
+			Byte cantHijos, LocalDate fechaNacimiento, ArrayList<Vehiculo> vehiculos) {
 		super();
 		
 		this.idPersona = idPersona;
@@ -19,6 +21,7 @@ public class Persona {
 		this.dptoResidencia = dptoResidencia;
 		this.cantHijos = cantHijos;
 		this.fechaNacimiento = fechaNacimiento;
+		this.vehiculos = vehiculos;
 	}
 	
 	public Persona() {
@@ -28,8 +31,14 @@ public class Persona {
 
 	@Override
 	public String toString() {
-		return "Persona [idPersona=" + idPersona  + ", dptoResidencia=" + dptoResidencia + ", cantHijos=" + cantHijos
-				+ ", fechaNacimiento=" + fechaNacimiento + "]";
+		return "---Persona--- "
+				+ "\nID Persona: " + idPersona  
+				+ "\nDpto de Residencia: " + dptoResidencia 
+				+ "\nCantidad de Hijos: " + cantHijos
+				+ "\nFecha de Nacimiento: " + fechaNacimiento
+				+ "\n"
+				+ this.getVehiculos().toString()
+				;
 	}
 
 	public int getIdPersona() {
@@ -73,6 +82,14 @@ public class Persona {
 	}
 	public void setId(int id) {
 		this.idPersona = id;
+	}
+
+	public ArrayList<Vehiculo> getVehiculos() {
+		return vehiculos;
+	}
+
+	public void setVehiculos(ArrayList<Vehiculo> vehiculos) {
+		this.vehiculos = vehiculos;
 	}
 
 	

@@ -3,12 +3,14 @@ package classes;
 public class Vehiculo {
 	public Integer idVehiculo;
 	public String nombre, color;
+	public Persona duenio;
 
-	public Vehiculo(Integer idVehiculo, String nombre, String color) {
+	public Vehiculo(Integer idVehiculo, String nombre, String color, Persona duenio) {
 		super();
 		this.idVehiculo = idVehiculo;
 		this.nombre = nombre;
 		this.color = color;
+		this.duenio = duenio;
 	}
 
 	public Integer getIdVehiculo() {
@@ -37,7 +39,10 @@ public class Vehiculo {
 
 	@Override
 	public String toString() {
-		return "Vehiculo [idVehiculo=" + idVehiculo + ", nombre=" + nombre + ", color=" + color + "]";
+		return "\n --- Vehiculo ---"
+				+ "\nidVehiculo=" + idVehiculo 
+				+ "\nnombre=" + nombre 
+				+ "\ncolor=" + color;
 	}
 
 }

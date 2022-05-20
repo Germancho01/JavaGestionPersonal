@@ -13,14 +13,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import org.w3c.dom.ls.LSOutput;
-
 import classes.Persona;
+import classes.Vehiculo;
 import exceptions.CellNoSelectedException;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class Listado extends JFrame {
+public class ListadoVehiculo extends JFrame {
 
 	private JFrame frame;
 	private JTable table;
@@ -28,21 +27,19 @@ public class Listado extends JFrame {
 	private String[] datos = new String[6];
 	private JCheckBox chckbxConHijos;
 	private JCheckBox chckbxMayoresDeEdad;
-	private JButton btnAgregarVehculo;
-	private JButton btnListarVehculo;
 
 	/**
 	 * Create the application.
 	 */
-	public Listado(ArrayList<Persona> personas) {
+	public ListadoVehiculo(ArrayList<Vehiculo> vehiculos) {
 
-		initialize(personas);
+		initialize(vehiculos);
 
 		limpiarTabla();
 
 		// Cargar todas las personas en la tabla
-		for (int i = 0; i < personas.size(); i++) {
-			cargarPersona(personas, i);
+		for (int i = 0; i < vehiculos.size(); i++) {
+			cargarPersona(vehiculos, i);
 		}
 
 	}
@@ -50,7 +47,7 @@ public class Listado extends JFrame {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize(ArrayList<Persona> personas) {
+	private void initialize(ArrayList<Vehiculo> vehiculos) {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 600, 622);
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -70,26 +67,26 @@ public class Listado extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				int fila = table.getSelectedRow();
 				if (e.getClickCount() == 2) {
-					JOptionPane.showMessageDialog(null, personas.get(fila).toString());
+					JOptionPane.showMessageDialog(null, vehiculos.get(fila).toString());
 				}
 			}
 		});
 
 		// se define el modelo por defecto de la tabla,
 		// se agrega nombre a las columnas y preferencias de la tabla
-		table.setModel(new DefaultTableModel(new Object[][] { { null, null, null, null, null, null }, },
-				new String[] { "ID", "Nombre", "Apellido", "Cantidad Hijos", "Dpto Residencia", "Fecha Nacimiento" }) {
-			Class[] columnTypes = new Class[] { String.class, String.class, String.class, String.class, String.class,
-					String.class };
-
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null, null},
+			},
+			new String[] {
+				"ID", "Nombre", "Color", "Tipo", "Atributo 1", "Atributo 2"
+			}
+		) {
+			Class[] columnTypes = new Class[] {
+				String.class, String.class, String.class, String.class, String.class, String.class
+			};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
-			}
-
-			boolean[] columnEditables = new boolean[] { false, false, false, false, false, false };
-
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
 			}
 		});
 		table.getColumnModel().getColumn(0).setPreferredWidth(40);
@@ -111,7 +108,7 @@ public class Listado extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// Eliminar registros con la excepción de celda no seleccionada
 				try {
-					eliminarPersona(personas);
+					eliminarPersona(vehiculos);
 				} catch (CellNoSelectedException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage());
 				}
@@ -127,7 +124,7 @@ public class Listado extends JFrame {
 		btnEliminarTodo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				limpiarTabla();
-				personas.clear(); // limpia el mapa de personas
+				vehiculos.clear(); // limpia el mapa de personas
 			}
 		});
 		btnEliminarTodo.setBounds(39, 366, 115, 23);
@@ -141,7 +138,7 @@ public class Listado extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// Modificar datos con la excepción de celda no seleccionada
 				try {
-					modificarDatos(personas);
+					modificarDatos(vehiculos);
 				} catch (CellNoSelectedException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage());
 				}
@@ -151,40 +148,13 @@ public class Listado extends JFrame {
 		btnModificar.setBounds(459, 41, 89, 23);
 		btnModificar.setFocusable(false);
 		frame.getContentPane().add(btnModificar);
-		
-		// --------------- Boton Agregar Vehiculos --------------------
-		
-		btnAgregarVehculo = new JButton("Agregar Veh\u00EDculo");
-		btnAgregarVehculo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int fila = table.getSelectedRow();
-				new FormularioVehiculo(personas, fila);
-			}
-		});
-		btnAgregarVehculo.setFocusable(false);
-		btnAgregarVehculo.setBounds(192, 41, 148, 23);
-		frame.getContentPane().add(btnAgregarVehculo);
-		
-		// --------------- Boton Listar Vehiculos --------------------
-		
-		btnListarVehculo = new JButton("Listar Veh\u00EDculo");
-		btnListarVehculo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int fila = table.getSelectedRow();
-				System.out.println(fila);
-				new ListadoVehiculo(personas.get(fila).getVehiculos());
-			}
-		});
-		btnListarVehculo.setFocusable(false);
-		btnListarVehculo.setBounds(39, 41, 130, 23);
-		frame.getContentPane().add(btnListarVehculo);
 
 		// --------------- CheckBox Mayores de Edad --------------------
 
 		chckbxMayoresDeEdad = new JCheckBox("Mostrar solo mayores de edad");
 		chckbxMayoresDeEdad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				filtros(personas);
+				//filtros(vehiculos);
 			}
 		});
 		chckbxMayoresDeEdad.setBounds(29, 535, 229, 23);
@@ -196,7 +166,7 @@ public class Listado extends JFrame {
 		chckbxConHijos = new JCheckBox("Mostrar solo personas con hijos");
 		chckbxConHijos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				filtros(personas);
+				//filtros(vehiculos);
 			}
 		});
 		chckbxConHijos.setBounds(283, 535, 229, 23);
@@ -208,23 +178,23 @@ public class Listado extends JFrame {
 	 * Create methods.
 	 */
 
-	// --------------- Método Cargar Persona --------------------
+	// --------------- Método Cargar Vehiculo --------------------
 
-	public void cargarPersona(ArrayList<Persona> personas, int i) {
+	public void cargarPersona(ArrayList<Vehiculo> vehiculos, int i) {
 
-		datos[0] = Integer.toString(personas.get(i).getId());
-		datos[1] = personas.get(i).getNombre();
-		datos[2] = personas.get(i).getApellido();
-		datos[3] = personas.get(i).getCantHijos().toString();
-		datos[4] = personas.get(i).getDptoResidencia();
-		datos[5] = personas.get(i).getFechaNacimiento().toString();
+		datos[0] = Integer.toString(vehiculos.get(i).getIdVehiculo());
+		datos[1] = vehiculos.get(i).getNombre();
+		datos[2] = vehiculos.get(i).getColor();
+		datos[3] = null;
+		datos[4] = null;
+		datos[5] = null;
 		model.addRow(datos);
 	}
 
 	// --------------- Método Modificar Dato --------------------
 
-	public void modificarDatos(ArrayList<Persona> personas) throws CellNoSelectedException {
-		
+	public void modificarDatos(ArrayList<Vehiculo> vehiculos) throws CellNoSelectedException {
+
 		int fila = table.getSelectedRow(); // obtener celda seleccionada
 		int columna = table.getSelectedColumn(); // obtener columna seleccionada
 
@@ -236,44 +206,42 @@ public class Listado extends JFrame {
 		// modificar los datos dependiendo de la columna seleccionada
 		if (columna == 1) {
 			String nuevoNombre = JOptionPane.showInputDialog("Ingrese nuevo nombre: ");
-			personas.get(fila).setNombre(nuevoNombre); // cambia el valor de la persona en el mapa personas
+			vehiculos.get(fila).setNombre(nuevoNombre); // cambia el valor de la persona en el mapa personas
 			table.setValueAt(nuevoNombre, fila, 1); // setea el nuevo valor en la tabla, en la fila y columna
 													// seleccionadas
 		} else if (columna == 2) {
-			String nuevoApellido = JOptionPane.showInputDialog("Ingrese nuevo apellido: ");
-			personas.get(fila).setApellido(nuevoApellido);
-			table.setValueAt(nuevoApellido, fila, 2);
+			JOptionPane.showMessageDialog(null, "No es posible cambiar el tipo de vehículo.");
 		} else if (columna == 3) {
 			try {
-				Byte nuevoCantHijos = Byte.parseByte(JOptionPane.showInputDialog("Ingrese cantidad de hijos: "));
-				personas.get(fila).setCantHijos(nuevoCantHijos);
-				table.setValueAt(nuevoCantHijos, fila, 3);
+				//Byte nuevoCantHijos = Byte.parseByte(JOptionPane.showInputDialog("Ingrese cantidad de hijos: "));
+				//vehiculos.get(fila).setCantHijos(nuevoCantHijos);
+				//table.setValueAt(nuevoCantHijos, fila, 3);
 			} catch (Exception e2) {
 				JOptionPane.showMessageDialog(null, "Formato de dato inválido.");
 			}
 
 		} else if (columna == 4) {
-			String nuevoDptoResidencia = JOptionPane.showInputDialog("Ingrese nuevo dpto de residencia: ");
-			personas.get(fila).setDptoResidencia(nuevoDptoResidencia);
-			table.setValueAt(nuevoDptoResidencia, fila, 4);
+			//String nuevoDptoResidencia = JOptionPane.showInputDialog("Ingrese nuevo dpto de residencia: ");
+			//vehiculos.get(fila).setNombre(nuevoDptoResidencia);
+			//table.setValueAt(nuevoDptoResidencia, fila, 4);
 		} else if (columna == 5) {
 			// modifica la fecha de nacimiento con un Exeption,
 			// en caso de que el formato de la fecha no sea correcto
-			try {
-				String nuevoDateString = JOptionPane.showInputDialog("Ingrese nueva fecha: ");
-				LocalDate nuevoDate = LocalDate.parse(nuevoDateString); // transforma el String ingresado en un tipo
+			//try {
+				//String nuevoDateString = JOptionPane.showInputDialog("Ingrese nueva fecha: ");
+				//LocalDate nuevoDate = LocalDate.parse(nuevoDateString); // transforma el String ingresado en un tipo
 																		// LocalDate
-				personas.get(fila).setFechaNacimiento(nuevoDate);
-				table.setValueAt(nuevoDate, fila, 5);
-			} catch (Exception e2) {
-				JOptionPane.showMessageDialog(null, "Formato de fecha inválido. Use: yyyy-mm-dd");
-			}
+				//vehiculos.get(fila).setFechaNacimiento(nuevoDate);
+				//table.setValueAt(nuevoDate, fila, 5);
+			//} catch (Exception e2) {
+				//JOptionPane.showMessageDialog(null, "Formato de fecha inválido. Use: yyyy-mm-dd");
+			//}
 		}
 	}
 
-	// --------------- Método Eliminar Persona Seleccionada --------------------
+	// --------------- Método Eliminar Vehiculo Seleccionado --------------------
 
-	public void eliminarPersona(ArrayList<Persona> personas) throws CellNoSelectedException {
+	public void eliminarPersona(ArrayList<Vehiculo> vehiculos) throws CellNoSelectedException {
 		int fila = table.getSelectedRow();
 
 		if (fila < 0) {
@@ -281,7 +249,7 @@ public class Listado extends JFrame {
 		}
 
 		model.removeRow(fila); // elimina fila de la tabla
-		personas.remove(fila); // elima persona en el arrayList
+		vehiculos.remove(fila); // elima persona en el arrayList
 	}
 
 	// --------------- Método Limpiar Tabla --------------------
@@ -290,49 +258,6 @@ public class Listado extends JFrame {
 		int filas = table.getRowCount(); // obtener cantidad de filas de la tabla
 		for (int i = filas - 1; i >= 0; i--) {
 			model.removeRow(i); // eliminar fila de la tabal en i
-		}
-	}
-
-	// --------------- Método Filtros --------------------
-
-	// filtros de los checkBox
-	public void filtros(ArrayList<Persona> personas) {
-		limpiarTabla();
-
-		if (chckbxMayoresDeEdad.isSelected() && chckbxConHijos.isSelected()) {
-			LocalDate hoy = LocalDate.now();
-
-			for (int i = 0; i < personas.size(); i++) {
-				boolean esMayor = personas.get(i).getFechaNacimiento().isBefore(hoy.plusYears(-18));
-				boolean tieneHijos = personas.get(i).getCantHijos() > 0;
-
-				if (esMayor && tieneHijos) {
-					cargarPersona(personas, i);
-				}
-			}
-
-		} else if (chckbxMayoresDeEdad.isSelected() && !chckbxConHijos.isSelected()) {
-			LocalDate hoy = LocalDate.now();
-
-			for (int i = 0; i < personas.size(); i++) {
-
-				if (personas.get(i).getFechaNacimiento().isBefore(hoy.plusYears(-18))) {
-					cargarPersona(personas, i);
-				}
-			}
-
-		} else if (!chckbxMayoresDeEdad.isSelected() && chckbxConHijos.isSelected()) {
-			for (int i = 0; i < personas.size(); i++) {
-
-				if (personas.get(i).getCantHijos() > 0) {
-					cargarPersona(personas, i);
-				}
-			}
-
-		} else if (!chckbxMayoresDeEdad.isSelected() && !chckbxConHijos.isSelected()) {
-			for (int i = 0; i < personas.size(); i++) {
-				cargarPersona(personas, i);
-			}
 		}
 	}
 

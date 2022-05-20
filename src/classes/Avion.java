@@ -5,8 +5,8 @@ public class Avion extends Vehiculo {
 	public Double longitud;
 	public Integer cantPasajeros;
 
-	public Avion(Integer idVehiculo, String nombre, String color, Double longitud, Integer cantPasajeros) {
-		super(idVehiculo, nombre, color);
+	public Avion(Integer idVehiculo, String nombre, String color, Persona duenio, Double longitud, Integer cantPasajeros) {
+		super(idVehiculo, nombre, color, duenio);
 		this.longitud = longitud;
 		this.cantPasajeros = cantPasajeros;
 	}
