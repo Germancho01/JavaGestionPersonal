@@ -179,8 +179,11 @@ public class Listado extends JFrame {
 		btnAgregarVehculo = new JButton("Agregar Veh\u00EDculo");
 		btnAgregarVehculo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int fila = table.getSelectedRow();
-				new FormularioVehiculo(personas, fila);
+				try {
+					agregarVehiculo(personas);
+				} catch (CellNoSelectedException e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage());
+				}
 			}
 		});
 		btnAgregarVehculo.setFocusable(false);
@@ -335,6 +338,18 @@ public class Listado extends JFrame {
 		personas.remove(fila); // elima persona en el arrayList
 	}
 
+	// --------------- Método Agregar Vehiculo --------------------
+
+		public void agregarVehiculo(ArrayList<Persona> personas) throws CellNoSelectedException {
+			int fila = table.getSelectedRow();
+
+			if (fila < 0) {
+				throw new CellNoSelectedException();
+			}
+
+			new FormularioVehiculo(personas, fila);
+			
+		}
 	// --------------- Método Limpiar Tabla --------------------
 
 	public void limpiarTabla() {
