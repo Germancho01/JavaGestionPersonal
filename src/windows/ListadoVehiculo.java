@@ -2,7 +2,6 @@ package windows;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -13,6 +12,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import classes.Barco;
 import classes.Persona;
 import classes.Vehiculo;
 import exceptions.CellNoSelectedException;
@@ -21,23 +21,30 @@ import java.awt.event.MouseEvent;
 
 public class ListadoVehiculo extends JFrame {
 
+	private String[] datos = new String[6];
+
 	private JFrame frame;
+
 	private JTable table;
 	private DefaultTableModel model;
-	private String[] datos = new String[6];
-	private JCheckBox chckbxConHijos;
-	private JCheckBox chckbxMayoresDeEdad;
+
+	private JCheckBox chckbxAviones;
+	private JCheckBox chckbxBarcos;
+	private JButton btnVolver;
 
 	/**
+	 * 
 	 * Create the application.
+	 * 
 	 */
-	public ListadoVehiculo(ArrayList<Vehiculo> vehiculos) {
 
-		initialize(vehiculos);
+	public ListadoVehiculo(ArrayList<Vehiculo> vehiculos, ArrayList<Persona> personas) {
+
+		initialize(vehiculos, personas);
 
 		limpiarTabla();
 
-		// Cargar todas las personas en la tabla
+		// Cargar todos los vehiculos de la persona en la tabla
 		for (int i = 0; i < vehiculos.size(); i++) {
 			cargarPersona(vehiculos, i);
 		}
@@ -45,19 +52,23 @@ public class ListadoVehiculo extends JFrame {
 	}
 
 	/**
+	 * 
 	 * Initialize the contents of the frame.
+	 * 
 	 */
-	private void initialize(ArrayList<Vehiculo> vehiculos) {
+
+	private void initialize(ArrayList<Vehiculo> vehiculos, ArrayList<Persona> personas) {
+
 		frame = new JFrame();
-		frame.setBounds(100, 100, 600, 622);
-		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		frame.setBounds(100, 100, 600, 376);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setVisible(true);
 
 		// --------------- Table --------------------
 
 		JScrollPane scrollPane = new JScrollPane(); // nuevo scroll pane
-		scrollPane.setBounds(29, 75, 530, 280); // setea las coordenadas de la tabla y su tamaño
+		scrollPane.setBounds(29, 75, 530, 154); // setea las coordenadas de la tabla y su tamaño
 		frame.getContentPane().add(scrollPane); // agrega el scroll pane al panel
 
 		table = new JTable(); // nueva tabla
@@ -79,7 +90,7 @@ public class ListadoVehiculo extends JFrame {
 				{null, null, null, null, null, null},
 			},
 			new String[] {
-				"ID", "Nombre", "Color", "Tipo", "Atributo 1", "Atributo 2"
+				"ID", "Nombre", "Color", "Tipo", "Eslora / Longitud", "Manga / Cant Pasajeros"
 			}
 		) {
 			Class[] columnTypes = new Class[] {
@@ -91,10 +102,9 @@ public class ListadoVehiculo extends JFrame {
 		});
 		table.getColumnModel().getColumn(0).setPreferredWidth(40);
 		table.getColumnModel().getColumn(1).setPreferredWidth(100);
-		table.getColumnModel().getColumn(2).setPreferredWidth(100);
-		table.getColumnModel().getColumn(3).setPreferredWidth(100);
-		table.getColumnModel().getColumn(4).setPreferredWidth(110);
-		table.getColumnModel().getColumn(5).setPreferredWidth(110);
+		table.getColumnModel().getColumn(3).setPreferredWidth(73);
+		table.getColumnModel().getColumn(4).setPreferredWidth(105);
+		table.getColumnModel().getColumn(5).setPreferredWidth(140);
 
 		scrollPane.setViewportView(table); // se agrega la tabla al scroll pane
 
@@ -124,10 +134,10 @@ public class ListadoVehiculo extends JFrame {
 		btnEliminarTodo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				limpiarTabla();
-				vehiculos.clear(); // limpia el mapa de personas
+				vehiculos.clear(); // limpia el arrayList vehiculos
 			}
 		});
-		btnEliminarTodo.setBounds(39, 366, 115, 23);
+		btnEliminarTodo.setBounds(235, 41, 115, 23);
 		btnEliminarTodo.setFocusable(false);
 		frame.getContentPane().add(btnEliminarTodo);
 
@@ -149,43 +159,69 @@ public class ListadoVehiculo extends JFrame {
 		btnModificar.setFocusable(false);
 		frame.getContentPane().add(btnModificar);
 
-		// --------------- CheckBox Mayores de Edad --------------------
-
-		chckbxMayoresDeEdad = new JCheckBox("Mostrar solo mayores de edad");
-		chckbxMayoresDeEdad.addActionListener(new ActionListener() {
+		// --------------- Botón Volver --------------------
+		btnVolver = new JButton("Volver");
+		btnVolver.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//filtros(vehiculos);
+				new Listado(personas);
+				frame.setVisible(false);
 			}
 		});
-		chckbxMayoresDeEdad.setBounds(29, 535, 229, 23);
-		chckbxMayoresDeEdad.setFocusable(false);
-		frame.getContentPane().add(chckbxMayoresDeEdad);
+		btnVolver.setFocusable(false);
+		btnVolver.setBounds(29, 291, 115, 23);
+		frame.getContentPane().add(btnVolver);
+
+		// --------------- CheckBox Mayores de Edad --------------------
+
+		chckbxBarcos = new JCheckBox("Barcos");
+		chckbxBarcos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// filtros(vehiculos);
+			}
+		});
+		chckbxBarcos.setBounds(451, 236, 97, 23);
+		chckbxBarcos.setFocusable(false);
+		frame.getContentPane().add(chckbxBarcos);
 
 		// --------------- CheckBox Solo con Hijos --------------------
 
-		chckbxConHijos = new JCheckBox("Mostrar solo personas con hijos");
-		chckbxConHijos.addActionListener(new ActionListener() {
+		chckbxAviones = new JCheckBox("Aviones");
+		chckbxAviones.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//filtros(vehiculos);
+				// filtros(vehiculos);
 			}
 		});
-		chckbxConHijos.setBounds(283, 535, 229, 23);
-		chckbxConHijos.setFocusable(false);
-		frame.getContentPane().add(chckbxConHijos);
+		chckbxAviones.setBounds(451, 262, 97, 23);
+		chckbxAviones.setFocusable(false);
+		frame.getContentPane().add(chckbxAviones);
+
 	}
 
 	/**
+	 * 
 	 * Create methods.
+	 * 
 	 */
 
 	// --------------- Método Cargar Vehiculo --------------------
 
 	public void cargarPersona(ArrayList<Vehiculo> vehiculos, int i) {
+		String tipo;
+		String eslora;
+		String manga;
+		String longitud;
+		String cantPasajeros;
+
+		if (vehiculos.get(i) instanceof Barco) {
+			tipo = "Barco";
+		} else {
+			tipo = "Avión";
+		}
 
 		datos[0] = Integer.toString(vehiculos.get(i).getIdVehiculo());
 		datos[1] = vehiculos.get(i).getNombre();
 		datos[2] = vehiculos.get(i).getColor();
-		datos[3] = null;
+		datos[3] = tipo;
 		datos[4] = null;
 		datos[5] = null;
 		model.addRow(datos);
@@ -206,36 +242,35 @@ public class ListadoVehiculo extends JFrame {
 		// modificar los datos dependiendo de la columna seleccionada
 		if (columna == 1) {
 			String nuevoNombre = JOptionPane.showInputDialog("Ingrese nuevo nombre: ");
-			vehiculos.get(fila).setNombre(nuevoNombre); // cambia el valor de la persona en el mapa personas
-			table.setValueAt(nuevoNombre, fila, 1); // setea el nuevo valor en la tabla, en la fila y columna
-													// seleccionadas
+			vehiculos.get(fila).setNombre(nuevoNombre);
+			table.setValueAt(nuevoNombre, fila, 1);
 		} else if (columna == 2) {
-			JOptionPane.showMessageDialog(null, "No es posible cambiar el tipo de vehículo.");
+			String nuevoColor = JOptionPane.showInputDialog("Ingrese nuevo color: ");
+			vehiculos.get(fila).setNombre(nuevoColor);
+			table.setValueAt(nuevoColor, fila, 2);
 		} else if (columna == 3) {
-			try {
-				//Byte nuevoCantHijos = Byte.parseByte(JOptionPane.showInputDialog("Ingrese cantidad de hijos: "));
-				//vehiculos.get(fila).setCantHijos(nuevoCantHijos);
-				//table.setValueAt(nuevoCantHijos, fila, 3);
-			} catch (Exception e2) {
-				JOptionPane.showMessageDialog(null, "Formato de dato inválido.");
-			}
+			JOptionPane.showMessageDialog(null, "No es posible modificar el tipo de vehículo.");
 
 		} else if (columna == 4) {
-			//String nuevoDptoResidencia = JOptionPane.showInputDialog("Ingrese nuevo dpto de residencia: ");
-			//vehiculos.get(fila).setNombre(nuevoDptoResidencia);
-			//table.setValueAt(nuevoDptoResidencia, fila, 4);
+			// String nuevoDptoResidencia = JOptionPane.showInputDialog("Ingrese nuevo dpto
+			// de residencia: ");
+			// vehiculos.get(fila).setNombre(nuevoDptoResidencia);
+			// table.setValueAt(nuevoDptoResidencia, fila, 4);
 		} else if (columna == 5) {
 			// modifica la fecha de nacimiento con un Exeption,
 			// en caso de que el formato de la fecha no sea correcto
-			//try {
-				//String nuevoDateString = JOptionPane.showInputDialog("Ingrese nueva fecha: ");
-				//LocalDate nuevoDate = LocalDate.parse(nuevoDateString); // transforma el String ingresado en un tipo
-																		// LocalDate
-				//vehiculos.get(fila).setFechaNacimiento(nuevoDate);
-				//table.setValueAt(nuevoDate, fila, 5);
-			//} catch (Exception e2) {
-				//JOptionPane.showMessageDialog(null, "Formato de fecha inválido. Use: yyyy-mm-dd");
-			//}
+			// try {
+			// String nuevoDateString = JOptionPane.showInputDialog("Ingrese nueva fecha:
+			// ");
+			// LocalDate nuevoDate = LocalDate.parse(nuevoDateString); // transforma el
+			// String ingresado en un tipo
+			// LocalDate
+			// vehiculos.get(fila).setFechaNacimiento(nuevoDate);
+			// table.setValueAt(nuevoDate, fila, 5);
+			// } catch (Exception e2) {
+			// JOptionPane.showMessageDialog(null, "Formato de fecha inválido. Use:
+			// yyyy-mm-dd");
+			// }
 		}
 	}
 
@@ -249,7 +284,7 @@ public class ListadoVehiculo extends JFrame {
 		}
 
 		model.removeRow(fila); // elimina fila de la tabla
-		vehiculos.remove(fila); // elima persona en el arrayList
+		vehiculos.remove(fila); // elima vehiculo en el arrayList
 	}
 
 	// --------------- Método Limpiar Tabla --------------------

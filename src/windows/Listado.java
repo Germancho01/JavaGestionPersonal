@@ -13,8 +13,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import org.w3c.dom.ls.LSOutput;
-
 import classes.Persona;
 import exceptions.CellNoSelectedException;
 import java.awt.event.MouseAdapter;
@@ -22,17 +20,34 @@ import java.awt.event.MouseEvent;
 
 public class Listado extends JFrame {
 
+	/*
+	 * 
+	 * Declare variables.
+	 * 
+	 */
+
+	private String[] datos = new String[6];
+
+	// --- Frame ---
 	private JFrame frame;
+
+	// --- Table ---
 	private JTable table;
 	private DefaultTableModel model;
-	private String[] datos = new String[6];
-	private JCheckBox chckbxConHijos;
-	private JCheckBox chckbxMayoresDeEdad;
+
+	// --- Button ----
 	private JButton btnAgregarVehculo;
 	private JButton btnListarVehculo;
 
+	// --- Check Box ----
+	private JCheckBox chckbxConHijos;
+	private JCheckBox chckbxMayoresDeEdad;
+	private JButton btnVolver;
+
 	/**
+	 * 
 	 * Create the application.
+	 * 
 	 */
 	public Listado(ArrayList<Persona> personas) {
 
@@ -48,12 +63,15 @@ public class Listado extends JFrame {
 	}
 
 	/**
+	 * 
 	 * Initialize the contents of the frame.
+	 * 
 	 */
+
 	private void initialize(ArrayList<Persona> personas) {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 600, 622);
-		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setVisible(true);
 
@@ -64,6 +82,7 @@ public class Listado extends JFrame {
 		frame.getContentPane().add(scrollPane); // agrega el scroll pane al panel
 
 		table = new JTable(); // nueva tabla
+
 		// action doble click del mouse
 		table.addMouseListener(new MouseAdapter() {
 			@Override
@@ -92,6 +111,8 @@ public class Listado extends JFrame {
 				return columnEditables[column];
 			}
 		});
+
+		// ancho por defecto de las columnas
 		table.getColumnModel().getColumn(0).setPreferredWidth(40);
 		table.getColumnModel().getColumn(1).setPreferredWidth(100);
 		table.getColumnModel().getColumn(2).setPreferredWidth(100);
@@ -127,7 +148,7 @@ public class Listado extends JFrame {
 		btnEliminarTodo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				limpiarTabla();
-				personas.clear(); // limpia el mapa de personas
+				personas.clear(); // limpia el arrayList de personas
 			}
 		});
 		btnEliminarTodo.setBounds(39, 366, 115, 23);
@@ -151,9 +172,9 @@ public class Listado extends JFrame {
 		btnModificar.setBounds(459, 41, 89, 23);
 		btnModificar.setFocusable(false);
 		frame.getContentPane().add(btnModificar);
-		
+
 		// --------------- Boton Agregar Vehiculos --------------------
-		
+
 		btnAgregarVehculo = new JButton("Agregar Veh\u00EDculo");
 		btnAgregarVehculo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -164,15 +185,16 @@ public class Listado extends JFrame {
 		btnAgregarVehculo.setFocusable(false);
 		btnAgregarVehculo.setBounds(192, 41, 148, 23);
 		frame.getContentPane().add(btnAgregarVehculo);
-		
+
 		// --------------- Boton Listar Vehiculos --------------------
-		
+
 		btnListarVehculo = new JButton("Listar Veh\u00EDculo");
 		btnListarVehculo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int fila = table.getSelectedRow();
-				System.out.println(fila);
-				new ListadoVehiculo(personas.get(fila).getVehiculos());
+
+				new ListadoVehiculo(personas.get(fila).getVehiculos(), personas);
+				frame.setVisible(false);
 			}
 		});
 		btnListarVehculo.setFocusable(false);
@@ -181,38 +203,51 @@ public class Listado extends JFrame {
 
 		// --------------- CheckBox Mayores de Edad --------------------
 
-		chckbxMayoresDeEdad = new JCheckBox("Mostrar solo mayores de edad");
+		chckbxMayoresDeEdad = new JCheckBox("Personas mayores de edad");
 		chckbxMayoresDeEdad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				filtros(personas);
 			}
 		});
-		chckbxMayoresDeEdad.setBounds(29, 535, 229, 23);
+		chckbxMayoresDeEdad.setBounds(360, 400, 199, 23);
 		chckbxMayoresDeEdad.setFocusable(false);
 		frame.getContentPane().add(chckbxMayoresDeEdad);
 
 		// --------------- CheckBox Solo con Hijos --------------------
 
-		chckbxConHijos = new JCheckBox("Mostrar solo personas con hijos");
+		chckbxConHijos = new JCheckBox("Personas con hijos");
 		chckbxConHijos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				filtros(personas);
 			}
 		});
-		chckbxConHijos.setBounds(283, 535, 229, 23);
+		chckbxConHijos.setBounds(360, 436, 199, 23);
 		chckbxConHijos.setFocusable(false);
 		frame.getContentPane().add(chckbxConHijos);
+		
+		btnVolver = new JButton("Volver");
+		btnVolver.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new Formulario(personas);
+				frame.setVisible(false);
+			}
+		});
+		btnVolver.setFocusable(false);
+		btnVolver.setBounds(444, 549, 115, 23);
+		frame.getContentPane().add(btnVolver);
 	}
 
 	/**
+	 * 
 	 * Create methods.
+	 * 
 	 */
 
 	// --------------- Método Cargar Persona --------------------
 
 	public void cargarPersona(ArrayList<Persona> personas, int i) {
 
-		datos[0] = Integer.toString(personas.get(i).getId());
+		datos[0] = Integer.toString(personas.get(i).getIdPersona());
 		datos[1] = personas.get(i).getNombre();
 		datos[2] = personas.get(i).getApellido();
 		datos[3] = personas.get(i).getCantHijos().toString();
@@ -224,8 +259,8 @@ public class Listado extends JFrame {
 	// --------------- Método Modificar Dato --------------------
 
 	public void modificarDatos(ArrayList<Persona> personas) throws CellNoSelectedException {
-		
-		int fila = table.getSelectedRow(); // obtener celda seleccionada
+
+		int fila = table.getSelectedRow(); // obtener fila seleccionada
 		int columna = table.getSelectedColumn(); // obtener columna seleccionada
 
 		// Excepción en caso de que no se seleccione ninguna fila
@@ -236,7 +271,7 @@ public class Listado extends JFrame {
 		// modificar los datos dependiendo de la columna seleccionada
 		if (columna == 1) {
 			String nuevoNombre = JOptionPane.showInputDialog("Ingrese nuevo nombre: ");
-			personas.get(fila).setNombre(nuevoNombre); // cambia el valor de la persona en el mapa personas
+			personas.get(fila).setNombre(nuevoNombre); // cambia el valor de la persona en el arrayList personas
 			table.setValueAt(nuevoNombre, fila, 1); // setea el nuevo valor en la tabla, en la fila y columna
 													// seleccionadas
 		} else if (columna == 2) {

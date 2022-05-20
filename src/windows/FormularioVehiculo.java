@@ -9,8 +9,10 @@ import classes.Avion;
 import classes.Barco;
 import classes.Persona;
 import classes.Vehiculo;
+import exceptions.FieldNoCompletedException;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
@@ -29,7 +31,8 @@ public class FormularioVehiculo extends JFrame {
 	private JTextField textFieldAtributo2;
 	JComboBox comboBoxTipo;
 	private String nombre, color;
-	private Integer cantPasajeros, idVehiculo = 0;
+	private Integer cantPasajeros;
+	private Integer idVehiculo;
 	private double manga, eslora, longitud;
 
 	/**
@@ -96,8 +99,14 @@ public class FormularioVehiculo extends JFrame {
 		JButton btnAgregar = new JButton("Agregar");
 		btnAgregar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ingresarDatos(personas, fila);
-				vaciarCampos();
+				try {
+					ingresarDatos(personas, fila);
+				}catch (FieldNoCompletedException e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage());
+				} catch (Exception e2) {
+					JOptionPane.showMessageDialog(null, "Revise que haya ingresado correctamente todos los datos.");
+				}
+				
 			}
 		});
 		btnAgregar.setBounds(54, 207, 89, 23);
@@ -135,9 +144,14 @@ public class FormularioVehiculo extends JFrame {
 
 	// ----------- Método Ingresar Datos ----------
 
-	private void ingresarDatos(ArrayList<Persona> personas, int fila) {
+	private void ingresarDatos(ArrayList<Persona> personas, int fila) throws FieldNoCompletedException{
 		nombre = textFieldNombre.getText();
 		color = textFieldColor.getText();
+		idVehiculo = Vehiculo.getId();
+		
+		if (nombre.isEmpty() || color.isEmpty()) {
+			throw new FieldNoCompletedException();
+		}
 
 		if (comboBoxTipo.getSelectedIndex() == 0) {
 			eslora = Double.parseDouble(textFieldAtributo1.getText());
@@ -154,8 +168,7 @@ public class FormularioVehiculo extends JFrame {
 			personas.get(fila).getVehiculos().add(avion);
 		}
 		
-		idVehiculo++;
-		System.out.println(idVehiculo);
+		vaciarCampos();
 	}
 
 	// ----------- Método Vaciar Campos ----------

@@ -7,6 +7,7 @@ public class Avion extends Vehiculo {
 
 	public Avion(Integer idVehiculo, String nombre, String color, Persona duenio, Double longitud, Integer cantPasajeros) {
 		super(idVehiculo, nombre, color, duenio);
+		
 		this.longitud = longitud;
 		this.cantPasajeros = cantPasajeros;
 	}

@@ -4,13 +4,23 @@ public class Vehiculo {
 	public Integer idVehiculo;
 	public String nombre, color;
 	public Persona duenio;
+	public static int id;
 
 	public Vehiculo(Integer idVehiculo, String nombre, String color, Persona duenio) {
 		super();
+		id++;
 		this.idVehiculo = idVehiculo;
 		this.nombre = nombre;
 		this.color = color;
 		this.duenio = duenio;
+	}
+
+	public static int getId() {
+		return id;
+	}
+
+	public static void setId(int id) {
+		Vehiculo.id = id;
 	}
 
 	public Integer getIdVehiculo() {
@@ -37,12 +47,17 @@ public class Vehiculo {
 		this.color = color;
 	}
 
+	public Persona getDuenio() {
+		return duenio;
+	}
+
+	public void setDuenio(Persona duenio) {
+		this.duenio = duenio;
+	}
+
 	@Override
 	public String toString() {
-		return "\n --- Vehiculo ---"
-				+ "\nidVehiculo=" + idVehiculo 
-				+ "\nnombre=" + nombre 
-				+ "\ncolor=" + color;
+		return "\n --- Vehiculo ---" + "\nidVehiculo=" + idVehiculo + "\nnombre=" + nombre + "\ncolor=" + color;
 	}
 
 }

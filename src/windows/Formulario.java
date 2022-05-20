@@ -6,8 +6,10 @@ import javax.swing.JOptionPane;
 
 import javax.swing.JTextField;
 
+import classes.Barco;
 import classes.Persona;
 import classes.Vehiculo;
+import exceptions.FieldNoCompletedException;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -27,42 +29,38 @@ public class Formulario extends JFrame {
 	 * Declare Variables.
 	 * 
 	 */
-	
-	private ArrayList<Persona> personas = new ArrayList<Persona>();
-	
+
 	private String nombre, apellido, dptoResidencia;
 	private Byte cantHijos;
 	private LocalDate fecNacimiento;
 	private Integer anio, mes, dia;
-	private Integer id = 0;
-	
+	private Integer idPersona;
+
 	// --- Frame
 	private JFrame frmFormulario;
-	
+
 	// ---TextFields
 	private JTextField textFieldNombre;
 	private JTextField textFieldApellido;
 	private JTextField textFieldDptoResidencia;
 	private JTextField textFieldCantHijos;
-	
-	
+
 	// ---ComboBox
 	private JComboBox<String> comboBoxDia;
 	private JComboBox<String> comboBoxMes;
 	private JComboBox<String> comboBoxAnio;
-	
+
 	// --- Button
 	private JButton btnAgregar;
 	private JButton btnListar;
-	
 
 	/**
 	 * 
 	 * Create the application.
 	 * 
 	 */
-	public Formulario() {
-		initialize();
+	public Formulario(ArrayList<Persona> personas) {
+		initialize(personas);
 	}
 
 	/**
@@ -70,7 +68,7 @@ public class Formulario extends JFrame {
 	 * Initialize the contents of the frame.
 	 * 
 	 */
-	private void initialize() {
+	private void initialize(ArrayList<Persona> personas) {
 
 		// --------------- Frame --------------------
 
@@ -81,12 +79,12 @@ public class Formulario extends JFrame {
 				Toolkit.getDefaultToolkit().getImage(Formulario.class.getResource("/images/logoPerson.png")));
 		frmFormulario.getContentPane().setForeground(SystemColor.textHighlight); // color del JPane
 		frmFormulario.setBounds(0, 0, 600, 284); // tamaño del frame
-		frmFormulario.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // purgar el frame al apretar x
+		frmFormulario.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // esconder ventana al apretar cerrar
 		frmFormulario.setLocationRelativeTo(null); // aparecer frame en el centro de la pantalla
 		frmFormulario.setVisible(true); // hacer visible el frame
 		frmFormulario.setResizable(false); // impide que se cambie el tamaño del frame
 		frmFormulario.getContentPane().setLayout(null);
-		
+
 		// --------------- Labels --------------------
 
 		JLabel lblNombre = new JLabel("Nombre"); // nueva JLabel
@@ -138,19 +136,22 @@ public class Formulario extends JFrame {
 		// Agregar función al botón
 		btnAgregar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// ingresar datos con las excepciones de text fields no completados y comboboxes
-				// no seleccionados
+				// ingresar datos con las excepciones de text fields no completados
 				try {
-					ingresarDatos();
+					ingresarDatos(personas);
 				} catch (NumberFormatException e2) {
 					JOptionPane.showMessageDialog(null, "Revise que haya ingresado correctamente todos los datos.");
+				} catch (FieldNoCompletedException e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage());
+				} catch (Exception e2) {
+					JOptionPane.showMessageDialog(null, "ERROR!\nAlgo ha salido mal.");
 				}
 			}
 		});
 		btnAgregar.setBounds(470, 185, 89, 23); // setea las coordenadas y tamaño del botón
 		btnAgregar.setFocusable(false); // quita el recuadro en el texto cuando se selecciona el botón
 		frmFormulario.getContentPane().add(btnAgregar); // agregar botón al panel
-		
+
 		// --------------- Botón Listar --------------------
 
 		btnListar = new JButton("Listar");
@@ -161,8 +162,21 @@ public class Formulario extends JFrame {
 			}
 		});
 		btnListar.setFocusable(false);
-		btnListar.setBounds(20, 185, 89, 23);
+		btnListar.setBounds(371, 185, 89, 23);
 		frmFormulario.getContentPane().add(btnListar);
+
+		// --------------- Botón Volver --------------------
+
+		JButton btnVolver = new JButton("Volver");
+		btnVolver.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new Inicio(personas);
+				frmFormulario.setVisible(false);
+			}
+		});
+		btnVolver.setFocusable(false);
+		btnVolver.setBounds(29, 185, 89, 23);
+		frmFormulario.getContentPane().add(btnVolver);
 
 		// --------------- ComboBox Dia --------------------
 
@@ -174,16 +188,10 @@ public class Formulario extends JFrame {
 		comboBoxDia = new JComboBox<String>(); // nuevo comboBox con Items tipo String
 		comboBoxDia.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Obtener el dato seleccionado en el comboBoxDia con un Exception,
-				// en caso de que se seleccione el valor nullo.
+				// Obtener el dato seleccionado en el comboBoxDia
 				// el valor se almacena en la variable entera "dia", despues de pasar el dato
-				// tipo
-				// objeto a String y luego a Integer.
-				try {
-					dia = Integer.parseInt(comboBoxDia.getSelectedItem().toString());
-				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(null, "Dato inválido");
-				}
+				// tipo objeto a String y luego a Integer.
+				dia = Integer.parseInt(comboBoxDia.getSelectedItem().toString());
 			}
 		});
 		comboBoxDia.setModel(new DefaultComboBoxModel<String>(dias));
@@ -201,11 +209,7 @@ public class Formulario extends JFrame {
 		comboBoxMes = new JComboBox<String>();
 		comboBoxMes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					mes = Integer.parseInt(comboBoxMes.getSelectedItem().toString());
-				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(null, "Dato inválido");
-				}
+				mes = Integer.parseInt(comboBoxMes.getSelectedItem().toString());
 			}
 		});
 		comboBoxMes.setModel(new DefaultComboBoxModel<String>(meses));
@@ -242,23 +246,29 @@ public class Formulario extends JFrame {
 
 	// --------------- Método Ingresar Datos --------------------
 
-	public void ingresarDatos() {
+	public void ingresarDatos(ArrayList<Persona> personas) throws FieldNoCompletedException {
+
 		ArrayList<Vehiculo> vehiculos = new ArrayList<Vehiculo>();
+		ArrayList<Barco> barcos = new ArrayList<Barco>();
 
 		// extraer datos de los textField y almacenarlo en variables
 		nombre = textFieldNombre.getText();
 		apellido = textFieldApellido.getText();
 		dptoResidencia = textFieldDptoResidencia.getText();
 		cantHijos = Byte.parseByte(textFieldCantHijos.getText()); // se transforma el dato de tipo String a Byte
+		idPersona = Persona.getId();
 
 		fecNacimiento = LocalDate.of(anio, mes, dia); // se genera una fecha LocalDate a partir de los datos ingresados
 
-		// crear instancia de persona y la almacena en un arrayList
-		personas.add(new Persona(id, nombre, apellido, dptoResidencia, cantHijos, fecNacimiento, vehiculos));
+		boolean estaVacio = nombre.isEmpty() || apellido.isEmpty() || dptoResidencia.isEmpty();
 
-		// aumentar id
-		id++;
-		
+		if (estaVacio) {
+			throw new FieldNoCompletedException();
+		}
+
+		// crear instancia de persona y la almacena en un arrayList
+		personas.add(new Persona(idPersona, nombre, apellido, dptoResidencia, cantHijos, fecNacimiento, vehiculos));
+
 		// resetear los componentes
 		resetearCampos();
 	}

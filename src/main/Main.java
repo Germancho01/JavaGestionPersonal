@@ -1,5 +1,8 @@
 package main;
 
+import java.util.ArrayList;
+
+import classes.Persona;
 import windows.Inicio;
 
 /**
@@ -17,7 +20,8 @@ public class Main {
 	 */
 	
 	public static void main(String[] args) {
-		
-		new Inicio();
+		ArrayList<Persona> personas = new ArrayList<Persona>();
+
+		new Inicio(personas);
 	}
 }
