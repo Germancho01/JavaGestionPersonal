@@ -1,40 +1,44 @@
 package classes;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class Persona {
 	
-	public int idPersona;
 	public String nombre, apellido, dptoResidencia;
 	private Byte cantHijos;
 	private LocalDate fechaNacimiento;
-	public static int id = 0;
+	public int idPersona;
+	private ArrayList<Vehiculo> vehiculos = new ArrayList<Vehiculo>();
 	
-	public Persona(String nombre, String apellido, String dptoResidencia, 
-			Byte cantHijos, LocalDate fechaNacimiento) {
+	public Persona(Integer idPersona,String nombre, String apellido, String dptoResidencia, 
+			Byte cantHijos, LocalDate fechaNacimiento, ArrayList<Vehiculo> vehiculos) {
 		super();
 		
-		this.idPersona = incrementarId();
+		this.idPersona = idPersona;
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.dptoResidencia = dptoResidencia;
 		this.cantHijos = cantHijos;
 		this.fechaNacimiento = fechaNacimiento;
+		this.vehiculos = vehiculos;
 	}
 	
 	public Persona() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
-	private int incrementarId() {
-		return id++;
-	}
 
 	@Override
 	public String toString() {
-		return "Persona [idPersona=" + idPersona  + ", dptoResidencia=" + dptoResidencia + ", cantHijos=" + cantHijos
-				+ ", fechaNacimiento=" + fechaNacimiento + "]";
+		return "---Persona--- "
+				+ "\nID Persona: " + idPersona  
+				+ "\nDpto de Residencia: " + dptoResidencia 
+				+ "\nCantidad de Hijos: " + cantHijos
+				+ "\nFecha de Nacimiento: " + fechaNacimiento
+				+ "\n"
+				+ this.getVehiculos().toString()
+				;
 	}
 
 	public int getIdPersona() {
@@ -73,11 +77,19 @@ public class Persona {
 	public void setFechaNacimiento(LocalDate fechaNacimiento) {
 		this.fechaNacimiento = fechaNacimiento;
 	}
-	public static int getId() {
-		return id;
+	public int getId() {
+		return idPersona;
 	}
 	public void setId(int id) {
-		Persona.id = id;
+		this.idPersona = id;
+	}
+
+	public ArrayList<Vehiculo> getVehiculos() {
+		return vehiculos;
+	}
+
+	public void setVehiculos(ArrayList<Vehiculo> vehiculos) {
+		this.vehiculos = vehiculos;
 	}
 
 	
