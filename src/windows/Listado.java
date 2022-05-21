@@ -290,35 +290,52 @@ public class Listado extends JFrame {
 		// modificar los datos dependiendo de la columna seleccionada
 		if (columna == 1) {
 			String nuevoNombre = JOptionPane.showInputDialog("Ingrese nuevo nombre: ");
-			personas.get(fila).setNombre(nuevoNombre); // cambia el valor de la persona en el arrayList personas
-			table.setValueAt(nuevoNombre, fila, 1); // setea el nuevo valor en la tabla, en la fila y columna
-													// seleccionadas
+			
+			if (nuevoNombre != null) {
+				personas.get(fila).setNombre(nuevoNombre); // cambia el valor de la persona en el arrayList personas
+				table.setValueAt(nuevoNombre, fila, 1); // setea el nuevo valor en la tabla, en la fila y columna
+														// seleccionadas
+			} 
+			
 		} else if (columna == 2) {
 			String nuevoApellido = JOptionPane.showInputDialog("Ingrese nuevo apellido: ");
-			personas.get(fila).setApellido(nuevoApellido);
-			table.setValueAt(nuevoApellido, fila, 2);
+			
+			if (nuevoApellido != null) {
+				personas.get(fila).setApellido(nuevoApellido);
+				table.setValueAt(nuevoApellido, fila, 2);
+			}
+			
 		} else if (columna == 3) {
 			try {
-				Byte nuevoCantHijos = Byte.parseByte(JOptionPane.showInputDialog("Ingrese cantidad de hijos: "));
-				personas.get(fila).setCantHijos(nuevoCantHijos);
-				table.setValueAt(nuevoCantHijos, fila, 3);
+				String nuevoCantHijosString = JOptionPane.showInputDialog("Ingrese cantidad de hijos: ");
+				
+				if (nuevoCantHijosString != null) {
+					Byte nuevoCantHijos = Byte.parseByte(nuevoCantHijosString);
+					personas.get(fila).setCantHijos(nuevoCantHijos);
+					table.setValueAt(nuevoCantHijos, fila, 3);
+				}
 			} catch (Exception e2) {
 				JOptionPane.showMessageDialog(null, "Formato de dato inválido.");
 			}
 
 		} else if (columna == 4) {
 			String nuevoDptoResidencia = JOptionPane.showInputDialog("Ingrese nuevo dpto de residencia: ");
-			personas.get(fila).setDptoResidencia(nuevoDptoResidencia);
-			table.setValueAt(nuevoDptoResidencia, fila, 4);
+			if (nuevoDptoResidencia != null) {
+				personas.get(fila).setDptoResidencia(nuevoDptoResidencia);
+				table.setValueAt(nuevoDptoResidencia, fila, 4);
+			}
+			
 		} else if (columna == 5) {
 			// modifica la fecha de nacimiento con un Exeption,
 			// en caso de que el formato de la fecha no sea correcto
 			try {
 				String nuevoDateString = JOptionPane.showInputDialog("Ingrese nueva fecha: ");
-				LocalDate nuevoDate = LocalDate.parse(nuevoDateString); // transforma el String ingresado en un tipo
-																		// LocalDate
-				personas.get(fila).setFechaNacimiento(nuevoDate);
-				table.setValueAt(nuevoDate, fila, 5);
+				if (nuevoDateString != null) {
+					// transforma el String ingresado en un tipo LocalDate
+					LocalDate nuevoDate = LocalDate.parse(nuevoDateString);
+					personas.get(fila).setFechaNacimiento(nuevoDate);
+					table.setValueAt(nuevoDate, fila, 5);
+				}
 			} catch (Exception e2) {
 				JOptionPane.showMessageDialog(null, "Formato de fecha inválido. Use: yyyy-mm-dd");
 			}
