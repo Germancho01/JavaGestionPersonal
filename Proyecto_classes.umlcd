@@ -85,8 +85,8 @@
     <stereotypes xmi:id="_-VBq0NiQEeyUB9Td45QnVQ" name="Reference">
       <modelElement href="Proyecto.uml#_3A9AQNiQEeyUB9Td45QnVQ"/>
     </stereotypes>
-    <nameVisual xmi:id="_-VBDwdiQEeyUB9Td45QnVQ" text="">
-      <visualProperties xmi:id="_-qPF0NiQEeyUB9Td45QnVQ" position="-36.5,-8.5" visible="false"/>
+    <nameVisual xmi:id="_lPua4Nj_EeyHa4M4PuMnzw" text="">
+      <visualProperties xmi:id="_tlVa8Nj_EeyHa4M4PuMnzw" visible="false"/>
     </nameVisual>
     <sourceRole xmi:id="_-VBDwtiQEeyUB9Td45QnVQ" aggregationKind="NONE" name="">
       <modelElement href="Proyecto.uml#_3A7yItiQEeyUB9Td45QnVQ"/>
@@ -96,7 +96,7 @@
     </sourceRole>
     <targetRole xmi:id="_-VBDw9iQEeyUB9Td45QnVQ" aggregationKind="NONE" name="dueño" navigable="true">
       <modelElement href="Proyecto.uml#_2-tkkdiQEeyUB9Td45QnVQ"/>
-      <visualProperties xmi:id="_-qPs4NiQEeyUB9Td45QnVQ" position="-54.0,-19.0"/>
+      <visualProperties xmi:id="_-qPs4NiQEeyUB9Td45QnVQ" position="-54.0,-18.0"/>
       <stereotypes xmi:id="_Ht6FwNiREeyUB9Td45QnVQ" name="LegacyStyledElement">
         <modelElement href="Proyecto.uml#_2-uLoNiQEeyUB9Td45QnVQ"/>
       </stereotypes>
@@ -324,6 +324,9 @@
       <stereotypes xmi:id="_HuJWUNiREeyUB9Td45QnVQ" name="Generics"/>
       <stereotypes xmi:id="_HuKkcNiREeyUB9Td45QnVQ" name="Generics"/>
       <stereotypes xmi:id="_HuZN8NiREeyUB9Td45QnVQ" name="Generics"/>
+      <stereotypes xmi:id="_lQkIYNj_EeyHa4M4PuMnzw" name="Generics"/>
+      <stereotypes xmi:id="_lQrdINj_EeyHa4M4PuMnzw" name="Generics"/>
+      <stereotypes xmi:id="_lRANQNj_EeyHa4M4PuMnzw" name="Generics"/>
       <visibility xmi:id="_-USEDdiQEeyUB9Td45QnVQ" label="+"/>
       <cardinality xmi:id="_-USEDtiQEeyUB9Td45QnVQ" label="1" max="1" min="1"/>
       <type xmi:id="_-USED9iQEeyUB9Td45QnVQ" name="ArrayList">
@@ -335,6 +338,9 @@
       <stereotypes xmi:id="_HuLLgNiREeyUB9Td45QnVQ" name="Generics"/>
       <stereotypes xmi:id="_HuMZoNiREeyUB9Td45QnVQ" name="Generics"/>
       <stereotypes xmi:id="_HuacENiREeyUB9Td45QnVQ" name="Generics"/>
+      <stereotypes xmi:id="_lQvHgNj_EeyHa4M4PuMnzw" name="Generics"/>
+      <stereotypes xmi:id="_lQw8sNj_EeyHa4M4PuMnzw" name="Generics"/>
+      <stereotypes xmi:id="_lRFFwNj_EeyHa4M4PuMnzw" name="Generics"/>
       <visibility xmi:id="_-USEEtiQEeyUB9Td45QnVQ" label="+"/>
       <cardinality xmi:id="_-USEE9iQEeyUB9Td45QnVQ" label="1" max="1" min="1"/>
       <type xmi:id="_-USEFNiQEeyUB9Td45QnVQ" name="ArrayList">
@@ -346,6 +352,9 @@
       <stereotypes xmi:id="_HuNAsNiREeyUB9Td45QnVQ" name="Generics"/>
       <stereotypes xmi:id="_HuOO0NiREeyUB9Td45QnVQ" name="Generics"/>
       <stereotypes xmi:id="_HucRQNiREeyUB9Td45QnVQ" name="Generics"/>
+      <stereotypes xmi:id="_lQ0AANj_EeyHa4M4PuMnzw" name="Generics"/>
+      <stereotypes xmi:id="_lQ11MNj_EeyHa4M4PuMnzw" name="Generics"/>
+      <stereotypes xmi:id="_lRG68Nj_EeyHa4M4PuMnzw" name="Generics"/>
       <visibility xmi:id="_-USEF9iQEeyUB9Td45QnVQ" label="+"/>
       <cardinality xmi:id="_-USEGNiQEeyUB9Td45QnVQ" label="1" max="1" min="1"/>
       <type xmi:id="_-USEGdiQEeyUB9Td45QnVQ" name="ArrayList">
@@ -654,6 +663,9 @@
       <stereotypes xmi:id="_tZKKINiREeyUB9Td45QnVQ" name="LegacyStyledElement"/>
       <stereotypes xmi:id="_tZLYQNiREeyUB9Td45QnVQ" name="LegacyStyledElement"/>
       <stereotypes xmi:id="_tZL_UNiREeyUB9Td45QnVQ" name="LegacyStyledElement"/>
+      <stereotypes xmi:id="_lQ4RcNj_EeyHa4M4PuMnzw" name="LegacyStyledElement"/>
+      <stereotypes xmi:id="_lQ6tsNj_EeyHa4M4PuMnzw" name="LegacyStyledElement"/>
+      <stereotypes xmi:id="_lRJXMNj_EeyHa4M4PuMnzw" name="LegacyStyledElement"/>
       <visibility xmi:id="_-VNRENiQEeyUB9Td45QnVQ" label="+"/>
       <cardinality xmi:id="_-VNREdiQEeyUB9Td45QnVQ" label="1" max="1" min="1"/>
       <type xmi:id="_-VNREtiQEeyUB9Td45QnVQ" name="Persona">

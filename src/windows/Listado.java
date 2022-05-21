@@ -18,6 +18,7 @@ import classes.Vehiculo;
 import exceptions.CellNoSelectedException;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Toolkit;
 
 public class Listado extends JFrame {
 
@@ -30,7 +31,7 @@ public class Listado extends JFrame {
 	private String[] datos = new String[6];
 
 	// --- Frame ---
-	private JFrame frame;
+	private JFrame frmListadoVehculos;
 
 	// --- Table ---
 	private JTable table;
@@ -70,17 +71,19 @@ public class Listado extends JFrame {
 	 */
 
 	private void initialize(ArrayList<Persona> personas) {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 600, 622);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
-		frame.setVisible(true);
+		frmListadoVehculos = new JFrame();
+		frmListadoVehculos.setIconImage(Toolkit.getDefaultToolkit().getImage(Listado.class.getResource("/images/logoAzulPerson.png")));
+		frmListadoVehculos.setTitle("Listado Personas");
+		frmListadoVehculos.setBounds(100, 100, 600, 622);
+		frmListadoVehculos.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmListadoVehculos.getContentPane().setLayout(null);
+		frmListadoVehculos.setVisible(true);
 
 		// --------------- Table --------------------
 
 		JScrollPane scrollPane = new JScrollPane(); // nuevo scroll pane
 		scrollPane.setBounds(29, 75, 530, 280); // setea las coordenadas de la tabla y su tamaño
-		frame.getContentPane().add(scrollPane); // agrega el scroll pane al panel
+		frmListadoVehculos.getContentPane().add(scrollPane); // agrega el scroll pane al panel
 
 		table = new JTable(); // nueva tabla
 
@@ -141,7 +144,7 @@ public class Listado extends JFrame {
 		});
 		btnEliminar.setBounds(360, 41, 89, 23);
 		btnEliminar.setFocusable(false);
-		frame.getContentPane().add(btnEliminar);
+		frmListadoVehculos.getContentPane().add(btnEliminar);
 
 		// --------------- Botón Eliminar Todo --------------------
 
@@ -154,7 +157,7 @@ public class Listado extends JFrame {
 		});
 		btnEliminarTodo.setBounds(39, 366, 115, 23);
 		btnEliminarTodo.setFocusable(false);
-		frame.getContentPane().add(btnEliminarTodo);
+		frmListadoVehculos.getContentPane().add(btnEliminarTodo);
 
 		// --------------- Botón Modificar --------------------
 
@@ -172,7 +175,7 @@ public class Listado extends JFrame {
 		});
 		btnModificar.setBounds(459, 41, 89, 23);
 		btnModificar.setFocusable(false);
-		frame.getContentPane().add(btnModificar);
+		frmListadoVehculos.getContentPane().add(btnModificar);
 
 		// --------------- Boton Agregar Vehiculos --------------------
 
@@ -188,7 +191,7 @@ public class Listado extends JFrame {
 		});
 		btnAgregarVehculo.setFocusable(false);
 		btnAgregarVehculo.setBounds(192, 41, 148, 23);
-		frame.getContentPane().add(btnAgregarVehculo);
+		frmListadoVehculos.getContentPane().add(btnAgregarVehculo);
 
 		// --------------- Boton Listar Vehiculos --------------------
 
@@ -204,42 +207,42 @@ public class Listado extends JFrame {
 		});
 		btnListarVehculo.setFocusable(false);
 		btnListarVehculo.setBounds(39, 41, 130, 23);
-		frame.getContentPane().add(btnListarVehculo);
+		frmListadoVehculos.getContentPane().add(btnListarVehculo);
 
 		// --------------- CheckBox Mayores de Edad --------------------
 
-		chckbxMayoresDeEdad = new JCheckBox("Personas mayores de edad");
+		chckbxMayoresDeEdad = new JCheckBox("Mostrar solo personas mayores de edad");
 		chckbxMayoresDeEdad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				filtros(personas);
 			}
 		});
-		chckbxMayoresDeEdad.setBounds(360, 400, 199, 23);
+		chckbxMayoresDeEdad.setBounds(270, 400, 289, 23);
 		chckbxMayoresDeEdad.setFocusable(false);
-		frame.getContentPane().add(chckbxMayoresDeEdad);
+		frmListadoVehculos.getContentPane().add(chckbxMayoresDeEdad);
 
 		// --------------- CheckBox Solo con Hijos --------------------
 
-		chckbxConHijos = new JCheckBox("Personas con hijos");
+		chckbxConHijos = new JCheckBox("Mostrar solo personas con hijos");
 		chckbxConHijos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				filtros(personas);
 			}
 		});
-		chckbxConHijos.setBounds(360, 436, 199, 23);
+		chckbxConHijos.setBounds(270, 436, 289, 23);
 		chckbxConHijos.setFocusable(false);
-		frame.getContentPane().add(chckbxConHijos);
+		frmListadoVehculos.getContentPane().add(chckbxConHijos);
 
 		btnVolver = new JButton("Volver");
 		btnVolver.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new Formulario(personas);
-				frame.setVisible(false);
+				frmListadoVehculos.setVisible(false);
 			}
 		});
 		btnVolver.setFocusable(false);
 		btnVolver.setBounds(444, 549, 115, 23);
-		frame.getContentPane().add(btnVolver);
+		frmListadoVehculos.getContentPane().add(btnVolver);
 	}
 
 	/**
@@ -259,7 +262,7 @@ public class Listado extends JFrame {
 
 		new ListadoVehiculo(personas.get(fila).getVehiculos(), personas.get(fila).getBarcos(),
 				personas.get(fila).getAviones(), personas);
-		frame.setVisible(false);
+		frmListadoVehculos.setVisible(false);
 	}
 	
 	// --------------- Método Cargar Persona --------------------
