@@ -20,12 +20,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Toolkit;
 
 public class ListadoVehiculo extends JFrame {
 
 	private String[] datos = new String[5];
 
-	private JFrame frame;
+	private JFrame frmListadoVehculos;
 
 	private JTable tableBarcos;
 	private JTable tableAviones;
@@ -66,29 +67,31 @@ public class ListadoVehiculo extends JFrame {
 
 	private void initialize(ArrayList<Vehiculo> vehiculos, ArrayList<Barco> barcos, ArrayList<Avion> aviones,  ArrayList<Persona> personas) {
 
-		frame = new JFrame();
-		frame.setBounds(100, 100, 600, 577);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
-		frame.setVisible(true);
+		frmListadoVehculos = new JFrame();
+		frmListadoVehculos.setTitle("Listado Veh\u00EDculos");
+		frmListadoVehculos.setIconImage(Toolkit.getDefaultToolkit().getImage(ListadoVehiculo.class.getResource("/images/logo_AzulVehiculos.png")));
+		frmListadoVehculos.setBounds(100, 100, 600, 577);
+		frmListadoVehculos.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmListadoVehculos.getContentPane().setLayout(null);
+		frmListadoVehculos.setVisible(true);
 		
 		// --------------- Label --------------------
 		
 		JLabel lblNewLabel = new JLabel("Barcos");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 32));
 		lblNewLabel.setBounds(29, 32, 130, 32);
-		frame.getContentPane().add(lblNewLabel);
+		frmListadoVehculos.getContentPane().add(lblNewLabel);
 		
 		JLabel lblAviones = new JLabel("Aviones");
 		lblAviones.setFont(new Font("Tahoma", Font.PLAIN, 32));
 		lblAviones.setBounds(29, 261, 130, 32);
-		frame.getContentPane().add(lblAviones);
+		frmListadoVehculos.getContentPane().add(lblAviones);
 
 		// --------------- Table Barcos--------------------
 
 		JScrollPane scrollPane = new JScrollPane(); // nuevo scroll pane
 		scrollPane.setBounds(29, 75, 530, 154); // setea las coordenadas de la tabla y su tamaño
-		frame.getContentPane().add(scrollPane); // agrega el scroll pane al panel
+		frmListadoVehculos.getContentPane().add(scrollPane); // agrega el scroll pane al panel
 
 		tableBarcos = new JTable(); // nueva tabla
 		// action doble click del mouse
@@ -139,7 +142,7 @@ public class ListadoVehiculo extends JFrame {
 		
 		JScrollPane scrollPane1 = new JScrollPane(); // nuevo scroll pane
 		scrollPane1.setBounds(29, 304, 530, 154); // setea las coordenadas de la tabla y su tamaño
-		frame.getContentPane().add(scrollPane1); // agrega el scroll pane al panel
+		frmListadoVehculos.getContentPane().add(scrollPane1); // agrega el scroll pane al panel
 		
 		tableAviones = new JTable();
 		tableAviones.setModel(new DefaultTableModel(
@@ -187,7 +190,7 @@ public class ListadoVehiculo extends JFrame {
 		});
 		btnEliminar.setBounds(360, 41, 89, 23);
 		btnEliminar.setFocusable(false);
-		frame.getContentPane().add(btnEliminar);
+		frmListadoVehculos.getContentPane().add(btnEliminar);
 		
 		// --------------- Botón Eliminar Aviones--------------------
 		
@@ -204,7 +207,7 @@ public class ListadoVehiculo extends JFrame {
 		});
 		btnEliminar_1.setFocusable(false);
 		btnEliminar_1.setBounds(360, 270, 89, 23);
-		frame.getContentPane().add(btnEliminar_1);
+		frmListadoVehculos.getContentPane().add(btnEliminar_1);
 
 		// --------------- Botón Eliminar Todo Barcos--------------------
 		
@@ -217,7 +220,7 @@ public class ListadoVehiculo extends JFrame {
 		});
 		btnEliminarTodo.setBounds(235, 41, 115, 23);
 		btnEliminarTodo.setFocusable(false);
-		frame.getContentPane().add(btnEliminarTodo);
+		frmListadoVehculos.getContentPane().add(btnEliminarTodo);
 		
 		// --------------- Botón Eliminar Todo Aviones--------------------
 		
@@ -230,7 +233,7 @@ public class ListadoVehiculo extends JFrame {
 		});
 		btnEliminarTodo_1.setFocusable(false);
 		btnEliminarTodo_1.setBounds(235, 270, 115, 23);
-		frame.getContentPane().add(btnEliminarTodo_1);
+		frmListadoVehculos.getContentPane().add(btnEliminarTodo_1);
 
 		// --------------- Botón Modificar Barcos--------------------
 
@@ -247,7 +250,7 @@ public class ListadoVehiculo extends JFrame {
 		});
 		btnModificar.setBounds(459, 41, 89, 23);
 		btnModificar.setFocusable(false);
-		frame.getContentPane().add(btnModificar);
+		frmListadoVehculos.getContentPane().add(btnModificar);
 		
 		// --------------- Botón Modificar Aviones--------------------
 		
@@ -264,19 +267,19 @@ public class ListadoVehiculo extends JFrame {
 		});
 		btnModificar_1.setFocusable(false);
 		btnModificar_1.setBounds(459, 270, 89, 23);
-		frame.getContentPane().add(btnModificar_1);
+		frmListadoVehculos.getContentPane().add(btnModificar_1);
 
 		// --------------- Botón Volver --------------------
 		btnVolver = new JButton("Volver");
 		btnVolver.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new Listado(personas);
-				frame.setVisible(false);
+				frmListadoVehculos.setVisible(false);
 			}
 		});
 		btnVolver.setFocusable(false);
 		btnVolver.setBounds(29, 491, 115, 23);
-		frame.getContentPane().add(btnVolver);
+		frmListadoVehculos.getContentPane().add(btnVolver);
 		
 		
 

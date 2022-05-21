@@ -31,8 +31,8 @@ public class Inicio extends JFrame {
 		
 		// ----- Label con imagen -----
 		JLabel lblImage = new JLabel("");
-		lblImage.setIcon(new ImageIcon(Inicio.class.getResource("/images/logoPerson.png")));
-		lblImage.setBounds(106, 31, 200, 128);
+		lblImage.setIcon(new ImageIcon(Inicio.class.getResource("/images/logoAzulPerson.png")));
+		lblImage.setBounds(106, 31, 186, 142);
 		contentPane.add(lblImage);
 		
 		// ----- Botón Ingresar-----

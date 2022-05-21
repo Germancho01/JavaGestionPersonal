@@ -19,6 +19,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JButton;
+import java.awt.Toolkit;
 
 public class FormularioVehiculo extends JFrame {
 
@@ -41,6 +42,8 @@ public class FormularioVehiculo extends JFrame {
 	 * Create the frame.
 	 */
 	public FormularioVehiculo(ArrayList<Persona> personas, int fila) {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(FormularioVehiculo.class.getResource("/images/logo_AzulVehiculos.png")));
+		setTitle("Formulario Veh\u00EDculos");
 
 		// --------------- Frame --------------------
 

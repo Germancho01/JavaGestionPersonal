@@ -77,7 +77,7 @@ public class Formulario extends JFrame {
 		frmFormulario.setTitle("Formulario"); // poner título al frame
 		// poner icono en el frame
 		frmFormulario.setIconImage(
-				Toolkit.getDefaultToolkit().getImage(Formulario.class.getResource("/images/logoPerson.png")));
+				Toolkit.getDefaultToolkit().getImage(Formulario.class.getResource("/images/logoAzulPerson.png")));
 		frmFormulario.getContentPane().setForeground(SystemColor.textHighlight); // color del JPane
 		frmFormulario.setBounds(0, 0, 600, 284); // tamaño del frame
 		frmFormulario.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // esconder ventana al apretar cerrar
