@@ -22,6 +22,12 @@ import javax.swing.DefaultComboBoxModel;
 
 import java.awt.Toolkit;
 import java.awt.SystemColor;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JTabbedPane;
+import javax.swing.JPanel;
+import javax.swing.JList;
 
 public class Formulario extends JFrame {
 
@@ -53,7 +59,19 @@ public class Formulario extends JFrame {
 
 	// --- Button
 	private JButton btnAgregar;
-	private JButton btnListar;
+	private JScrollPane scrollPane;
+	private JTable table;
+	private JButton btnModificar;
+	private JButton btnEliminar;
+	private JButton btnEliminarTodo;
+	private JTable table_1;
+	private JPanel panelVehiculos;
+	private JTextField textFieldNombreVehiculo;
+	private JTextField textField;
+	private JTextField textField_1;
+	private JTextField textField_2;
+	private JTable table_2;
+	private JTable table_3;
 
 	/**
 	 * 
@@ -79,60 +97,129 @@ public class Formulario extends JFrame {
 		frmFormulario.setIconImage(
 				Toolkit.getDefaultToolkit().getImage(Formulario.class.getResource("/images/logoAzulPerson.png")));
 		frmFormulario.getContentPane().setForeground(SystemColor.textHighlight); // color del JPane
-		frmFormulario.setBounds(0, 0, 600, 284); // tamaño del frame
+		frmFormulario.setBounds(0, 0, 677, 700); // tamaño del frame
 		frmFormulario.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // esconder ventana al apretar cerrar
 		frmFormulario.setLocationRelativeTo(null); // aparecer frame en el centro de la pantalla
 		frmFormulario.setVisible(true); // hacer visible el frame
-		frmFormulario.setResizable(false); // impide que se cambie el tamaño del frame
+		frmFormulario.setResizable(false);
 		frmFormulario.getContentPane().setLayout(null);
+
+		// --------------- ComboBox Dia --------------------
+
+		// cargar array con la cantidad de días del mes
+		String[] dias = new String[31];
+		for (int i = 0; i < dias.length; i++) {
+			dias[i] = Integer.toString(i + 1);
+		}
+
+		// --------------- ComboBox Mes --------------------
+
+		String[] meses = new String[12];
+		for (int i = 0; i < meses.length; i++) {
+			meses[i] = Integer.toString(i + 1);
+		}
+
+		// --------------- ComboBox Año --------------------
+
+		String[] anios = new String[100];
+		for (int i = 0; i < anios.length; i++) {
+			anios[i] = Integer.toString(2022 - i);
+		}
+
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setToolTipText("");
+		tabbedPane.setBounds(26, 11, 613, 588);
+		frmFormulario.getContentPane().add(tabbedPane);
+
+		JPanel panelPersonas = new JPanel();
+		tabbedPane.addTab("Personas", null, panelPersonas, null);
+		panelPersonas.setLayout(null);
 
 		// --------------- Labels --------------------
 
-		JLabel lblNombre = new JLabel("Nombre"); // nueva JLabel
-		lblNombre.setBounds(29, 33, 46, 14); // setear coordenadas y tamaño
-		frmFormulario.getContentPane().add(lblNombre); // agregar label al panel
+		JLabel lblNombre = new JLabel("Nombre");
+		lblNombre.setBounds(34, 32, 46, 14);
+		panelPersonas.add(lblNombre);
 
 		JLabel lblApellido = new JLabel("Apellido");
-		lblApellido.setBounds(29, 82, 46, 14);
-		frmFormulario.getContentPane().add(lblApellido);
-
-		JLabel lblDptoResidencia = new JLabel("Dpto Residencia");
-		lblDptoResidencia.setBounds(256, 82, 98, 14);
-		frmFormulario.getContentPane().add(lblDptoResidencia);
-
-		JLabel lblCantHijos = new JLabel("Cantidad Hijos");
-		lblCantHijos.setBounds(256, 33, 98, 14);
-		frmFormulario.getContentPane().add(lblCantHijos);
-
-		JLabel lblFecNacimiento = new JLabel("Fecha de nacimiento");
-		lblFecNacimiento.setBounds(256, 128, 124, 14);
-		frmFormulario.getContentPane().add(lblFecNacimiento);
+		lblApellido.setBounds(34, 82, 46, 14);
+		panelPersonas.add(lblApellido);
 
 		// --------------- TexFields --------------------
 
-		textFieldNombre = new JTextField(); // nuevo JTextField
-		textFieldNombre.setBounds(85, 30, 139, 20); // setear tamaño y coordenadas
-		frmFormulario.getContentPane().add(textFieldNombre); // añadir al Panel
+		textFieldNombre = new JTextField();
+		textFieldNombre.setBounds(90, 30, 140, 20);
+		panelPersonas.add(textFieldNombre);
 		textFieldNombre.setColumns(10);
 
 		textFieldApellido = new JTextField();
+		textFieldApellido.setBounds(90, 79, 139, 20);
+		panelPersonas.add(textFieldApellido);
 		textFieldApellido.setColumns(10);
-		textFieldApellido.setBounds(85, 79, 139, 20);
-		frmFormulario.getContentPane().add(textFieldApellido);
 
-		textFieldDptoResidencia = new JTextField();
-		textFieldDptoResidencia.setColumns(10);
-		textFieldDptoResidencia.setBounds(391, 79, 168, 20);
-		frmFormulario.getContentPane().add(textFieldDptoResidencia);
+		JLabel lblCantHijos = new JLabel("Cantidad Hijos");
+		lblCantHijos.setBounds(260, 32, 98, 14);
+		panelPersonas.add(lblCantHijos);
+
+		JLabel lblDptoResidencia = new JLabel("Dpto Residencia");
+		lblDptoResidencia.setBounds(260, 81, 98, 14);
+		panelPersonas.add(lblDptoResidencia);
+
+		JLabel lblFecNacimiento = new JLabel("Fecha de nacimiento");
+		lblFecNacimiento.setBounds(261, 127, 124, 14);
+		panelPersonas.add(lblFecNacimiento);
 
 		textFieldCantHijos = new JTextField();
+		textFieldCantHijos.setBounds(396, 29, 168, 20);
+		panelPersonas.add(textFieldCantHijos);
 		textFieldCantHijos.setColumns(10);
-		textFieldCantHijos.setBounds(391, 30, 168, 20);
-		frmFormulario.getContentPane().add(textFieldCantHijos);
+
+		textFieldDptoResidencia = new JTextField();
+		textFieldDptoResidencia.setBounds(396, 78, 168, 20);
+		panelPersonas.add(textFieldDptoResidencia);
+		textFieldDptoResidencia.setColumns(10);
+		comboBoxDia = new JComboBox<String>();
+		comboBoxDia.setBounds(396, 123, 46, 22);
+		panelPersonas.add(comboBoxDia);
+		comboBoxDia.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Obtener el dato seleccionado en el comboBoxDia
+				// el valor se almacena en la variable entera "dia", despues de pasar el dato
+				// tipo objeto a String y luego a Integer.
+				dia = Integer.parseInt(comboBoxDia.getSelectedItem().toString());
+			}
+		});
+		comboBoxDia.setModel(new DefaultComboBoxModel<String>(dias));
+		comboBoxDia.setSelectedIndex(0);
+		comboBoxDia.setFocusable(false);
+		comboBoxMes = new JComboBox<String>();
+		comboBoxMes.setBounds(452, 123, 46, 22);
+		panelPersonas.add(comboBoxMes);
+		comboBoxMes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mes = Integer.parseInt(comboBoxMes.getSelectedItem().toString());
+			}
+		});
+		comboBoxMes.setModel(new DefaultComboBoxModel<String>(meses));
+		comboBoxMes.setSelectedIndex(0);
+		comboBoxMes.setFocusable(false);
+		comboBoxAnio = new JComboBox<String>();
+		comboBoxAnio.setBounds(508, 123, 56, 22);
+		panelPersonas.add(comboBoxAnio);
+		comboBoxAnio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				anio = Integer.parseInt(comboBoxAnio.getSelectedItem().toString());
+			}
+		});
+		comboBoxAnio.setModel(new DefaultComboBoxModel<String>(anios));
+		comboBoxAnio.setSelectedIndex(0);
+		comboBoxAnio.setFocusable(false);
 
 		// --------------- Botón Agregar --------------------
 
-		btnAgregar = new JButton("Agregar"); // nuevo botón
+		btnAgregar = new JButton("Agregar");
+		btnAgregar.setBounds(490, 184, 89, 23);
+		panelPersonas.add(btnAgregar);
 
 		// Agregar función al botón
 		btnAgregar.addActionListener(new ActionListener() {
@@ -149,26 +236,152 @@ public class Formulario extends JFrame {
 				}
 			}
 		});
-		btnAgregar.setBounds(470, 185, 89, 23); // setea las coordenadas y tamaño del botón
-		btnAgregar.setFocusable(false); // quita el recuadro en el texto cuando se selecciona el botón
-		frmFormulario.getContentPane().add(btnAgregar); // agregar botón al panel
+		btnAgregar.setFocusable(false);
 
-		// --------------- Botón Listar --------------------
-
-		btnListar = new JButton("Listar");
-		btnListar.addActionListener(new ActionListener() {
+		btnModificar = new JButton("Modificar");
+		btnModificar.setBounds(26, 184, 89, 23);
+		panelPersonas.add(btnModificar);
+		btnModificar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new Listado(personas);
-				frmFormulario.setVisible(false);
 			}
 		});
-		btnListar.setFocusable(false);
-		btnListar.setBounds(371, 185, 89, 23);
-		frmFormulario.getContentPane().add(btnListar);
+		btnModificar.setFocusable(false);
+
+		btnEliminar = new JButton("Eliminar");
+		btnEliminar.setBounds(125, 184, 89, 23);
+		panelPersonas.add(btnEliminar);
+		btnEliminar.setFocusable(false);
+
+		btnEliminarTodo = new JButton("Eliminar Todo");
+		btnEliminarTodo.setBounds(224, 184, 116, 23);
+		panelPersonas.add(btnEliminarTodo);
+		btnEliminarTodo.setFocusable(false);
+
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(26, 218, 553, 200);
+		panelPersonas.add(scrollPane);
+
+		table_1 = new JTable();
+		table_1.setModel(new DefaultTableModel(new Object[][] { { null, null, null, null, null, null }, },
+				new String[] { "New column", "New column", "New column", "New column", "New column", "New column" }));
+		scrollPane.setViewportView(table_1);
+
+		JList list = new JList();
+		list.setBounds(26, 429, 553, 89);
+		panelPersonas.add(list);
+
+		panelVehiculos = new JPanel();
+		tabbedPane.addTab("Vehículos", null, panelVehiculos, null);
+		panelVehiculos.setLayout(null);
+
+		JLabel lblNewLabel = new JLabel("Nombre");
+		lblNewLabel.setBounds(34, 32, 46, 14);
+		panelVehiculos.add(lblNewLabel);
+
+		textFieldNombreVehiculo = new JTextField();
+		textFieldNombreVehiculo.setBounds(90, 30, 140, 20);
+		panelVehiculos.add(textFieldNombreVehiculo);
+		textFieldNombreVehiculo.setColumns(10);
+
+		JLabel lblColor = new JLabel("Color");
+		lblColor.setBounds(34, 82, 46, 14);
+		panelVehiculos.add(lblColor);
+
+		textField = new JTextField();
+		textField.setBounds(90, 79, 140, 20);
+		textField.setColumns(10);
+		panelVehiculos.add(textField);
+
+		JLabel lblNewAtributo1 = new JLabel("Cantidad de pasajeros");
+		lblNewAtributo1.setBounds(34, 132, 145, 14);
+		panelVehiculos.add(lblNewAtributo1);
+
+		textField_1 = new JTextField();
+		textField_1.setBounds(184, 129, 46, 20);
+		textField_1.setColumns(10);
+		panelVehiculos.add(textField_1);
+
+		JLabel lblLongitud = new JLabel("Longitud");
+		lblLongitud.setBounds(34, 182, 145, 14);
+		panelVehiculos.add(lblLongitud);
+
+		textField_2 = new JTextField();
+		textField_2.setBounds(184, 179, 46, 20);
+		textField_2.setColumns(10);
+		panelVehiculos.add(textField_2);
+
+		JLabel lblTipo = new JLabel("Tipo");
+		lblTipo.setBounds(280, 82, 30, 14);
+		panelVehiculos.add(lblTipo);
+
+		JComboBox comboBox = new JComboBox();
+		comboBox.setBounds(396, 78, 86, 22);
+		panelVehiculos.add(comboBox);
+
+		JLabel lblPropietario = new JLabel("Propietario");
+		lblPropietario.setBounds(280, 32, 64, 14);
+		panelVehiculos.add(lblPropietario);
+
+		JComboBox comboBox_1 = new JComboBox();
+		comboBox_1.setBounds(396, 28, 168, 22);
+		panelVehiculos.add(comboBox_1);
+
+		JButton btnModificar_1 = new JButton("Modificar");
+		btnModificar_1.setBounds(265, 509, 89, 23);
+		btnModificar_1.setFocusable(false);
+		panelVehiculos.add(btnModificar_1);
+
+		JButton btnEliminar_1 = new JButton("Eliminar");
+		btnEliminar_1.setBounds(364, 509, 89, 23);
+		btnEliminar_1.setFocusable(false);
+		panelVehiculos.add(btnEliminar_1);
+
+		JButton btnEliminarTodo_1 = new JButton("Eliminar Todo");
+		btnEliminarTodo_1.setBounds(463, 509, 116, 23);
+		btnEliminarTodo_1.setFocusable(false);
+		panelVehiculos.add(btnEliminarTodo_1);
+
+		JButton btnAgregar_1 = new JButton("Agregar");
+		btnAgregar_1.setBounds(130, 226, 100, 23);
+		btnAgregar_1.setFocusable(false);
+		panelVehiculos.add(btnAgregar_1);
+
+		JTabbedPane tabbedPane_1 = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane_1.setBounds(26, 260, 553, 238);
+		panelVehiculos.add(tabbedPane_1);
+		
+		JPanel panel = new JPanel();
+		tabbedPane_1.addTab("Barcos", null, panel, null);
+		panel.setLayout(null);
+		
+		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBounds(0, 0, 548, 210);
+		panel.add(scrollPane_2);
+		
+		table_3 = new JTable();
+		table_3.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null},
+			},
+			new String[] {
+				"New column", "New column", "New column", "New column", "New column"
+			}
+		));
+		scrollPane_2.setViewportView(table_3);
+
+		JScrollPane scrollPane_1 = new JScrollPane();
+		tabbedPane_1.addTab("Aviones", scrollPane_1);
+
+		table_2 = new JTable();
+		table_2.setModel(new DefaultTableModel(new Object[][] { { null, null, null, null, null }, },
+				new String[] { "New column", "New column", "New column", "New column", "New column" }));
+		scrollPane_1.setViewportView(table_2);
 
 		// --------------- Botón Volver --------------------
 
 		JButton btnVolver = new JButton("Volver");
+		btnVolver.setBounds(26, 615, 89, 23);
+		frmFormulario.getContentPane().add(btnVolver);
 		btnVolver.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new Inicio(personas);
@@ -176,66 +389,6 @@ public class Formulario extends JFrame {
 			}
 		});
 		btnVolver.setFocusable(false);
-		btnVolver.setBounds(29, 185, 89, 23);
-		frmFormulario.getContentPane().add(btnVolver);
-
-		// --------------- ComboBox Dia --------------------
-
-		// cargar array con la cantidad de días del mes
-		String[] dias = new String[31];
-		for (int i = 0; i < dias.length; i++) {
-			dias[i] = Integer.toString(i + 1);
-		}
-		comboBoxDia = new JComboBox<String>(); // nuevo comboBox con Items tipo String
-		comboBoxDia.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// Obtener el dato seleccionado en el comboBoxDia
-				// el valor se almacena en la variable entera "dia", despues de pasar el dato
-				// tipo objeto a String y luego a Integer.
-				dia = Integer.parseInt(comboBoxDia.getSelectedItem().toString());
-			}
-		});
-		comboBoxDia.setModel(new DefaultComboBoxModel<String>(dias));
-		comboBoxDia.setSelectedIndex(0);
-		comboBoxDia.setBounds(391, 124, 46, 22);
-		comboBoxDia.setFocusable(false);
-		frmFormulario.getContentPane().add(comboBoxDia);
-
-		// --------------- ComboBox Mes --------------------
-
-		String[] meses = new String[12];
-		for (int i = 0; i < meses.length; i++) {
-			meses[i] = Integer.toString(i + 1);
-		}
-		comboBoxMes = new JComboBox<String>();
-		comboBoxMes.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				mes = Integer.parseInt(comboBoxMes.getSelectedItem().toString());
-			}
-		});
-		comboBoxMes.setModel(new DefaultComboBoxModel<String>(meses));
-		comboBoxMes.setSelectedIndex(0);
-		comboBoxMes.setFocusable(false);
-		comboBoxMes.setBounds(447, 124, 46, 22);
-		frmFormulario.getContentPane().add(comboBoxMes);
-
-		// --------------- ComboBox Año --------------------
-
-		String[] anios = new String[100];
-		for (int i = 0; i < anios.length; i++) {
-			anios[i] = Integer.toString(2022 - i);
-		}
-		comboBoxAnio = new JComboBox<String>();
-		comboBoxAnio.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				anio = Integer.parseInt(comboBoxAnio.getSelectedItem().toString());
-			}
-		});
-		comboBoxAnio.setModel(new DefaultComboBoxModel<String>(anios));
-		comboBoxAnio.setSelectedIndex(0);
-		comboBoxAnio.setFocusable(false);
-		comboBoxAnio.setBounds(503, 124, 56, 22);
-		frmFormulario.getContentPane().add(comboBoxAnio);
 
 	}
 
@@ -269,7 +422,8 @@ public class Formulario extends JFrame {
 		}
 
 		// crear instancia de persona y la almacena en un arrayList
-		personas.add(new Persona(idPersona, nombre, apellido, dptoResidencia, cantHijos, fecNacimiento, vehiculos, barcos, aviones));
+		personas.add(new Persona(idPersona, nombre, apellido, dptoResidencia, cantHijos, fecNacimiento, vehiculos,
+				barcos, aviones));
 
 		// resetear los componentes
 		resetearCampos();
