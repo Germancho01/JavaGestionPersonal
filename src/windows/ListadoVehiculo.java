@@ -244,7 +244,6 @@ public class ListadoVehiculo extends JFrame {
 					JOptionPane.showMessageDialog(null, e1.getMessage());
 				}
 			}
-
 		});
 		btnModificar.setBounds(459, 41, 89, 23);
 		btnModificar.setFocusable(false);
@@ -253,6 +252,16 @@ public class ListadoVehiculo extends JFrame {
 		// --------------- Botón Modificar Aviones--------------------
 		
 		JButton btnModificar_1 = new JButton("Modificar");
+		btnModificar_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Modificar datos con la excepción de celda no seleccionada
+				try {
+					modificarDatosAvion(aviones);
+				} catch (CellNoSelectedException e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage());
+				}
+			}
+		});
 		btnModificar_1.setFocusable(false);
 		btnModificar_1.setBounds(459, 270, 89, 23);
 		frame.getContentPane().add(btnModificar_1);
@@ -320,17 +329,25 @@ public class ListadoVehiculo extends JFrame {
 		// modificar los datos dependiendo de la columna seleccionada
 		if (columna == 1) {
 			String nuevoNombre = JOptionPane.showInputDialog("Ingrese nuevo nombre: ");
-			barcos.get(fila).setNombre(nuevoNombre);
-			tableBarcos.setValueAt(nuevoNombre, fila, 1);
+			if (nuevoNombre != null) {
+				barcos.get(fila).setNombre(nuevoNombre);
+				tableBarcos.setValueAt(nuevoNombre, fila, 1);
+			}
+			
 		} else if (columna == 2) {
 			String nuevoColor = JOptionPane.showInputDialog("Ingrese nuevo color: ");
-			barcos.get(fila).setNombre(nuevoColor);
-			tableBarcos.setValueAt(nuevoColor, fila, 2);
+			if (nuevoColor != null) {
+				barcos.get(fila).setNombre(nuevoColor);
+				tableBarcos.setValueAt(nuevoColor, fila, 2);
+			}
+			
 		} else if (columna == 3) {
 			try {
 				String nuevoEsloraString = JOptionPane.showInputDialog("Ingrese nuevo eslora: ");
-				barcos.get(fila).setEslora(Double.parseDouble(nuevoEsloraString));
-				tableBarcos.setValueAt(nuevoEsloraString, fila, 3);
+				if (nuevoEsloraString != null) {
+					barcos.get(fila).setEslora(Double.parseDouble(nuevoEsloraString));
+					tableBarcos.setValueAt(nuevoEsloraString, fila, 3);
+				}
 			} catch (Exception e2) {
 				JOptionPane.showMessageDialog(null, "Formato de dato inválido.");
 			}
@@ -338,8 +355,10 @@ public class ListadoVehiculo extends JFrame {
 		} else if (columna == 4) {
 			try {
 				String nuevoMangaString = JOptionPane.showInputDialog("Ingrese nuevo manga: ");
-				barcos.get(fila).setEslora(Double.parseDouble(nuevoMangaString));
-				tableBarcos.setValueAt(nuevoMangaString, fila, 4);
+				if (nuevoMangaString != null) {
+					barcos.get(fila).setEslora(Double.parseDouble(nuevoMangaString));
+					tableBarcos.setValueAt(nuevoMangaString, fila, 4);
+				}
 			} catch (Exception e2) {
 				JOptionPane.showMessageDialog(null, "Formato de dato inválido.");
 			}
@@ -350,8 +369,8 @@ public class ListadoVehiculo extends JFrame {
 
 		public void modificarDatosAvion(ArrayList<Avion> aviones) throws CellNoSelectedException {
 
-			int fila = tableBarcos.getSelectedRow(); // obtener celda seleccionada
-			int columna = tableBarcos.getSelectedColumn(); // obtener columna seleccionada
+			int fila = tableAviones.getSelectedRow(); // obtener celda seleccionada
+			int columna = tableAviones.getSelectedColumn(); // obtener columna seleccionada
 
 			// Excepción en caso de que no se seleccione ninguna fila
 			if (fila < 0) {
@@ -361,17 +380,23 @@ public class ListadoVehiculo extends JFrame {
 			// modificar los datos dependiendo de la columna seleccionada
 			if (columna == 1) {
 				String nuevoNombre = JOptionPane.showInputDialog("Ingrese nuevo nombre: ");
-				aviones.get(fila).setNombre(nuevoNombre);
-				tableBarcos.setValueAt(nuevoNombre, fila, 1);
+				if (nuevoNombre != null) {
+					aviones.get(fila).setNombre(nuevoNombre);
+					tableAviones.setValueAt(nuevoNombre, fila, 1);
+				}
 			} else if (columna == 2) {
 				String nuevoColor = JOptionPane.showInputDialog("Ingrese nuevo color: ");
-				aviones.get(fila).setNombre(nuevoColor);
-				tableBarcos.setValueAt(nuevoColor, fila, 2);
+				if (nuevoColor != null) {
+					aviones.get(fila).setNombre(nuevoColor);
+					tableAviones.setValueAt(nuevoColor, fila, 2);
+				}
 			} else if (columna == 3) {
 				try {
 					String nuevoEsloraString = JOptionPane.showInputDialog("Ingrese nueva longitud: ");
-					aviones.get(fila).setLongitud(Double.parseDouble(nuevoEsloraString));
-					tableBarcos.setValueAt(nuevoEsloraString, fila, 3);
+					if (nuevoEsloraString != null) {
+						aviones.get(fila).setLongitud(Double.parseDouble(nuevoEsloraString));
+						tableAviones.setValueAt(nuevoEsloraString, fila, 3);
+					}
 				} catch (Exception e2) {
 					JOptionPane.showMessageDialog(null, "Formato de dato inválido.");
 				}
@@ -379,8 +404,10 @@ public class ListadoVehiculo extends JFrame {
 			} else if (columna == 4) {
 				try {
 					String nuevoCantPasajerosString = JOptionPane.showInputDialog("Ingrese nueva Cantidad de Pasajeros: ");
-					aviones.get(fila).setCantPasajeros(Integer.parseInt(nuevoCantPasajerosString));
-					tableBarcos.setValueAt(nuevoCantPasajerosString, fila, 4);
+					if (nuevoCantPasajerosString != null) {
+						aviones.get(fila).setCantPasajeros(Integer.parseInt(nuevoCantPasajerosString));
+						tableAviones.setValueAt(nuevoCantPasajerosString, fila, 4);
+					}
 				} catch (Exception e2) {
 					JOptionPane.showMessageDialog(null, "Formato de dato inválido.");
 				}
