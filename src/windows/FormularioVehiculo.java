@@ -149,7 +149,7 @@ public class FormularioVehiculo extends JFrame {
 	private void ingresarDatos(ArrayList<Persona> personas, int fila) throws FieldNoCompletedException{
 		nombre = textFieldNombre.getText();
 		color = textFieldColor.getText();
-		idVehiculo = Vehiculo.getId();
+		//idVehiculo = Vehiculo.getId();
 		
 		if (nombre.isEmpty() || color.isEmpty()) {
 			throw new FieldNoCompletedException();
@@ -158,6 +158,7 @@ public class FormularioVehiculo extends JFrame {
 		if (comboBoxTipo.getSelectedIndex() == 0) {
 			eslora = Double.parseDouble(textFieldAtributo1.getText());
 			manga = Double.parseDouble(textFieldAtributo2.getText());
+			idVehiculo = Barco.getId();
 			
 			Barco barco = new Barco(idVehiculo, nombre, color, personas.get(fila), eslora, manga);
 			personas.get(fila).getBarcos().add(barco);
@@ -166,6 +167,7 @@ public class FormularioVehiculo extends JFrame {
 		} else if (comboBoxTipo.getSelectedIndex() == 1) {
 			longitud = Double.parseDouble(textFieldAtributo1.getText());
 			cantPasajeros = Integer.parseInt(textFieldAtributo2.getText());
+			idVehiculo = Avion.getId();
 
 			Avion avion = new Avion(idVehiculo, nombre, color, null, longitud, cantPasajeros);
 			personas.get(fila).getAviones().add(avion);
