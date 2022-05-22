@@ -20,7 +20,6 @@ import javax.swing.JComboBox;
 
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.awt.event.ActionEvent;
 
 import java.awt.Toolkit;
@@ -225,8 +224,8 @@ public class Formulario extends JFrame {
 
 					limpiarTabla(0);
 
-					for (int i = 0; i < personas.size(); i++) {
-						cargarPersonas(personas, i);
+					for (Persona persona : personas) {
+						cargarPersona(persona);
 					}
 
 				} catch (NumberFormatException e2) {
@@ -282,7 +281,7 @@ public class Formulario extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				limpiarTabla(0);
 				personas.clear(); // limpia el arrayList de personas
-				
+
 				actualizarPropietarios(personas);
 				cargarBarco(personas);
 			}
@@ -415,6 +414,10 @@ public class Formulario extends JFrame {
 
 		limpiarTabla(0);
 
+		for (Persona persona : personas) {
+			cargarPersona(persona);
+		}
+
 		// --------------- Lista --------------------
 
 		list = new JList();
@@ -510,7 +513,7 @@ public class Formulario extends JFrame {
 		comboBoxPropietario = new JComboBox<String>();
 		actualizarPropietarios(personas);
 		comboBoxPropietario.setBounds(396, 78, 168, 22);
-		//comboBoxPropietario.setSelectedIndex(0);
+		// comboBoxPropietario.setSelectedIndex(0);
 		comboBoxPropietario.setFocusable(false);
 		panelVehiculos.add(comboBoxPropietario);
 
@@ -757,14 +760,14 @@ public class Formulario extends JFrame {
 
 	// --------------- Método Cargar Persona --------------------
 
-	public void cargarPersonas(ArrayList<Persona> personas, int i) {
+	public void cargarPersona(Persona persona) {
 
-		datos[0] = Integer.toString(personas.get(i).getIdPersona());
-		datos[1] = personas.get(i).getNombre();
-		datos[2] = personas.get(i).getApellido();
-		datos[3] = personas.get(i).getCantHijos().toString();
-		datos[4] = personas.get(i).getDptoResidencia();
-		datos[5] = personas.get(i).getFechaNacimiento().toString();
+		datos[0] = Integer.toString(persona.getIdPersona());
+		datos[1] = persona.getNombre();
+		datos[2] = persona.getApellido();
+		datos[3] = persona.getCantHijos().toString();
+		datos[4] = persona.getDptoResidencia();
+		datos[5] = persona.getFechaNacimiento().toString();
 		model.addRow(datos);
 	}
 
@@ -861,36 +864,37 @@ public class Formulario extends JFrame {
 		if (chckbxMayoresDeEdad.isSelected() && chckbxConHijos.isSelected()) {
 			LocalDate hoy = LocalDate.now();
 
-			for (int i = 0; i < personas.size(); i++) {
-				boolean esMayor = personas.get(i).getFechaNacimiento().isBefore(hoy.plusYears(-18));
-				boolean tieneHijos = personas.get(i).getCantHijos() > 0;
+			for (Persona persona : personas) {
+				boolean esMayor = persona.getFechaNacimiento().isBefore(hoy.plusYears(-18));
+				boolean tieneHijos = persona.getCantHijos() > 0;
 
 				if (esMayor && tieneHijos) {
-					cargarPersonas(personas, i);
+					cargarPersona(persona);
 				}
 			}
 
 		} else if (chckbxMayoresDeEdad.isSelected() && !chckbxConHijos.isSelected()) {
 			LocalDate hoy = LocalDate.now();
 
-			for (int i = 0; i < personas.size(); i++) {
+			for (Persona persona : personas) {
 
-				if (personas.get(i).getFechaNacimiento().isBefore(hoy.plusYears(-18))) {
-					cargarPersonas(personas, i);
+				if (persona.getFechaNacimiento().isBefore(hoy.plusYears(-18))) {
+					cargarPersona(persona);
 				}
 			}
 
 		} else if (!chckbxMayoresDeEdad.isSelected() && chckbxConHijos.isSelected()) {
-			for (int i = 0; i < personas.size(); i++) {
 
-				if (personas.get(i).getCantHijos() > 0) {
-					cargarPersonas(personas, i);
+			for (Persona persona : personas) {
+				if (persona.getCantHijos() > 0) {
+					cargarPersona(persona);
 				}
 			}
 
 		} else if (!chckbxMayoresDeEdad.isSelected() && !chckbxConHijos.isSelected()) {
-			for (int i = 0; i < personas.size(); i++) {
-				cargarPersonas(personas, i);
+
+			for (Persona persona : personas) {
+				cargarPersona(persona);
 			}
 		}
 	}
@@ -941,7 +945,7 @@ public class Formulario extends JFrame {
 	// --------------- Método Cargar Barcos --------------------
 
 	public void cargarBarco(ArrayList<Persona> personas) {
-		
+
 		limpiarTabla(1);
 
 		for (Persona persona : personas) {
@@ -953,7 +957,7 @@ public class Formulario extends JFrame {
 				datos[2] = barco.getColor();
 				datos[3] = Double.toString(barco.getEslora());
 				datos[4] = Double.toString(barco.getManga());
-				
+
 				modelBarcos.addRow(datos);
 			}
 		}
