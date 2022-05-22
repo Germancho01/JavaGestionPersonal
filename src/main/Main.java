@@ -2,6 +2,7 @@ package main;
 
 import java.util.ArrayList;
 
+import classes.Barco;
 import classes.Persona;
 import windows.Inicio;
 
@@ -18,7 +19,7 @@ public class Main {
 	 * Launch the application.
 	 * 
 	 */
-	
+
 	public static void main(String[] args) {
 		ArrayList<Persona> personas = new ArrayList<Persona>();
 
