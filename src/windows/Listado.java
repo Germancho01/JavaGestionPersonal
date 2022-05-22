@@ -128,6 +128,7 @@ public class Listado extends JFrame {
 
 		model = (DefaultTableModel) table.getModel(); // obtener el modelo de la tabla para poder añadir datos a la
 														// misma
+		limpiarTabla();
 
 		// --------------- Botón Eliminar --------------------
 
