@@ -29,6 +29,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.AbstractDocument.BranchElement;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -80,9 +81,9 @@ public class Formulario extends JFrame {
 	 * --- Panel Vehículos
 	 */
 
-	private ArrayList<Vehiculo> vehiculos = new ArrayList<Vehiculo>();
-	private ArrayList<Barco> barcos = new ArrayList<Barco>();
-	private ArrayList<Avion> aviones = new ArrayList<Avion>();
+	private String[] datosVehiculos = new String[6];
+
+	private JTabbedPane tabbedPane_1;
 
 	private String nombreVehiculo, color;
 	private Integer cantPasajeros;
@@ -96,6 +97,7 @@ public class Formulario extends JFrame {
 
 	private JComboBox<String> comboBoxTipo;
 	private JComboBox<String> comboBoxPropietario;
+	private JComboBox<String> comboBoxPropietario_1;
 
 	/*
 	 * --- Panel Barcos
@@ -220,13 +222,9 @@ public class Formulario extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// ingresar datos con las excepciones de text fields no completados
 				try {
-					ingresarPersona(personas);
+					Persona persona = ingresarPersona(personas);
 
-					limpiarTabla(0);
-
-					for (Persona persona : personas) {
-						cargarPersona(persona);
-					}
+					cargarPersona(persona);
 
 				} catch (NumberFormatException e2) {
 					JOptionPane.showMessageDialog(null, "Revise que haya ingresado correctamente todos los datos.");
@@ -248,6 +246,8 @@ public class Formulario extends JFrame {
 				try {
 					modificarPersona(personas);
 				} catch (CellNoSelectedException e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage());
+				} catch (FieldNoCompletedException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage());
 				}
 			}
@@ -280,10 +280,12 @@ public class Formulario extends JFrame {
 		btnEliminarTodo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				limpiarTabla(0);
+				limpiarTabla(1);
+				limpiarTabla(2);
 				personas.clear(); // limpia el arrayList de personas
 
 				actualizarPropietarios(personas);
-				cargarBarco(personas);
+
 			}
 		});
 		btnEliminarTodo.setBounds(224, 227, 116, 23);
@@ -491,14 +493,12 @@ public class Formulario extends JFrame {
 		comboBoxTipo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (comboBoxTipo.getSelectedIndex() == 0) {
-					lblAtributo1.setText("Eslora: ");
-					lblAtributo2.setText("Manga: ");
+					lblAtributo1.setText("Eslora ");
+					lblAtributo2.setText("Manga ");
 				}
 				if (comboBoxTipo.getSelectedIndex() == 1) {
-					lblAtributo1.setText("Cantidad de Pasajeros: ");
-					lblAtributo2.setText("Longitud: ");
-				} else {
-
+					lblAtributo1.setText("Cantidad de Pasajeros ");
+					lblAtributo2.setText("Longitud ");
 				}
 			}
 		});
@@ -511,11 +511,21 @@ public class Formulario extends JFrame {
 		// --------------- ComboBox Propietario --------------------
 
 		comboBoxPropietario = new JComboBox<String>();
-		actualizarPropietarios(personas);
 		comboBoxPropietario.setBounds(396, 78, 168, 22);
-		// comboBoxPropietario.setSelectedIndex(0);
 		comboBoxPropietario.setFocusable(false);
 		panelVehiculos.add(comboBoxPropietario);
+
+		comboBoxPropietario_1 = new JComboBox<String>();
+		comboBoxPropietario_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				filtroVehiculos(personas);
+			}
+		});
+		comboBoxPropietario_1.setBounds(27, 548, 190, 22);
+		comboBoxPropietario_1.setFocusable(false);
+		panelVehiculos.add(comboBoxPropietario_1);
+
+		actualizarPropietarios(personas);
 
 		// --------------- Botón Agregar --------------------
 
@@ -525,9 +535,13 @@ public class Formulario extends JFrame {
 				try {
 					ingresarVehiculo(personas, comboBoxPropietario.getSelectedIndex());
 				} catch (FieldNoCompletedException e1) {
-					JOptionPane.showMessageDialog(null, e1.getMessage());
-				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(null, "Revise que haya ingresado correctamente todos los datos.");
+					JOptionPane.showMessageDialog(null, e1.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+				} catch (NumberFormatException e2) {
+					JOptionPane.showMessageDialog(null, "Revise que haya ingresado correctamente todos los datos.",
+							"ERROR", JOptionPane.ERROR_MESSAGE);
+				} catch (IndexOutOfBoundsException e2) {
+					JOptionPane.showMessageDialog(null, "Debe ingresar el propietario del vehículo.", "ERROR",
+							JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -538,28 +552,33 @@ public class Formulario extends JFrame {
 		// --------------- Botón Modificar --------------------
 
 		JButton btnModificar_1 = new JButton("Modificar");
-		btnModificar_1.setBounds(30, 524, 89, 23);
+		btnModificar_1.setBounds(27, 506, 89, 23);
 		btnModificar_1.setFocusable(false);
 		panelVehiculos.add(btnModificar_1);
 
 		// --------------- Botón Eliminar --------------------
 
 		JButton btnEliminar_1 = new JButton("Eliminar");
-		btnEliminar_1.setBounds(129, 524, 89, 23);
+		btnEliminar_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+			}
+		});
+		btnEliminar_1.setBounds(126, 506, 89, 23);
 		btnEliminar_1.setFocusable(false);
 		panelVehiculos.add(btnEliminar_1);
 
 		// --------------- Botón Eliminar Todo --------------------
 
 		JButton btnEliminarTodo_1 = new JButton("Eliminar Todo");
-		btnEliminarTodo_1.setBounds(463, 524, 116, 23);
+		btnEliminarTodo_1.setBounds(460, 506, 116, 23);
 		btnEliminarTodo_1.setFocusable(false);
 		panelVehiculos.add(btnEliminarTodo_1);
 
 		// --------------- Panel 1 --------------------
 
-		JTabbedPane tabbedPane_1 = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane_1.setBounds(26, 237, 553, 279);
+		tabbedPane_1 = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane_1.setBounds(23, 219, 553, 279);
 		panelVehiculos.add(tabbedPane_1);
 
 		/*
@@ -716,7 +735,7 @@ public class Formulario extends JFrame {
 
 	// --------------- Método Ingresar Persona --------------------
 
-	public void ingresarPersona(ArrayList<Persona> personas) throws FieldNoCompletedException {
+	public Persona ingresarPersona(ArrayList<Persona> personas) throws FieldNoCompletedException {
 
 		ArrayList<Vehiculo> vehiculos = new ArrayList<Vehiculo>();
 		ArrayList<Barco> barcos = new ArrayList<Barco>();
@@ -738,12 +757,16 @@ public class Formulario extends JFrame {
 		}
 
 		// crear instancia de persona y la almacena en un arrayList
-		personas.add(new Persona(idPersona, nombre, apellido, dptoResidencia, cantHijos, fecNacimiento, vehiculos,
-				barcos, aviones));
+		Persona persona = new Persona(idPersona, nombre, apellido, dptoResidencia, cantHijos, fecNacimiento, vehiculos,
+				barcos, aviones);
+
+		personas.add(persona);
 
 		// resetear los componentes
 		resetearCampos();
 		actualizarPropietarios(personas);
+
+		return persona;
 	}
 
 	// --------------- Método Resetear Campos --------------------
@@ -773,7 +796,8 @@ public class Formulario extends JFrame {
 
 	// --------------- Método Modificar Dato --------------------
 
-	public void modificarPersona(ArrayList<Persona> personas) throws CellNoSelectedException {
+	public void modificarPersona(ArrayList<Persona> personas)
+			throws CellNoSelectedException, FieldNoCompletedException {
 
 		int fila = table.getSelectedRow(); // obtener fila seleccionada
 		int columna = table.getSelectedColumn(); // obtener columna seleccionada
@@ -787,14 +811,25 @@ public class Formulario extends JFrame {
 		if (columna == 1) {
 			String nuevoNombre = JOptionPane.showInputDialog("Ingrese nuevo nombre: ");
 
+			if (nuevoNombre.isEmpty()) {
+				throw new FieldNoCompletedException();
+			}
+
 			if (nuevoNombre != null) {
-				personas.get(fila).setNombre(nuevoNombre); // cambia el valor de la persona en el arrayList personas
-				table.setValueAt(nuevoNombre, fila, 1); // setea el nuevo valor en la tabla, en la fila y columna
-														// seleccionadas
+
+				// cambia el valor de la persona en el arrayList personas
+				personas.get(fila).setNombre(nuevoNombre);
+
+				// setea el nuevo valor en la tabla, en la fila y columna seleccionadas
+				table.setValueAt(nuevoNombre, fila, 1);
 			}
 
 		} else if (columna == 2) {
 			String nuevoApellido = JOptionPane.showInputDialog("Ingrese nuevo apellido: ");
+
+			if (nuevoApellido.isEmpty()) {
+				throw new FieldNoCompletedException();
+			}
 
 			if (nuevoApellido != null) {
 				personas.get(fila).setApellido(nuevoApellido);
@@ -816,6 +851,11 @@ public class Formulario extends JFrame {
 
 		} else if (columna == 4) {
 			String nuevoDptoResidencia = JOptionPane.showInputDialog("Ingrese nuevo dpto de residencia: ");
+
+			if (nuevoDptoResidencia.isEmpty()) {
+				throw new FieldNoCompletedException();
+			}
+
 			if (nuevoDptoResidencia != null) {
 				personas.get(fila).setDptoResidencia(nuevoDptoResidencia);
 				table.setValueAt(nuevoDptoResidencia, fila, 4);
@@ -826,6 +866,7 @@ public class Formulario extends JFrame {
 			// en caso de que el formato de la fecha no sea correcto
 			try {
 				String nuevoDateString = JOptionPane.showInputDialog("Ingrese nueva fecha: ");
+
 				if (nuevoDateString != null) {
 					// transforma el String ingresado en un tipo LocalDate
 					LocalDate nuevoDate = LocalDate.parse(nuevoDateString);
@@ -851,8 +892,21 @@ public class Formulario extends JFrame {
 
 		model.removeRow(fila); // elimina fila de la tabla
 		personas.remove(fila); // elima persona en el arrayList
+
 		actualizarPropietarios(personas);
-		cargarBarco(personas);
+
+		for (Persona persona : personas) {
+			for (Barco barco : persona.getBarcos()) {
+				cargarVehiculo(barco);
+			}
+		}
+
+		for (Persona persona : personas) {
+			for (Avion avion : persona.getAviones()) {
+				cargarVehiculo(avion);
+			}
+		}
+
 	}
 
 	// --------------- Método Filtros --------------------
@@ -908,35 +962,37 @@ public class Formulario extends JFrame {
 	// ----------- Método Ingresar Vehiculo ----------
 
 	private void ingresarVehiculo(ArrayList<Persona> personas, int i) throws FieldNoCompletedException {
-		nombre = textFieldNombreVehiculo.getText();
+		nombreVehiculo = textFieldNombreVehiculo.getText();
 		color = textFieldColor.getText();
-		// idVehiculo = Vehiculo.getId();
 
-		if (nombre.isEmpty() || color.isEmpty()) {
+		if (nombreVehiculo.isEmpty() || color.isEmpty()) {
 			throw new FieldNoCompletedException();
 		}
 
+		// Si el comboBox tipo de vehiculo es un barco:
 		if (comboBoxTipo.getSelectedIndex() == 0) {
 			eslora = Double.parseDouble(textFieldAtributo1.getText());
 			manga = Double.parseDouble(textFieldAtributo2.getText());
 			idVehiculo = Barco.getId();
 
-			Barco barco = new Barco(idVehiculo, nombre, color, personas.get(i), eslora, manga);
+			Barco barco = new Barco(idVehiculo, nombreVehiculo, color, personas.get(i), eslora, manga);
 			personas.get(i).getBarcos().add(barco);
 			personas.get(i).getVehiculos().add(barco);
 
-			cargarBarco(personas);
+			cargarVehiculo(barco);
+
+			// Si el comboBox tipo de vehiculo es un avion:
 
 		} else if (comboBoxTipo.getSelectedIndex() == 1) {
 			cantPasajeros = Integer.parseInt(textFieldAtributo1.getText());
 			longitud = Double.parseDouble(textFieldAtributo2.getText());
 			idVehiculo = Avion.getId();
 
-			Avion avion = new Avion(idVehiculo, nombre, color, null, longitud, cantPasajeros);
+			Avion avion = new Avion(idVehiculo, nombreVehiculo, color, null, longitud, cantPasajeros);
 			personas.get(i).getAviones().add(avion);
 			personas.get(i).getVehiculos().add(avion);
 
-			cargarAvion(aviones, i);
+			cargarVehiculo(avion);
 		}
 
 		vaciarCampos();
@@ -944,39 +1000,51 @@ public class Formulario extends JFrame {
 
 	// --------------- Método Cargar Barcos --------------------
 
-	public void cargarBarco(ArrayList<Persona> personas) {
+	public void cargarVehiculo(Barco barco) {
 
-		limpiarTabla(1);
+		datosVehiculos[0] = Integer.toString(barco.getIdVehiculo());
+		datosVehiculos[1] = barco.getNombre();
+		datosVehiculos[2] = barco.getColor();
+		datosVehiculos[3] = Double.toString(barco.getEslora());
+		datosVehiculos[4] = Double.toString(barco.getManga());
 
-		for (Persona persona : personas) {
-			barcos = persona.getBarcos();
-
-			for (Barco barco : barcos) {
-				datos[0] = Integer.toString(barco.getIdVehiculo());
-				datos[1] = barco.getNombre();
-				datos[2] = barco.getColor();
-				datos[3] = Double.toString(barco.getEslora());
-				datos[4] = Double.toString(barco.getManga());
-
-				modelBarcos.addRow(datos);
-			}
-		}
+		modelBarcos.addRow(datosVehiculos);
 	}
 
 	// --------------- Método Cargar Aviones --------------------
 
-	public void cargarAvion(ArrayList<Avion> aviones, int i) {
+	public void cargarVehiculo(Avion avion) {
 
-		datos[0] = Integer.toString(aviones.get(i).getIdVehiculo());
-		datos[1] = aviones.get(i).getNombre();
-		datos[2] = aviones.get(i).getColor();
-		datos[3] = Double.toString(aviones.get(i).getLongitud());
-		datos[4] = Double.toString(aviones.get(i).getCantPasajeros());
+		datosVehiculos[0] = Integer.toString(avion.getIdVehiculo());
+		datosVehiculos[1] = avion.getNombre();
+		datosVehiculos[2] = avion.getColor();
+		datosVehiculos[3] = Double.toString(avion.getLongitud());
+		datosVehiculos[4] = Double.toString(avion.getCantPasajeros());
 
-		modelAviones.addRow(datos);
+		modelAviones.addRow(datosVehiculos);
+	}
+
+	// --------------- Método Eliminar Vehiculo --------------------
+
+	public void eliminarVehiculo(ArrayList<Persona> personas) throws CellNoSelectedException {
+
+		if (tabbedPane_1.getSelectedIndex() == 0) {
+
+			int fila = tableBarcos.getSelectedRow();
+			int propitario = comboBoxPropietario_1.getSelectedIndex();
+
+			if (fila < 0) {
+				throw new CellNoSelectedException();
+			}
+
+			modelBarcos.removeRow(fila); // elimina fila de la tabla
+			personas.get(propitario).getBarcos().remove(fila);
+		}
+
 	}
 
 	// ----------- Método Vaciar Campos ----------
+
 	private void vaciarCampos() {
 		textFieldAtributo1.setText("");
 		textFieldAtributo2.setText("");
@@ -985,14 +1053,52 @@ public class Formulario extends JFrame {
 
 	}
 
+	// ----------- Método Actualizar Propietarios ----------
+
 	public void actualizarPropietarios(ArrayList<Persona> personas) {
 
-		String[] personasString = new String[personas.size()];
+		String[] propietarios = new String[personas.size()];
+		String[] propietarios1 = new String[personas.size() + 1];
+		propietarios1[0] = " ";
+
 		for (int i = 0; i < personas.size(); i++) {
-			personasString[i] = personas.get(i).getNombre() + " " + personas.get(i).getApellido();
+			propietarios[i] = personas.get(i).getNombre() + " " + personas.get(i).getApellido();
+			propietarios1[i + 1] = personas.get(i).getNombre() + " " + personas.get(i).getApellido();
 		}
 
-		comboBoxPropietario.setModel(new DefaultComboBoxModel<String>(personasString));
+		comboBoxPropietario.setModel(new DefaultComboBoxModel<String>(propietarios));
+		comboBoxPropietario_1.setModel(new DefaultComboBoxModel<String>(propietarios1));
 	}
 
+	// ----------- Método Filtro Vehiculos ----------
+
+	public void filtroVehiculos(ArrayList<Persona> personas) {
+		int i = comboBoxPropietario_1.getSelectedIndex();
+
+		limpiarTabla(1);
+		limpiarTabla(2);
+
+		if (i == 0) {
+
+			for (Persona persona : personas) {
+				for (Barco barco : persona.getBarcos()) {
+					cargarVehiculo(barco);
+				}
+
+				for (Avion avion : persona.getAviones()) {
+					cargarVehiculo(avion);
+				}
+			}
+
+		} else {
+
+			for (Barco barco : personas.get(i - 1).getBarcos()) {
+				cargarVehiculo(barco);
+			}
+
+			for (Avion avion : personas.get(i - 1).getAviones()) {
+				cargarVehiculo(avion);
+			}
+		}
+	}
 }
