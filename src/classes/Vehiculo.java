@@ -4,11 +4,12 @@ public class Vehiculo {
 	public Integer idVehiculo;
 	public String nombre, color;
 	public Persona duenio;
-
+	public static int id;
 
 	public Vehiculo(Integer idVehiculo, String nombre, String color, Persona duenio) {
 		super();
 
+		id++;
 		this.idVehiculo = idVehiculo;
 		this.nombre = nombre;
 		this.color = color;
@@ -50,6 +51,14 @@ public class Vehiculo {
 	@Override
 	public String toString() {
 		return "\n --- Vehiculo ---" + "\nidVehiculo=" + idVehiculo + "\nnombre=" + nombre + "\ncolor=" + color;
+	}
+
+	public static int getId() {
+		return id;
+	}
+
+	public static void setId(int id) {
+		Vehiculo.id = id;
 	}
 
 }
