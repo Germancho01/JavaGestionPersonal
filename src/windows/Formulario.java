@@ -237,11 +237,12 @@ public class Formulario extends JFrame {
 					cargarPersona(persona);
 
 				} catch (NumberFormatException e2) {
-					JOptionPane.showMessageDialog(null, "Revise que haya ingresado correctamente todos los datos.");
+					JOptionPane.showMessageDialog(null, "Revise que haya ingresado correctamente todos los datos.",
+							"ERROR", JOptionPane.ERROR_MESSAGE);
 				} catch (FieldNoCompletedException e1) {
-					JOptionPane.showMessageDialog(null, e1.getMessage());
+					JOptionPane.showMessageDialog(null, e1.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
 				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(null, "ERROR!\nAlgo ha salido mal.");
+					JOptionPane.showMessageDialog(null, "Algo ha salido mal.", "ERROR", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -256,9 +257,9 @@ public class Formulario extends JFrame {
 				try {
 					modificarPersona(personas);
 				} catch (CellNoSelectedException e1) {
-					JOptionPane.showMessageDialog(null, e1.getMessage());
+					JOptionPane.showMessageDialog(null, e1.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
 				} catch (FieldNoCompletedException e1) {
-					JOptionPane.showMessageDialog(null, e1.getMessage());
+					JOptionPane.showMessageDialog(null, e1.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 
@@ -276,7 +277,7 @@ public class Formulario extends JFrame {
 				try {
 					eliminarPersona(personas);
 				} catch (CellNoSelectedException e1) {
-					JOptionPane.showMessageDialog(null, e1.getMessage());
+					JOptionPane.showMessageDialog(null, e1.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
