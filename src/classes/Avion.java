@@ -1,5 +1,7 @@
 package classes;
 
+import javax.swing.table.DefaultTableModel;
+
 public class Avion extends Vehiculo {
 
 	public Double longitud;
@@ -13,6 +15,22 @@ public class Avion extends Vehiculo {
 		id++;
 		this.longitud = longitud;
 		this.cantPasajeros = cantPasajeros;
+	}
+
+	// --------------- Método Cargar Avion --------------------
+
+	public void cargarAvion(DefaultTableModel model) {
+
+		String[] datos = new String[5];
+
+		datos[0] = Integer.toString(this.getIdVehiculo());
+		datos[1] = this.getNombre();
+		datos[2] = this.getColor();
+		datos[3] = Double.toString(this.getLongitud());
+		datos[4] = Double.toString(this.getCantPasajeros());
+
+		model.addRow(datos);
+
 	}
 
 	public static int getId() {
