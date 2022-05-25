@@ -4,7 +4,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import classes.Barco;
 import classes.Persona;
 
 import javax.swing.ImageIcon;
@@ -65,5 +64,6 @@ public class Inicio extends JFrame {
 		setBounds(100, 100, 385, 367);
 		setLocationRelativeTo(null);
 		setVisible(true);
+		setResizable(false);
 	}
 }
