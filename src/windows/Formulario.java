@@ -719,6 +719,12 @@ public class Formulario extends JFrame {
 		menuBar.add(mnNewMenu_1);
 
 		JMenuItem mntmNewMenuItem_5 = new JMenuItem("Acerca de");
+		mntmNewMenuItem_5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String message = "Creado por el grupo TIX: \n\nAnna Benitez \nGermán Domínguez \nLeonardo Cutraro \nAgustina Martínez \nPedro Serna";
+				JOptionPane.showMessageDialog(null, message, "v2.0", JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
 		mnNewMenu_1.add(mntmNewMenuItem_5);
 
 		// --------------- Panel Tablas Vehiculos --------------------
