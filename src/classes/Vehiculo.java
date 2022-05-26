@@ -1,5 +1,7 @@
 package classes;
 
+import javax.swing.table.DefaultTableModel;
+
 public class Vehiculo {
 	public Integer idVehiculo;
 	public String nombre, color;
@@ -14,6 +16,25 @@ public class Vehiculo {
 		this.nombre = nombre;
 		this.color = color;
 		this.duenio = duenio;
+	}
+
+	// --------------- Método Cargar Vehiculo --------------------
+
+	public void cargarVehiculo(DefaultTableModel model) {
+
+		String[] datos = new String[4];
+		datos[0] = Integer.toString(this.getIdVehiculo());
+
+		datos[2] = this.getNombre();
+		datos[3] = this.getColor();
+
+		if (this instanceof Barco) {
+			datos[1] = "Barco";
+		} else {
+			datos[1] = "Avión";
+		}
+
+		model.addRow(datos);
 	}
 
 	public Integer getIdVehiculo() {

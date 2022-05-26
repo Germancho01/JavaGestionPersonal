@@ -1,11 +1,32 @@
 package windows;
 
+import java.awt.SystemColor;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.time.LocalDate;
+import java.util.ArrayList;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.table.DefaultTableModel;
 
 import classes.Avion;
 import classes.Barco;
@@ -14,27 +35,6 @@ import classes.Vehiculo;
 import exceptions.CellNoSelectedException;
 import exceptions.FieldNoCompletedException;
 import exceptions.ItemNoSelectedException;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.awt.event.ActionEvent;
-
-import java.awt.Toolkit;
-import java.awt.SystemColor;
-
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.time.LocalDate;
-import javax.swing.JCheckBox;
 
 public class Formulario extends JFrame {
 
@@ -75,7 +75,6 @@ public class Formulario extends JFrame {
 	private JScrollPane scrollPane;
 	private JTable table;
 	private DefaultTableModel model;
-	private JList<String> list;
 
 	/*
 	 * --- Panel Vehículos
@@ -84,10 +83,6 @@ public class Formulario extends JFrame {
 	ArrayList<Vehiculo> vehiculos = new ArrayList<Vehiculo>();
 	ArrayList<Barco> barcos = new ArrayList<Barco>();
 	ArrayList<Avion> aviones = new ArrayList<Avion>();
-
-	private String[] datosVehiculo = new String[4];
-	private String[] datosBarco = new String[5];
-	private String[] datosAvion = new String[5];
 
 	private JTabbedPane tabbedPaneTablas;
 
@@ -160,7 +155,8 @@ public class Formulario extends JFrame {
 
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setToolTipText("");
-		tabbedPane.setBounds(26, 11, 613, 645);
+		tabbedPane.setBounds(26, 11, 613, 614);
+		tabbedPane.setFocusable(false);
 		frmFormulario.getContentPane().add(tabbedPane);
 
 		/*
@@ -232,9 +228,7 @@ public class Formulario extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// ingresar datos con las excepciones de text fields no completados
 				try {
-					Persona persona = ingresarPersona(personas);
-
-					cargarPersona(persona);
+					ingresarPersona(personas);
 
 				} catch (NumberFormatException e2) {
 					JOptionPane.showMessageDialog(null, "Revise que haya ingresado correctamente todos los datos.",
@@ -253,7 +247,7 @@ public class Formulario extends JFrame {
 		btnModificar = new JButton("Modificar");
 		btnModificar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Modificar datos con la excepción de celda no seleccionada
+
 				try {
 					modificarPersona(personas);
 				} catch (CellNoSelectedException e1) {
@@ -372,8 +366,9 @@ public class Formulario extends JFrame {
 				filtros(personas);
 			}
 		});
-		chckbxMayoresDeEdad.setBounds(26, 468, 276, 23);
+		chckbxMayoresDeEdad.setBounds(26, 552, 276, 23);
 		chckbxMayoresDeEdad.setSelected(false);
+		chckbxMayoresDeEdad.setFocusable(false);
 		panelPersonas.add(chckbxMayoresDeEdad);
 
 		// --------------- CheckBox Personas con hijos --------------------
@@ -384,17 +379,29 @@ public class Formulario extends JFrame {
 				filtros(personas);
 			}
 		});
-		chckbxConHijos.setBounds(304, 468, 275, 23);
+		chckbxConHijos.setBounds(304, 552, 275, 23);
 		chckbxConHijos.setSelected(false);
+		chckbxConHijos.setFocusable(false);
 		panelPersonas.add(chckbxConHijos);
 
 		// --------------- Tabla --------------------
 
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(26, 261, 553, 200);
+		scrollPane.setBounds(26, 261, 553, 284);
 		panelPersonas.add(scrollPane);
 
 		table = new JTable();
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					int fila = table.getSelectedRow();
+					tabbedPane.setSelectedIndex(1);
+					comboBoxPropietario_1.setSelectedIndex(fila + 1);
+				}
+
+			}
+		});
 		table.setModel(new DefaultTableModel(new Object[][] { { null, null, null, null, null, null }, },
 				new String[] { "ID", "Nombre", "Apellido", "Cantidad Hijos", "Dpto Residencia", "Fecha Nacimiento" }) {
 
@@ -428,14 +435,8 @@ public class Formulario extends JFrame {
 		limpiarTabla(0);
 
 		for (Persona persona : personas) {
-			cargarPersona(persona);
+			persona.cargarPersona(model);
 		}
-
-		// --------------- Lista --------------------
-
-		list = new JList();
-		list.setBounds(26, 517, 553, 78);
-		panelPersonas.add(list);
 
 		/*
 		 * 
@@ -621,6 +622,111 @@ public class Formulario extends JFrame {
 		btnEliminarTodo_1.setFocusable(false);
 		panelVehiculos.add(btnEliminarTodo_1);
 
+		// --------------- Botón Volver --------------------
+
+		JButton btnVolver = new JButton("Volver");
+		btnVolver.setBounds(550, 636, 89, 23);
+		frmFormulario.getContentPane().add(btnVolver);
+		btnVolver.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new Inicio(personas);
+				frmFormulario.setVisible(false);
+			}
+		});
+		btnVolver.setFocusable(false);
+
+		JMenuBar menuBar = new JMenuBar();
+		frmFormulario.setJMenuBar(menuBar);
+
+		JMenu mnNewMenu = new JMenu("Archivo");
+		menuBar.add(mnNewMenu);
+
+		JMenuItem mntmNewMenuItem_4 = new JMenuItem("Abrir");
+		mnNewMenu.add(mntmNewMenuItem_4);
+
+		JMenuItem mntmNewMenuItem = new JMenuItem("Guardar");
+		mnNewMenu.add(mntmNewMenuItem);
+
+		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Salir");
+		mnNewMenu.add(mntmNewMenuItem_3);
+
+		JMenu mnNewMenu_2 = new JMenu("Apariencia");
+		menuBar.add(mnNewMenu_2);
+
+		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Normal");
+		mntmNewMenuItem_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+					frmFormulario.setVisible(false);
+					new Formulario(personas);
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+						| UnsupportedLookAndFeelException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		mnNewMenu_2.add(mntmNewMenuItem_1);
+
+		JMenuItem mntmNewMenuItem_2_1 = new JMenuItem("Cl\u00E1sica");
+		mntmNewMenuItem_2_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel");
+					frmFormulario.setVisible(false);
+					new Formulario(personas);
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+						| UnsupportedLookAndFeelException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		mnNewMenu_2.add(mntmNewMenuItem_2_1);
+
+		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Moderna");
+		mntmNewMenuItem_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+					frmFormulario.setVisible(false);
+					new Formulario(personas);
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+						| UnsupportedLookAndFeelException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		mnNewMenu_2.add(mntmNewMenuItem_2);
+
+		JMenuItem mntmNewMenuItem_6 = new JMenuItem("Nimbus");
+		mntmNewMenuItem_6.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				try {
+					UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+					frmFormulario.setVisible(false);
+					new Formulario(personas);
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+						| UnsupportedLookAndFeelException e1) {
+					e1.printStackTrace();
+				}
+
+			}
+		});
+		mnNewMenu_2.add(mntmNewMenuItem_6);
+
+		JMenu mnNewMenu_1 = new JMenu("Ayuda");
+		menuBar.add(mnNewMenu_1);
+
+		JMenuItem mntmNewMenuItem_5 = new JMenuItem("Acerca de");
+		mntmNewMenuItem_5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String message = "Creado por el grupo TIX: \n\nAnna Benitez \nGermán Domínguez \nLeonardo Cutraro \nAgustina Martínez \nPedro Serna";
+				JOptionPane.showMessageDialog(null, message, "v2.0", JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+		mnNewMenu_1.add(mntmNewMenuItem_5);
+
 		// --------------- Panel Tablas Vehiculos --------------------
 
 		tabbedPaneTablas = new JTabbedPane(JTabbedPane.TOP);
@@ -728,7 +834,7 @@ public class Formulario extends JFrame {
 
 		Persona persona : personas) {
 			for (Barco barco : persona.getBarcos()) {
-				cargarVehiculo(barco);
+				barco.cargarVehiculo(modelVehiculos);
 			}
 		}
 
@@ -776,24 +882,13 @@ public class Formulario extends JFrame {
 
 		limpiarTabla(3);
 
-		for (Persona persona : personas) {
+		for (
+
+		Persona persona : personas) {
 			for (Avion avion : persona.getAviones()) {
-				cargarVehiculo(avion);
+				avion.cargarVehiculo(modelVehiculos);
 			}
 		}
-
-		// --------------- Botón Volver --------------------
-
-		JButton btnVolver = new JButton("Volver");
-		btnVolver.setBounds(550, 667, 89, 23);
-		frmFormulario.getContentPane().add(btnVolver);
-		btnVolver.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				new Inicio(personas);
-				frmFormulario.setVisible(false);
-			}
-		});
-		btnVolver.setFocusable(false);
 
 	}
 
@@ -843,7 +938,7 @@ public class Formulario extends JFrame {
 
 	// --------------- Método Ingresar Persona --------------------
 
-	public Persona ingresarPersona(ArrayList<Persona> personas) throws FieldNoCompletedException {
+	public void ingresarPersona(ArrayList<Persona> personas) throws FieldNoCompletedException {
 
 		ArrayList<Vehiculo> vehiculos = new ArrayList<Vehiculo>();
 		ArrayList<Barco> barcos = new ArrayList<Barco>();
@@ -870,11 +965,11 @@ public class Formulario extends JFrame {
 
 		personas.add(persona);
 
+		persona.cargarPersona(model);
+
 		// resetear los componentes
 		resetearCampos();
 		actualizarPropietarios(personas);
-
-		return persona;
 	}
 
 	// --------------- Método Resetear Campos --------------------
@@ -889,102 +984,19 @@ public class Formulario extends JFrame {
 		comboBoxAnio.setSelectedIndex(0);
 	}
 
-	// --------------- Método Cargar Persona --------------------
-
-	public void cargarPersona(Persona persona) {
-
-		datos[0] = Integer.toString(persona.getIdPersona());
-		datos[1] = persona.getNombre();
-		datos[2] = persona.getApellido();
-		datos[3] = persona.getCantHijos().toString();
-		datos[4] = persona.getDptoResidencia();
-		datos[5] = persona.getFechaNacimiento().toString();
-		model.addRow(datos);
-	}
-
-	// --------------- Método Modificar Dato --------------------
+	// --------------- Método Modificar Datos Personas--------------------
 
 	public void modificarPersona(ArrayList<Persona> personas)
 			throws CellNoSelectedException, FieldNoCompletedException {
 
-		int fila = table.getSelectedRow(); // obtener fila seleccionada
-		int columna = table.getSelectedColumn(); // obtener columna seleccionada
+		int fila = table.getSelectedRow();
 
 		// Excepción en caso de que no se seleccione ninguna fila
 		if (fila < 0) {
 			throw new CellNoSelectedException();
 		}
 
-		// modificar los datos dependiendo de la columna seleccionada
-		if (columna == 1) {
-			String nuevoNombre = JOptionPane.showInputDialog("Ingrese nuevo nombre: ");
-
-			if (nuevoNombre.isEmpty()) {
-				throw new FieldNoCompletedException();
-			}
-
-			if (nuevoNombre != null) {
-
-				// cambia el valor de la persona en el arrayList personas
-				personas.get(fila).setNombre(nuevoNombre);
-
-				// setea el nuevo valor en la tabla, en la fila y columna seleccionadas
-				table.setValueAt(nuevoNombre, fila, 1);
-			}
-
-		} else if (columna == 2) {
-			String nuevoApellido = JOptionPane.showInputDialog("Ingrese nuevo apellido: ");
-
-			if (nuevoApellido.isEmpty()) {
-				throw new FieldNoCompletedException();
-			}
-
-			if (nuevoApellido != null) {
-				personas.get(fila).setApellido(nuevoApellido);
-				table.setValueAt(nuevoApellido, fila, 2);
-			}
-
-		} else if (columna == 3) {
-			try {
-				String nuevoCantHijosString = JOptionPane.showInputDialog("Ingrese cantidad de hijos: ");
-
-				if (nuevoCantHijosString != null) {
-					Byte nuevoCantHijos = Byte.parseByte(nuevoCantHijosString);
-					personas.get(fila).setCantHijos(nuevoCantHijos);
-					table.setValueAt(nuevoCantHijos, fila, 3);
-				}
-			} catch (Exception e2) {
-				JOptionPane.showMessageDialog(null, "Formato de dato inválido.");
-			}
-
-		} else if (columna == 4) {
-			String nuevoDptoResidencia = JOptionPane.showInputDialog("Ingrese nuevo dpto de residencia: ");
-
-			if (nuevoDptoResidencia.isEmpty()) {
-				throw new FieldNoCompletedException();
-			}
-
-			if (nuevoDptoResidencia != null) {
-				personas.get(fila).setDptoResidencia(nuevoDptoResidencia);
-				table.setValueAt(nuevoDptoResidencia, fila, 4);
-			}
-
-		} else if (columna == 5) {
-			// modifica la fecha de nacimiento con un Exeption,
-			// en caso de que el formato de la fecha no sea correcto
-			try {
-				String nuevoDateString = JOptionPane.showInputDialog("Ingrese nueva fecha: ");
-
-				if (nuevoDateString != null) {
-					// transforma el String ingresado en un tipo LocalDate
-					LocalDate nuevoDate = LocalDate.parse(nuevoDateString);
-					personas.get(fila).setFechaNacimiento(nuevoDate);
-					table.setValueAt(nuevoDate, fila, 5);
-				}
-			} catch (Exception e2) {
-				JOptionPane.showMessageDialog(null, "Formato de fecha inválido. Use: yyyy-mm-dd");
-			}
-		}
+		personas.get(fila).modificarDatos(table, fila);
 
 		actualizarPropietarios(personas);
 	}
@@ -1002,22 +1014,11 @@ public class Formulario extends JFrame {
 		personas.remove(fila); // elima persona en el arrayList
 
 		actualizarPropietarios(personas);
-
-		for (Persona persona : personas) {
-			for (Barco barco : persona.getBarcos()) {
-				cargarVehiculo(barco);
-			}
-		}
-
-		for (Persona persona : personas) {
-			for (Avion avion : persona.getAviones()) {
-				cargarVehiculo(avion);
-			}
-		}
+		actualizarTablasVehiculos(personas);
 
 	}
 
-	// --------------- Método Filtros --------------------
+	// --------------- Método Filtros de Personas --------------------
 
 	// filtros de los checkBox
 	public void filtros(ArrayList<Persona> personas) {
@@ -1031,7 +1032,7 @@ public class Formulario extends JFrame {
 				boolean tieneHijos = persona.getCantHijos() > 0;
 
 				if (esMayor && tieneHijos) {
-					cargarPersona(persona);
+					persona.cargarPersona(model);
 				}
 			}
 
@@ -1041,7 +1042,7 @@ public class Formulario extends JFrame {
 			for (Persona persona : personas) {
 
 				if (persona.getFechaNacimiento().isBefore(hoy.plusYears(-18))) {
-					cargarPersona(persona);
+					persona.cargarPersona(model);
 				}
 			}
 
@@ -1049,14 +1050,14 @@ public class Formulario extends JFrame {
 
 			for (Persona persona : personas) {
 				if (persona.getCantHijos() > 0) {
-					cargarPersona(persona);
+					persona.cargarPersona(model);
 				}
 			}
 
 		} else if (!chckbxMayoresDeEdad.isSelected() && !chckbxConHijos.isSelected()) {
 
 			for (Persona persona : personas) {
-				cargarPersona(persona);
+				persona.cargarPersona(model);
 			}
 		}
 	}
@@ -1086,6 +1087,7 @@ public class Formulario extends JFrame {
 			manga = Double.parseDouble(textFieldAtributo2.getText());
 
 			Barco barco = new Barco(idVehiculo, nombreVehiculo, color, personas.get(i), eslora, manga);
+
 			personas.get(i).getBarcos().add(barco);
 			personas.get(i).getVehiculos().add(barco);
 
@@ -1096,59 +1098,17 @@ public class Formulario extends JFrame {
 			longitud = Double.parseDouble(textFieldAtributo2.getText());
 
 			Avion avion = new Avion(idVehiculo, nombreVehiculo, color, personas.get(i), longitud, cantPasajeros);
+
 			personas.get(i).getAviones().add(avion);
 			personas.get(i).getVehiculos().add(avion);
 		}
 
+		actualizarTablasVehiculos(personas);
 		vaciarCampos();
 	}
 
-	// --------------- Método Cargar Vehiculos --------------------
+	// --------------- Método Eliminar Todos los Vehiculo --------------------
 
-	public void cargarVehiculo(Vehiculo vehiculo) {
-
-		datosVehiculo[0] = Integer.toString(vehiculo.getIdVehiculo());
-
-		datosVehiculo[2] = vehiculo.getNombre();
-		datosVehiculo[3] = vehiculo.getColor();
-
-		if (vehiculo instanceof Barco) {
-			datosVehiculo[1] = "Barco";
-		} else {
-			datosVehiculo[1] = "Avión";
-		}
-
-		modelVehiculos.addRow(datosVehiculo);
-	}
-
-	// --------------- Método Cargar Barcos --------------------
-
-	public void cargarBarco(Barco barco) {
-
-		datosBarco[0] = Integer.toString(barco.getIdVehiculo());
-		datosBarco[1] = barco.getNombre();
-		datosBarco[2] = barco.getColor();
-		datosBarco[3] = Double.toString(barco.getEslora());
-		datosBarco[4] = Double.toString(barco.getManga());
-
-		modelBarcos.addRow(datosBarco);
-	}
-
-	// --------------- Método Cargar Aviones --------------------
-
-	public void cargarAvion(Avion avion) {
-
-		datosAvion[0] = Integer.toString(avion.getIdVehiculo());
-		datosAvion[1] = avion.getNombre();
-		datosAvion[2] = avion.getColor();
-		datosAvion[3] = Double.toString(avion.getLongitud());
-		datosAvion[4] = Double.toString(avion.getCantPasajeros());
-
-		modelAviones.addRow(datosAvion);
-
-	}
-
-	// --------------- Método Eliminar Vehiculo --------------------
 	public void eliminarTodoVehiculos(ArrayList<Persona> personas) {
 		int propietario = comboBoxPropietario_1.getSelectedIndex() - 1;
 
@@ -1244,7 +1204,6 @@ public class Formulario extends JFrame {
 					break;
 				}
 			}
-
 			persona.getBarcos().remove(posicionBarco);
 		}
 
@@ -1357,7 +1316,7 @@ public class Formulario extends JFrame {
 
 	}
 
-	// ----------- Método Actualizar Propietarios ----------
+	// ----------- Método Actualizar Propietarios en comboBox ----------
 
 	public void actualizarPropietarios(ArrayList<Persona> personas) {
 
@@ -1379,30 +1338,78 @@ public class Formulario extends JFrame {
 	public void filtroVehiculos(ArrayList<Persona> personas) {
 		int i = comboBoxPropietario_1.getSelectedIndex();
 
-		limpiarTabla(1);
-		limpiarTabla(2);
-		limpiarTabla(3);
-
 		if (i == 0) {
-			actualizarListaVehiculos(personas);
+			actualizarTablasVehiculos(personas);
 
 		} else {
 
-			for (Vehiculo vehiculo : personas.get(i - 1).getVehiculos()) {
-				cargarVehiculo(vehiculo);
-			}
+			// actualizar lista
 
-			for (Barco barco : personas.get(i - 1).getBarcos()) {
-				cargarBarco(barco);
+			vehiculos.clear();
+			aviones.clear();
+			barcos.clear();
+
+			for (Vehiculo vehiculo : personas.get(i - 1).getVehiculos()) {
+				vehiculos.add(vehiculo);
 			}
 
 			for (Avion avion : personas.get(i - 1).getAviones()) {
-				cargarAvion(avion);
+				aviones.add(avion);
+			}
+
+			for (Barco barco : personas.get(i - 1).getBarcos()) {
+				barcos.add(barco);
+			}
+
+			// actualizar tabla
+
+			limpiarTabla(1);
+			limpiarTabla(2);
+			limpiarTabla(3);
+
+			for (Vehiculo vehiculo : personas.get(i - 1).getVehiculos()) {
+				vehiculo.cargarVehiculo(modelVehiculos);
+			}
+
+			for (Barco barco : personas.get(i - 1).getBarcos()) {
+				barco.cargarBarco(modelBarcos);
+			}
+
+			for (Avion avion : personas.get(i - 1).getAviones()) {
+				avion.cargarAvion(modelAviones);
 			}
 		}
 	}
 
-	// ----------- Método Actualizar Lista Vehiculos ----------
+	// ----------- Método Actualizar Tablas de Vehiculos ----------
+
+	public void actualizarTablasVehiculos(ArrayList<Persona> personas) {
+		limpiarTabla(1);
+		limpiarTabla(2);
+		limpiarTabla(3);
+
+		actualizarListaVehiculos(personas);
+
+		sortVehiculos(vehiculos);
+
+		for (Vehiculo vehiculo : vehiculos) {
+			vehiculo.cargarVehiculo(modelVehiculos);
+		}
+
+		sortBarcos(barcos);
+
+		for (Barco barco : barcos) {
+			barco.cargarBarco(modelBarcos);
+		}
+
+		sortAviones(aviones);
+
+		for (Avion avion : aviones) {
+			avion.cargarAvion(modelAviones);
+		}
+	}
+
+	// ----------- Método Actualizar Listas de Vehiculos ----------
 
 	public void actualizarListaVehiculos(ArrayList<Persona> personas) {
 
@@ -1424,31 +1431,13 @@ public class Formulario extends JFrame {
 				barcos.add(barco);
 			}
 		}
-
-		sortVehiculos(vehiculos);
-
-		for (Vehiculo vehiculo : vehiculos) {
-			cargarVehiculo(vehiculo);
-		}
-
-		sortBarcos(barcos);
-
-		for (Barco barco : barcos) {
-			cargarBarco(barco);
-		}
-
-		sortAviones(aviones);
-
-		for (Avion avion : aviones) {
-			cargarAvion(avion);
-		}
 	}
 
 	// ----------- Método Modificar Barco ----------
+
 	public void modificarBarco(ArrayList<Persona> personas) throws CellNoSelectedException, ItemNoSelectedException {
 
 		int fila = tableBarcos.getSelectedRow(); // obtener celda seleccionada
-		int columna = tableBarcos.getSelectedColumn(); // obtener columna seleccionada
 
 		if (fila < 0) {
 			throw new CellNoSelectedException();
@@ -1457,89 +1446,20 @@ public class Formulario extends JFrame {
 		int propietario = comboBoxPropietario_1.getSelectedIndex() - 1;
 
 		if (propietario == -1) {
-			Persona persona = barcos.get(fila).getDuenio();
-			int i = persona.getBarcos().indexOf(barcos.get(fila));
-
-			// modificar los datos dependiendo de la columna seleccionada
-			if (columna == 1) {
-				String nuevoNombre = JOptionPane.showInputDialog("Ingrese nuevo nombre: ");
-				if (nuevoNombre != null) {
-					persona.getBarcos().get(i).setNombre(nuevoNombre);
-				}
-
-			} else if (columna == 2) {
-				String nuevoColor = JOptionPane.showInputDialog("Ingrese nuevo color: ");
-				if (nuevoColor != null) {
-					persona.getBarcos().get(i).setColor(nuevoColor);
-				}
-
-			} else if (columna == 3) {
-				try {
-					String nuevoEsloraString = JOptionPane.showInputDialog("Ingrese nuevo eslora: ");
-					if (nuevoEsloraString != null) {
-						persona.getBarcos().get(i).setEslora(Double.parseDouble(nuevoEsloraString));
-					}
-				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(null, "Formato de dato inválido.");
-				}
-
-			} else if (columna == 4) {
-				try {
-					String nuevoMangaString = JOptionPane.showInputDialog("Ingrese nuevo manga: ");
-					if (nuevoMangaString != null) {
-						persona.getBarcos().get(i).setManga(Double.parseDouble(nuevoMangaString));
-					}
-				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(null, "Formato de dato inválido.");
-				}
-			}
+			barcos.get(fila).modificarDatos(tableBarcos);
 
 		} else {
-
-			// modificar los datos dependiendo de la columna seleccionada
-			if (columna == 1) {
-				String nuevoNombre = JOptionPane.showInputDialog("Ingrese nuevo nombre: ");
-				if (nuevoNombre != null) {
-					personas.get(propietario).getBarcos().get(fila).setNombre(nuevoNombre);
-				}
-
-			} else if (columna == 2) {
-				String nuevoColor = JOptionPane.showInputDialog("Ingrese nuevo color: ");
-				if (nuevoColor != null) {
-					personas.get(propietario).getBarcos().get(fila).setColor(nuevoColor);
-				}
-
-			} else if (columna == 3) {
-				try {
-					String nuevoEsloraString = JOptionPane.showInputDialog("Ingrese nuevo eslora: ");
-					if (nuevoEsloraString != null) {
-						personas.get(propietario).getBarcos().get(fila)
-								.setEslora(Double.parseDouble(nuevoEsloraString));
-					}
-				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(null, "Formato de dato inválido.");
-				}
-
-			} else if (columna == 4) {
-				try {
-					String nuevoMangaString = JOptionPane.showInputDialog("Ingrese nuevo manga: ");
-					if (nuevoMangaString != null) {
-						personas.get(propietario).getBarcos().get(fila).setManga(Double.parseDouble(nuevoMangaString));
-					}
-				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(null, "Formato de dato inválido.");
-				}
-			}
+			personas.get(propietario).getBarcos().get(fila).modificarDatos(tableBarcos);
 		}
 
-		filtroVehiculos(personas);
+		actualizarTablasVehiculos(personas);
 	}
 
 	// ----------- Método Modificar Avion ----------
 	public void modificarAvion(ArrayList<Persona> personas) throws CellNoSelectedException, ItemNoSelectedException {
 
 		int fila = tableAviones.getSelectedRow(); // obtener celda seleccionada
-		int columna = tableAviones.getSelectedColumn(); // obtener columna seleccionada
+
 		int propietario = comboBoxPropietario_1.getSelectedIndex() - 1;
 
 		// Excepción en caso de que no se seleccione ninguna fila
@@ -1548,86 +1468,13 @@ public class Formulario extends JFrame {
 		}
 
 		if (propietario == -1) {
+			aviones.get(fila).modificarDatos(tableAviones);
 
-			Persona persona = aviones.get(fila).getDuenio();
-			int i = persona.getAviones().indexOf(aviones.get(fila));
-
-			// modificar los datos dependiendo de la columna seleccionada
-			if (columna == 1) {
-				String nuevoNombre = JOptionPane.showInputDialog("Ingrese nuevo nombre: ");
-				if (nuevoNombre != null) {
-					persona.getAviones().get(i).setNombre(nuevoNombre);
-					tableAviones.setValueAt(nuevoNombre, fila, 1);
-				}
-			} else if (columna == 2) {
-				String nuevoColor = JOptionPane.showInputDialog("Ingrese nuevo color: ");
-				if (nuevoColor != null) {
-					persona.getAviones().get(i).setColor(nuevoColor);
-					tableAviones.setValueAt(nuevoColor, fila, 2);
-				}
-			} else if (columna == 3) {
-				try {
-					String nuevoEsloraString = JOptionPane.showInputDialog("Ingrese nueva longitud: ");
-					if (nuevoEsloraString != null) {
-						persona.getAviones().get(i).setLongitud(Double.parseDouble(nuevoEsloraString));
-						tableAviones.setValueAt(nuevoEsloraString, fila, 3);
-					}
-				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(null, "Formato de dato inválido.");
-				}
-
-			} else if (columna == 4) {
-				try {
-					String nuevoCantPasajerosString = JOptionPane
-							.showInputDialog("Ingrese nueva Cantidad de Pasajeros: ");
-					if (nuevoCantPasajerosString != null) {
-						persona.getAviones().get(i).setCantPasajeros(Integer.parseInt(nuevoCantPasajerosString));
-						tableAviones.setValueAt(nuevoCantPasajerosString, fila, 4);
-					}
-				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(null, "Formato de dato inválido.");
-				}
-			}
 		} else {
-			// modificar los datos dependiendo de la columna seleccionada
-			if (columna == 1) {
-				String nuevoNombre = JOptionPane.showInputDialog("Ingrese nuevo nombre: ");
-				if (nuevoNombre != null) {
-					personas.get(propietario).getAviones().get(fila).setNombre(nuevoNombre);
-					tableAviones.setValueAt(nuevoNombre, fila, 1);
-				}
-			} else if (columna == 2) {
-				String nuevoColor = JOptionPane.showInputDialog("Ingrese nuevo color: ");
-				if (nuevoColor != null) {
-					personas.get(propietario).getAviones().get(fila).setColor(nuevoColor);
-					tableAviones.setValueAt(nuevoColor, fila, 2);
-				}
-			} else if (columna == 3) {
-				try {
-					String nuevoEsloraString = JOptionPane.showInputDialog("Ingrese nueva longitud: ");
-					if (nuevoEsloraString != null) {
-						personas.get(propietario).getAviones().get(fila)
-								.setLongitud(Double.parseDouble(nuevoEsloraString));
-						tableAviones.setValueAt(nuevoEsloraString, fila, 3);
-					}
-				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(null, "Formato de dato inválido.");
-				}
-
-			} else if (columna == 4) {
-				try {
-					String nuevoCantPasajerosString = JOptionPane
-							.showInputDialog("Ingrese nueva Cantidad de Pasajeros: ");
-					if (nuevoCantPasajerosString != null) {
-						personas.get(propietario).getAviones().get(fila)
-								.setCantPasajeros(Integer.parseInt(nuevoCantPasajerosString));
-						tableAviones.setValueAt(nuevoCantPasajerosString, fila, 4);
-					}
-				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(null, "Formato de dato inválido.");
-				}
-			}
+			personas.get(propietario).getAviones().get(fila).modificarDatos(tableAviones);
 		}
+
+		actualizarTablasVehiculos(personas);
 	}
 
 	// ----------- Método Ordenar Vehiculos ----------

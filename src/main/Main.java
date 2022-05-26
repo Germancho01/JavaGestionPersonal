@@ -2,7 +2,6 @@ package main;
 
 import java.util.ArrayList;
 
-import classes.Barco;
 import classes.Persona;
 import windows.Inicio;
 
