@@ -6,6 +6,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -31,6 +35,7 @@ import javax.swing.table.DefaultTableModel;
 
 import classes.Avion;
 import classes.Barco;
+import classes.ListaPersonas;
 import classes.Persona;
 import classes.Vehiculo;
 import exceptions.CellNoSelectedException;
@@ -670,14 +675,13 @@ public class Formulario extends JFrame {
 		mntmNewMenuItem_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setCurrentDirectory(new File("."));
 				int response = fileChooser.showOpenDialog(null);
 
 				if (response == JFileChooser.APPROVE_OPTION) {
 
 					String archivo = fileChooser.getSelectedFile().getAbsolutePath();
 
-					// Instancoamos la clase que lee el archivo y organiza
-					// los datos en un listado de Personas.
 					ListaPersonas listaPersonas = null;
 					try {
 						listaPersonas = new ListaPersonas(archivo);
@@ -691,6 +695,7 @@ public class Formulario extends JFrame {
 					}
 
 					filtros(personas);
+					actualizarPropietarios(personas);
 				}
 
 			}
@@ -698,6 +703,38 @@ public class Formulario extends JFrame {
 		mnNewMenu.add(mntmNewMenuItem_4);
 
 		JMenuItem mntmNewMenuItem = new JMenuItem("Guardar");
+		mntmNewMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setCurrentDirectory(new File("."));
+
+				int response = fileChooser.showSaveDialog(null);
+
+				if (response == JFileChooser.APPROVE_OPTION) {
+					File file;
+					PrintWriter fileOut = null;
+
+					file = new File(fileChooser.getSelectedFile().getAbsolutePath());
+
+					try {
+						fileOut = new PrintWriter(file, "UTF-8");
+						for (Persona persona : personas) {
+							String datos = persona.getNombre() + "," + persona.getApellido() + ","
+									+ persona.getDptoResidencia() + "," + persona.getCantHijos() + ","
+									+ persona.getFechaNacimiento().toString();
+							fileOut.println(datos);
+						}
+
+					} catch (FileNotFoundException e1) {
+						e1.printStackTrace();
+					} catch (UnsupportedEncodingException e1) {
+						e1.printStackTrace();
+					} finally {
+						fileOut.close();
+					}
+				}
+			}
+		});
 		mnNewMenu.add(mntmNewMenuItem);
 
 		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Salir");

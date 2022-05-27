@@ -1,4 +1,4 @@
-package windows;
+package classes;
 
 import java.io.IOException;
 import java.nio.charset.MalformedInputException;
@@ -8,11 +8,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
-
-import classes.Avion;
-import classes.Barco;
-import classes.Persona;
-import classes.Vehiculo;
 
 public class ListaPersonas {
 
