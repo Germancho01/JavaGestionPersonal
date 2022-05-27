@@ -46,26 +46,20 @@ public class Dashboard extends JFrame {
 	 * Create the frame.
 	 */
 	public Dashboard(JComboBox<String> departamentos, ArrayList<Persona> personas) {
+		setTitle("Estad\u00EDsticas");
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setVisible(true);
-		setBounds(100, 100, 843, 712);
+		setBounds(100, 100, 750, 712);
 		contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.window);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 
-		JLabel lblPromedioVehiculos = new JLabel("Promedio Vehiculos");
-		lblPromedioVehiculos.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblPromedioVehiculos.setBounds(72, 409, 272, 21);
-		contentPane.add(lblPromedioVehiculos);
-
 		int contadorVehiculos = 0;
 		for (Persona persona : personas) {
 			contadorVehiculos += persona.getVehiculos().size();
 		}
-		int promedioVehiculos = contadorVehiculos / personas.size();
-
-		lblPromedioVehiculos.setText("Promedio Vehículos por persona: " + promedioVehiculos);
+		double promedioVehiculos = (double) contadorVehiculos / (double) personas.size();
 
 		// ------- Graficas ---------------
 
@@ -74,7 +68,7 @@ public class Dashboard extends JFrame {
 
 		ChartPanel chartPanel = new ChartPanel(barChart);
 		chartPanel.setBackground(SystemColor.activeCaption);
-		chartPanel.setBounds(10, 11, 574, 351);
+		chartPanel.setBounds(10, 11, 680, 351);
 		chartPanel.setPreferredSize(new Dimension(400, 200));
 		getContentPane().add(chartPanel);
 		chartPanel.setLayout(null);
@@ -84,10 +78,29 @@ public class Dashboard extends JFrame {
 
 		ChartPanel chartPanel1 = new ChartPanel(pieChart);
 		chartPanel1.setBackground(SystemColor.activeCaption);
-		chartPanel1.setBounds(393, 388, 424, 230);
+		chartPanel1.setBounds(309, 384, 377, 278);
 		chartPanel1.setPreferredSize(new Dimension(400, 200));
 		getContentPane().add(chartPanel1);
 		chartPanel.setLayout(null);
+
+		JLabel lblCantidadPersonas = new JLabel("Promedio Veh\u00EDculos por persona: 0");
+		lblCantidadPersonas.setBounds(27, 482, 272, 21);
+		contentPane.add(lblCantidadPersonas);
+		lblCantidadPersonas.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblCantidadPersonas.setText("Cantidad de personas ingresadas: " + personas.size());
+
+		JLabel lblCantidadPersonas_1 = new JLabel("Cantidad de personas ingresadas: 0");
+		lblCantidadPersonas_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblCantidadPersonas.setText("Cantidad de vehículos ingresados: " + contadorVehiculos);
+		lblCantidadPersonas_1.setBounds(27, 514, 272, 21);
+		contentPane.add(lblCantidadPersonas_1);
+
+		JLabel lblPromedioVehiculos = new JLabel("Promedio Vehiculos");
+		lblPromedioVehiculos.setBounds(27, 546, 272, 21);
+		contentPane.add(lblPromedioVehiculos);
+		lblPromedioVehiculos.setFont(new Font("Tahoma", Font.PLAIN, 14));
+
+		lblPromedioVehiculos.setText("Promedio de vehículos por persona: " + String.format("%.2f", promedioVehiculos));
 
 	}
 
@@ -98,20 +111,26 @@ public class Dashboard extends JFrame {
 		DefaultCategoryDataset datos = new DefaultCategoryDataset();
 
 		Integer[] frecuencia = new Integer[19];
+		Integer[] frecuenciaVehiculos = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 		for (Persona persona : personas) {
 			departamentos.setSelectedItem(persona.getDptoResidencia());
-			contadorDepartamentos.add(departamentos.getSelectedIndex());
+			int i = departamentos.getSelectedIndex();
+			contadorDepartamentos.add(i);
+
+			frecuenciaVehiculos[i] += persona.getVehiculos().size();
+
 		}
 
 		for (int i = 0; i < frecuencia.length; i++) {
 			frecuencia[i] = Collections.frequency(contadorDepartamentos, i);
 			datos.setValue(frecuencia[i], "Personas", departamentos.getItemAt(i));
+			datos.setValue(frecuenciaVehiculos[i], "Vehiculos", departamentos.getItemAt(i));
 
 		}
 
-		JFreeChart chart = ChartFactory.createBarChart("Personas por departamento", "Departamentos", "Personas", datos,
-				PlotOrientation.HORIZONTAL, false, false, false);
+		JFreeChart chart = ChartFactory.createBarChart("Personas y vehículos por departamento", "Departamentos",
+				"Personas", datos, PlotOrientation.HORIZONTAL, true, false, false);
 
 		chart.setBorderVisible(false);
 
