@@ -1,0 +1,6 @@
+Germán,Domínguez,Colonia,0,2001-08-22
+Roberto,Sanchez,Artigas,1,1993-03-13
+Carlos,Domínguez,Soriano,0,1998-04-30
+María,Perez,Treinta y Tres,3,1987-08-19
+Agustina,Machuca,Colonia,0,2001-08-01
+Lucas,Ebert,Colonia,0,2001-11-16

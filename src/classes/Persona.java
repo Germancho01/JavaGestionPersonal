@@ -138,9 +138,9 @@ public class Persona {
 
 	@Override
 	public String toString() {
-		return "---Persona--- " + "\nID Persona: " + idPersona + "\nDpto de Residencia: " + dptoResidencia
-				+ "\nCantidad de Hijos: " + cantHijos + "\nFecha de Nacimiento: " + fechaNacimiento + "\n"
-				+ this.getVehiculos().toString();
+		return "---Persona--- " + "\nID Persona: " + idPersona + "\nNombre: " + nombre + "\nApellido: " + apellido
+				+ "\nDpto de Residencia: " + dptoResidencia + "\nCantidad de Hijos: " + cantHijos
+				+ "\nFecha de Nacimiento: " + fechaNacimiento + "\n" + this.getVehiculos().toString();
 	}
 
 	public String getNombre() {

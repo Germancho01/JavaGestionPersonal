@@ -13,6 +13,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -42,8 +43,6 @@ public class Formulario extends JFrame {
 	 * --- Panel Personas
 	 */
 
-	private String[] datos = new String[6];
-
 	private String nombre, apellido, dptoResidencia;
 	private Byte cantHijos;
 	private LocalDate fecNacimiento;
@@ -53,10 +52,10 @@ public class Formulario extends JFrame {
 	// ---TextFields
 	private JTextField textFieldNombre;
 	private JTextField textFieldApellido;
-	private JTextField textFieldDptoResidencia;
 	private JTextField textFieldCantHijos;
 
 	// ---ComboBox
+	private JComboBox<String> comboBoxDptoResidencia;
 	private JComboBox<String> comboBoxDia;
 	private JComboBox<String> comboBoxMes;
 	private JComboBox<String> comboBoxAnio;
@@ -214,11 +213,6 @@ public class Formulario extends JFrame {
 		panelPersonas.add(textFieldCantHijos);
 		textFieldCantHijos.setColumns(10);
 
-		textFieldDptoResidencia = new JTextField();
-		textFieldDptoResidencia.setBounds(396, 78, 168, 20);
-		panelPersonas.add(textFieldDptoResidencia);
-		textFieldDptoResidencia.setColumns(10);
-
 		// --------------- Botón Agregar --------------------
 
 		btnAgregar = new JButton("Agregar");
@@ -298,6 +292,18 @@ public class Formulario extends JFrame {
 		btnEliminarTodo.setBounds(224, 227, 116, 23);
 		panelPersonas.add(btnEliminarTodo);
 		btnEliminarTodo.setFocusable(false);
+
+		// --------------- ComboBox Dpto Residencia --------------------
+
+		comboBoxDptoResidencia = new JComboBox<String>();
+		comboBoxDptoResidencia.setModel(
+				new DefaultComboBoxModel(new String[] { "Artigas", "Canelones", "Cerro Largo", "Colonia", "Durazno",
+						"Flores", "Florida", "Lavalleja", "Maldonado", "Montevideo", "Paysand\u00FA", "Rio Negro",
+						"Rivera", "Rocha", "Salto", "San Jos\u00E9", "Soriano", "Tacuaremb\u00F3", "Treinta y Tres" }));
+		comboBoxDptoResidencia.setSelectedIndex(0);
+		comboBoxDptoResidencia.setFocusable(false);
+		comboBoxDptoResidencia.setBounds(396, 78, 168, 22);
+		panelPersonas.add(comboBoxDptoResidencia);
 
 		// --------------- ComboBox Dia --------------------
 
@@ -630,7 +636,7 @@ public class Formulario extends JFrame {
 		// --------------- Botón Volver --------------------
 
 		JButton btnVolver = new JButton("Volver");
-		btnVolver.setBounds(550, 636, 89, 23);
+		btnVolver.setBounds(26, 636, 89, 23);
 		frmFormulario.getContentPane().add(btnVolver);
 		btnVolver.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -639,6 +645,18 @@ public class Formulario extends JFrame {
 			}
 		});
 		btnVolver.setFocusable(false);
+
+		// --------------- Botón Estadísticas --------------------
+
+		JButton btnEstadsticas = new JButton("Estad\u00EDsticas");
+		btnEstadsticas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new Dashboard(comboBoxDptoResidencia, personas);
+			}
+		});
+		btnEstadsticas.setFocusable(false);
+		btnEstadsticas.setBounds(531, 636, 108, 23);
+		frmFormulario.getContentPane().add(btnEstadsticas);
 
 		// --------------- Barra de tareas --------------------
 
@@ -649,6 +667,34 @@ public class Formulario extends JFrame {
 		menuBar.add(mnNewMenu);
 
 		JMenuItem mntmNewMenuItem_4 = new JMenuItem("Abrir");
+		mntmNewMenuItem_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fileChooser = new JFileChooser();
+				int response = fileChooser.showOpenDialog(null);
+
+				if (response == JFileChooser.APPROVE_OPTION) {
+
+					String archivo = fileChooser.getSelectedFile().getAbsolutePath();
+
+					// Instancoamos la clase que lee el archivo y organiza
+					// los datos en un listado de Personas.
+					ListaPersonas listaPersonas = null;
+					try {
+						listaPersonas = new ListaPersonas(archivo);
+
+						for (Persona persona : listaPersonas.lista) {
+							personas.add(persona);
+						}
+					} catch (Exception e2) {
+						JOptionPane.showMessageDialog(null, "No es posible ingresar sus datos.", "ERROR",
+								JOptionPane.ERROR_MESSAGE);
+					}
+
+					filtros(personas);
+				}
+
+			}
+		});
 		mnNewMenu.add(mntmNewMenuItem_4);
 
 		JMenuItem mntmNewMenuItem = new JMenuItem("Guardar");
@@ -856,14 +902,6 @@ public class Formulario extends JFrame {
 
 		limpiarTabla(2);
 
-		for (
-
-		Persona persona : personas) {
-			for (Barco barco : persona.getBarcos()) {
-				barco.cargarVehiculo(modelVehiculos);
-			}
-		}
-
 		/*
 		 * 
 		 * 
@@ -907,15 +945,6 @@ public class Formulario extends JFrame {
 		modelAviones = (DefaultTableModel) tableAviones.getModel();
 
 		limpiarTabla(3);
-
-		for (
-
-		Persona persona : personas) {
-			for (Avion avion : persona.getAviones()) {
-				avion.cargarVehiculo(modelVehiculos);
-			}
-		}
-
 	}
 
 	/*
@@ -973,7 +1002,7 @@ public class Formulario extends JFrame {
 		// extraer datos de los textField y almacenarlo en variables
 		nombre = textFieldNombre.getText();
 		apellido = textFieldApellido.getText();
-		dptoResidencia = textFieldDptoResidencia.getText();
+		dptoResidencia = (String) comboBoxDptoResidencia.getSelectedItem();
 		cantHijos = Byte.parseByte(textFieldCantHijos.getText()); // se transforma el dato de tipo String a Byte
 		idPersona = Persona.getId();
 
@@ -1004,7 +1033,7 @@ public class Formulario extends JFrame {
 		textFieldNombre.setText("");
 		textFieldApellido.setText("");
 		textFieldCantHijos.setText("");
-		textFieldDptoResidencia.setText("");
+		comboBoxDptoResidencia.setSelectedIndex(0);
 		comboBoxDia.setSelectedIndex(0);
 		comboBoxMes.setSelectedIndex(0);
 		comboBoxAnio.setSelectedIndex(0);
