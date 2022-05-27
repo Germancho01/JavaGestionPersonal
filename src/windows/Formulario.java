@@ -139,6 +139,7 @@ public class Formulario extends JFrame {
 		// --------------- Frame --------------------
 
 		JFrame frmFormulario = new JFrame(); // inicializar el frame
+		frmFormulario.getContentPane().setBackground(SystemColor.window);
 		frmFormulario.setTitle("Formulario"); // poner título al frame
 		// poner icono en el frame
 		frmFormulario.setIconImage(
@@ -169,6 +170,7 @@ public class Formulario extends JFrame {
 		 */
 
 		JPanel panelPersonas = new JPanel();
+		panelPersonas.setBackground(SystemColor.window);
 		panelPersonas.setBounds(26, 11, 613, 588);
 		panelPersonas.setLayout(null);
 		tabbedPane.addTab("Personas", null, panelPersonas, null);
@@ -361,6 +363,7 @@ public class Formulario extends JFrame {
 		// --------------- CheckBox Personas Mayores de edad --------------------
 
 		chckbxMayoresDeEdad = new JCheckBox("Mostrar solo personas mayores de edad");
+		chckbxMayoresDeEdad.setBackground(SystemColor.window);
 		chckbxMayoresDeEdad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				filtros(personas);
@@ -374,6 +377,7 @@ public class Formulario extends JFrame {
 		// --------------- CheckBox Personas con hijos --------------------
 
 		chckbxConHijos = new JCheckBox("Mostrar solo personas con hijos");
+		chckbxConHijos.setBackground(SystemColor.window);
 		chckbxConHijos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				filtros(personas);
@@ -447,6 +451,7 @@ public class Formulario extends JFrame {
 		 */
 
 		JPanel panelVehiculos = new JPanel();
+		panelVehiculos.setBackground(SystemColor.window);
 		panelVehiculos.setBounds(26, 11, 613, 588);
 		panelVehiculos.setLayout(null);
 		tabbedPane.addTab("Vehículos", null, panelVehiculos, null);
@@ -635,6 +640,8 @@ public class Formulario extends JFrame {
 		});
 		btnVolver.setFocusable(false);
 
+		// --------------- Barra de tareas --------------------
+
 		JMenuBar menuBar = new JMenuBar();
 		frmFormulario.setJMenuBar(menuBar);
 
@@ -648,6 +655,11 @@ public class Formulario extends JFrame {
 		mnNewMenu.add(mntmNewMenuItem);
 
 		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Salir");
+		mntmNewMenuItem_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
 		mnNewMenu.add(mntmNewMenuItem_3);
 
 		JMenu mnNewMenu_2 = new JMenu("Apariencia");
@@ -730,7 +742,21 @@ public class Formulario extends JFrame {
 		// --------------- Panel Tablas Vehiculos --------------------
 
 		tabbedPaneTablas = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPaneTablas.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (tabbedPaneTablas.getSelectedIndex() == 0) {
+					btnModificar_1.setEnabled(false);
+				} else if (tabbedPaneTablas.getSelectedIndex() == 1) {
+					btnModificar_1.setEnabled(true);
+				} else if (tabbedPaneTablas.getSelectedIndex() == 2) {
+					btnModificar_1.setEnabled(true);
+				}
+
+			}
+		});
 		tabbedPaneTablas.setBounds(23, 219, 553, 279);
+		btnModificar_1.setEnabled(false);
 		panelVehiculos.add(tabbedPaneTablas);
 
 		/*

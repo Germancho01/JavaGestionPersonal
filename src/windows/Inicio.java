@@ -56,9 +56,20 @@ public class Inicio extends JFrame {
 				System.exit(0);
 			}
 		});
-		btnSalir.setBounds(118, 250, 130, 31);
+		btnSalir.setBounds(118, 274, 130, 31);
 		btnSalir.setFocusable(false);
 		contentPane.add(btnSalir);
+
+		JButton btnEstadstica = new JButton("Estad\u00EDstica");
+		btnEstadstica.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new Dashboard(personas);
+				setVisible(false);
+			}
+		});
+		btnEstadstica.setFocusable(false);
+		btnEstadstica.setBounds(118, 232, 130, 31);
+		contentPane.add(btnEstadstica);
 
 		setTitle("Inicio");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Inicio.class.getResource("/images/logo_azulUTEC.png")));
