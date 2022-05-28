@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import classes.Persona;
 import windows.Inicio;
 
-/**
- * 
- * ProyectoS1 v2.0 Grupo TIX: Anna Benitez, Germán Domínguez, Leonardo Cutraro,
- * Agustina Martínez, Pedro Serna
- * 
+/*
+ * ********************************************************************************
+ * 																				  *
+ * ProyectoS1 v2.0 Grupo TIX: Anna Benitez, Germán Domínguez, Leonardo Cutraro,   *
+ * Agustina Martínez, Pedro Serna												  *
+ * 																				  *
+ * ********************************************************************************
  */
 
 public class Main {

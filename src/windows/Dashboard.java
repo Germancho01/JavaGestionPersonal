@@ -1,12 +1,9 @@
 package windows;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -19,19 +16,13 @@ import javax.swing.border.EmptyBorder;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.block.BlockBorder;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.Plot;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.StandardBarPainter;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.chart.title.TextTitle;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
 
 import classes.Persona;
 
@@ -50,12 +41,12 @@ public class Dashboard extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Dashboard.class.getResource("/images/logo_barras.png")));
 		setTitle("Estad\u00EDsticas");
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		setLocationRelativeTo(null);
 		setVisible(true);
 		setBounds(100, 100, 1172, 720);
 		contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.window);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setLocationRelativeTo(null);
 		setContentPane(contentPane);
 
 		int contadorVehiculos = 0;
@@ -87,17 +78,17 @@ public class Dashboard extends JFrame {
 		chartPanel.setLayout(null);
 
 		JLabel lblCantidadPersonas = new JLabel("Cantidad de personas ingresadas: " + personas.size());
-		lblCantidadPersonas.setBounds(769, 456, 272, 21);
+		lblCantidadPersonas.setBounds(769, 453, 272, 21);
 		lblCantidadPersonas.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		contentPane.add(lblCantidadPersonas);
 
-		JLabel lblCantidadVehiculos = new JLabel("Cantidad de vehiculos ingresados: " + contadorVehiculos);
+		JLabel lblCantidadVehiculos = new JLabel("Cantidad de vehículos ingresados: " + contadorVehiculos);
 		lblCantidadVehiculos.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblCantidadVehiculos.setBounds(769, 488, 272, 21);
+		lblCantidadVehiculos.setBounds(769, 485, 272, 21);
 		contentPane.add(lblCantidadVehiculos);
 
 		JLabel lblPromedioVehiculos = new JLabel("Promedio de vehículos por persona: 0");
-		lblPromedioVehiculos.setBounds(769, 520, 272, 21);
+		lblPromedioVehiculos.setBounds(769, 517, 272, 21);
 		lblPromedioVehiculos.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblPromedioVehiculos.setText("Promedio de vehículos por persona: " + String.format("%.2f", promedioVehiculos));
 		contentPane.add(lblPromedioVehiculos);
@@ -167,46 +158,6 @@ public class Dashboard extends JFrame {
 
 		Plot plot = chart.getPlot();
 		plot.setBackgroundPaint(SystemColor.window);
-
-		return chart;
-	}
-
-	public JFreeChart getLineChart(ArrayList<Persona> personas) {
-
-		ArrayList<Integer> edades = new ArrayList<Integer>();
-
-		var series = new XYSeries("Vehiculos");
-		for (Persona persona : personas) {
-			edades.add(persona.getFechaNacimiento().getYear() - LocalDate.now().getYear());
-
-		}
-
-		// series.add(edad, persona.getVehiculos().size());
-
-		var dataset = new XYSeriesCollection();
-		dataset.addSeries(series);
-
-		JFreeChart chart = ChartFactory.createXYLineChart("Vehiculos promedio por edad", "Edad", "Vehiculos", dataset,
-				PlotOrientation.VERTICAL, true, true, false);
-
-		XYPlot plot = chart.getXYPlot();
-
-		var renderer = new XYLineAndShapeRenderer();
-		renderer.setSeriesPaint(0, Color.RED);
-		renderer.setSeriesStroke(0, new BasicStroke(2.0f));
-
-		plot.setRenderer(renderer);
-		plot.setBackgroundPaint(Color.white);
-
-		plot.setRangeGridlinesVisible(true);
-		plot.setRangeGridlinePaint(Color.BLACK);
-
-		plot.setDomainGridlinesVisible(true);
-		plot.setDomainGridlinePaint(Color.BLACK);
-
-		chart.getLegend().setFrame(BlockBorder.NONE);
-
-		chart.setTitle(new TextTitle("Vehiculos promedios por edad", new Font("Serif", java.awt.Font.BOLD, 18)));
 
 		return chart;
 	}
