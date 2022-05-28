@@ -6,6 +6,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -13,6 +17,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -30,6 +35,7 @@ import javax.swing.table.DefaultTableModel;
 
 import classes.Avion;
 import classes.Barco;
+import classes.ListaPersonas;
 import classes.Persona;
 import classes.Vehiculo;
 import exceptions.CellNoSelectedException;
@@ -42,8 +48,6 @@ public class Formulario extends JFrame {
 	 * --- Panel Personas
 	 */
 
-	private String[] datos = new String[6];
-
 	private String nombre, apellido, dptoResidencia;
 	private Byte cantHijos;
 	private LocalDate fecNacimiento;
@@ -53,10 +57,10 @@ public class Formulario extends JFrame {
 	// ---TextFields
 	private JTextField textFieldNombre;
 	private JTextField textFieldApellido;
-	private JTextField textFieldDptoResidencia;
 	private JTextField textFieldCantHijos;
 
 	// ---ComboBox
+	private JComboBox<String> comboBoxDptoResidencia;
 	private JComboBox<String> comboBoxDia;
 	private JComboBox<String> comboBoxMes;
 	private JComboBox<String> comboBoxAnio;
@@ -139,6 +143,7 @@ public class Formulario extends JFrame {
 		// --------------- Frame --------------------
 
 		JFrame frmFormulario = new JFrame(); // inicializar el frame
+		frmFormulario.getContentPane().setBackground(SystemColor.window);
 		frmFormulario.setTitle("Formulario"); // poner título al frame
 		// poner icono en el frame
 		frmFormulario.setIconImage(
@@ -169,6 +174,7 @@ public class Formulario extends JFrame {
 		 */
 
 		JPanel panelPersonas = new JPanel();
+		panelPersonas.setBackground(SystemColor.window);
 		panelPersonas.setBounds(26, 11, 613, 588);
 		panelPersonas.setLayout(null);
 		tabbedPane.addTab("Personas", null, panelPersonas, null);
@@ -211,11 +217,6 @@ public class Formulario extends JFrame {
 		textFieldCantHijos.setBounds(396, 29, 168, 20);
 		panelPersonas.add(textFieldCantHijos);
 		textFieldCantHijos.setColumns(10);
-
-		textFieldDptoResidencia = new JTextField();
-		textFieldDptoResidencia.setBounds(396, 78, 168, 20);
-		panelPersonas.add(textFieldDptoResidencia);
-		textFieldDptoResidencia.setColumns(10);
 
 		// --------------- Botón Agregar --------------------
 
@@ -297,6 +298,18 @@ public class Formulario extends JFrame {
 		panelPersonas.add(btnEliminarTodo);
 		btnEliminarTodo.setFocusable(false);
 
+		// --------------- ComboBox Dpto Residencia --------------------
+
+		comboBoxDptoResidencia = new JComboBox<String>();
+		comboBoxDptoResidencia.setModel(
+				new DefaultComboBoxModel(new String[] { "Artigas", "Canelones", "Cerro Largo", "Colonia", "Durazno",
+						"Flores", "Florida", "Lavalleja", "Maldonado", "Montevideo", "Paysand\u00FA", "Rio Negro",
+						"Rivera", "Rocha", "Salto", "San Jos\u00E9", "Soriano", "Tacuaremb\u00F3", "Treinta y Tres" }));
+		comboBoxDptoResidencia.setSelectedIndex(0);
+		comboBoxDptoResidencia.setFocusable(false);
+		comboBoxDptoResidencia.setBounds(396, 78, 168, 22);
+		panelPersonas.add(comboBoxDptoResidencia);
+
 		// --------------- ComboBox Dia --------------------
 
 		// cargar array con la cantidad de días del mes
@@ -361,6 +374,7 @@ public class Formulario extends JFrame {
 		// --------------- CheckBox Personas Mayores de edad --------------------
 
 		chckbxMayoresDeEdad = new JCheckBox("Mostrar solo personas mayores de edad");
+		chckbxMayoresDeEdad.setBackground(SystemColor.window);
 		chckbxMayoresDeEdad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				filtros(personas);
@@ -374,6 +388,7 @@ public class Formulario extends JFrame {
 		// --------------- CheckBox Personas con hijos --------------------
 
 		chckbxConHijos = new JCheckBox("Mostrar solo personas con hijos");
+		chckbxConHijos.setBackground(SystemColor.window);
 		chckbxConHijos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				filtros(personas);
@@ -447,6 +462,7 @@ public class Formulario extends JFrame {
 		 */
 
 		JPanel panelVehiculos = new JPanel();
+		panelVehiculos.setBackground(SystemColor.window);
 		panelVehiculos.setBounds(26, 11, 613, 588);
 		panelVehiculos.setLayout(null);
 		tabbedPane.addTab("Vehículos", null, panelVehiculos, null);
@@ -625,7 +641,7 @@ public class Formulario extends JFrame {
 		// --------------- Botón Volver --------------------
 
 		JButton btnVolver = new JButton("Volver");
-		btnVolver.setBounds(550, 636, 89, 23);
+		btnVolver.setBounds(26, 636, 89, 23);
 		frmFormulario.getContentPane().add(btnVolver);
 		btnVolver.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -635,6 +651,20 @@ public class Formulario extends JFrame {
 		});
 		btnVolver.setFocusable(false);
 
+		// --------------- Botón Estadísticas --------------------
+
+		JButton btnEstadsticas = new JButton("Estad\u00EDsticas");
+		btnEstadsticas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new Dashboard(comboBoxDptoResidencia, personas);
+			}
+		});
+		btnEstadsticas.setFocusable(false);
+		btnEstadsticas.setBounds(531, 636, 108, 23);
+		frmFormulario.getContentPane().add(btnEstadsticas);
+
+		// --------------- Barra de tareas --------------------
+
 		JMenuBar menuBar = new JMenuBar();
 		frmFormulario.setJMenuBar(menuBar);
 
@@ -642,12 +672,77 @@ public class Formulario extends JFrame {
 		menuBar.add(mnNewMenu);
 
 		JMenuItem mntmNewMenuItem_4 = new JMenuItem("Abrir");
+		mntmNewMenuItem_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setCurrentDirectory(new File("."));
+				int response = fileChooser.showOpenDialog(null);
+
+				if (response == JFileChooser.APPROVE_OPTION) {
+
+					String archivo = fileChooser.getSelectedFile().getAbsolutePath();
+
+					ListaPersonas listaPersonas = null;
+					try {
+						listaPersonas = new ListaPersonas(archivo);
+
+						for (Persona persona : listaPersonas.lista) {
+							personas.add(persona);
+						}
+					} catch (Exception e2) {
+						JOptionPane.showMessageDialog(null, "No es posible ingresar sus datos.", "ERROR",
+								JOptionPane.ERROR_MESSAGE);
+					}
+
+					filtros(personas);
+					actualizarPropietarios(personas);
+				}
+
+			}
+		});
 		mnNewMenu.add(mntmNewMenuItem_4);
 
 		JMenuItem mntmNewMenuItem = new JMenuItem("Guardar");
+		mntmNewMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setCurrentDirectory(new File("."));
+
+				int response = fileChooser.showSaveDialog(null);
+
+				if (response == JFileChooser.APPROVE_OPTION) {
+					File file;
+					PrintWriter fileOut = null;
+
+					file = new File(fileChooser.getSelectedFile().getAbsolutePath());
+
+					try {
+						fileOut = new PrintWriter(file, "UTF-8");
+						for (Persona persona : personas) {
+							String datos = persona.getNombre() + "," + persona.getApellido() + ","
+									+ persona.getDptoResidencia() + "," + persona.getCantHijos() + ","
+									+ persona.getFechaNacimiento().toString();
+							fileOut.println(datos);
+						}
+
+					} catch (FileNotFoundException e1) {
+						e1.printStackTrace();
+					} catch (UnsupportedEncodingException e1) {
+						e1.printStackTrace();
+					} finally {
+						fileOut.close();
+					}
+				}
+			}
+		});
 		mnNewMenu.add(mntmNewMenuItem);
 
 		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Salir");
+		mntmNewMenuItem_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
 		mnNewMenu.add(mntmNewMenuItem_3);
 
 		JMenu mnNewMenu_2 = new JMenu("Apariencia");
@@ -730,7 +825,21 @@ public class Formulario extends JFrame {
 		// --------------- Panel Tablas Vehiculos --------------------
 
 		tabbedPaneTablas = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPaneTablas.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (tabbedPaneTablas.getSelectedIndex() == 0) {
+					btnModificar_1.setEnabled(false);
+				} else if (tabbedPaneTablas.getSelectedIndex() == 1) {
+					btnModificar_1.setEnabled(true);
+				} else if (tabbedPaneTablas.getSelectedIndex() == 2) {
+					btnModificar_1.setEnabled(true);
+				}
+
+			}
+		});
 		tabbedPaneTablas.setBounds(23, 219, 553, 279);
+		btnModificar_1.setEnabled(false);
 		panelVehiculos.add(tabbedPaneTablas);
 
 		/*
@@ -830,14 +939,6 @@ public class Formulario extends JFrame {
 
 		limpiarTabla(2);
 
-		for (
-
-		Persona persona : personas) {
-			for (Barco barco : persona.getBarcos()) {
-				barco.cargarVehiculo(modelVehiculos);
-			}
-		}
-
 		/*
 		 * 
 		 * 
@@ -881,15 +982,6 @@ public class Formulario extends JFrame {
 		modelAviones = (DefaultTableModel) tableAviones.getModel();
 
 		limpiarTabla(3);
-
-		for (
-
-		Persona persona : personas) {
-			for (Avion avion : persona.getAviones()) {
-				avion.cargarVehiculo(modelVehiculos);
-			}
-		}
-
 	}
 
 	/*
@@ -947,7 +1039,7 @@ public class Formulario extends JFrame {
 		// extraer datos de los textField y almacenarlo en variables
 		nombre = textFieldNombre.getText();
 		apellido = textFieldApellido.getText();
-		dptoResidencia = textFieldDptoResidencia.getText();
+		dptoResidencia = (String) comboBoxDptoResidencia.getSelectedItem();
 		cantHijos = Byte.parseByte(textFieldCantHijos.getText()); // se transforma el dato de tipo String a Byte
 		idPersona = Persona.getId();
 
@@ -978,7 +1070,7 @@ public class Formulario extends JFrame {
 		textFieldNombre.setText("");
 		textFieldApellido.setText("");
 		textFieldCantHijos.setText("");
-		textFieldDptoResidencia.setText("");
+		comboBoxDptoResidencia.setSelectedIndex(0);
 		comboBoxDia.setSelectedIndex(0);
 		comboBoxMes.setSelectedIndex(0);
 		comboBoxAnio.setSelectedIndex(0);

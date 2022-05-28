@@ -56,9 +56,11 @@ public class Inicio extends JFrame {
 				System.exit(0);
 			}
 		});
-		btnSalir.setBounds(118, 250, 130, 31);
+		btnSalir.setBounds(118, 240, 130, 31);
 		btnSalir.setFocusable(false);
 		contentPane.add(btnSalir);
+
+		// ----- Frame-----
 
 		setTitle("Inicio");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Inicio.class.getResource("/images/logo_azulUTEC.png")));
