@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.SystemColor;
+import java.awt.Toolkit;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,10 +47,12 @@ public class Dashboard extends JFrame {
 	 * Create the frame.
 	 */
 	public Dashboard(JComboBox<String> departamentos, ArrayList<Persona> personas) {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Dashboard.class.getResource("/images/logo_barras.png")));
 		setTitle("Estad\u00EDsticas");
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setLocationRelativeTo(null);
 		setVisible(true);
-		setBounds(100, 100, 750, 712);
+		setBounds(100, 100, 1172, 720);
 		contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.window);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -68,7 +71,7 @@ public class Dashboard extends JFrame {
 
 		ChartPanel chartPanel = new ChartPanel(barChart);
 		chartPanel.setBackground(SystemColor.activeCaption);
-		chartPanel.setBounds(10, 11, 680, 351);
+		chartPanel.setBounds(10, 11, 680, 659);
 		chartPanel.setPreferredSize(new Dimension(400, 200));
 		getContentPane().add(chartPanel);
 		chartPanel.setLayout(null);
@@ -78,30 +81,26 @@ public class Dashboard extends JFrame {
 
 		ChartPanel chartPanel1 = new ChartPanel(pieChart);
 		chartPanel1.setBackground(SystemColor.activeCaption);
-		chartPanel1.setBounds(309, 384, 377, 278);
+		chartPanel1.setBounds(750, 68, 377, 336);
 		chartPanel1.setPreferredSize(new Dimension(400, 200));
 		getContentPane().add(chartPanel1);
 		chartPanel.setLayout(null);
 
-		JLabel lblCantidadPersonas = new JLabel("Promedio Veh\u00EDculos por persona: 0");
-		lblCantidadPersonas.setBounds(27, 482, 272, 21);
-		contentPane.add(lblCantidadPersonas);
+		JLabel lblCantidadPersonas = new JLabel("Cantidad de personas ingresadas: " + personas.size());
+		lblCantidadPersonas.setBounds(769, 456, 272, 21);
 		lblCantidadPersonas.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblCantidadPersonas.setText("Cantidad de personas ingresadas: " + personas.size());
+		contentPane.add(lblCantidadPersonas);
 
-		JLabel lblCantidadPersonas_1 = new JLabel("Cantidad de personas ingresadas: 0");
-		lblCantidadPersonas_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblCantidadPersonas.setText("Cantidad de vehículos ingresados: " + contadorVehiculos);
-		lblCantidadPersonas_1.setBounds(27, 514, 272, 21);
-		contentPane.add(lblCantidadPersonas_1);
+		JLabel lblCantidadVehiculos = new JLabel("Cantidad de vehiculos ingresados: " + contadorVehiculos);
+		lblCantidadVehiculos.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblCantidadVehiculos.setBounds(769, 488, 272, 21);
+		contentPane.add(lblCantidadVehiculos);
 
-		JLabel lblPromedioVehiculos = new JLabel("Promedio Vehiculos");
-		lblPromedioVehiculos.setBounds(27, 546, 272, 21);
-		contentPane.add(lblPromedioVehiculos);
+		JLabel lblPromedioVehiculos = new JLabel("Promedio de vehículos por persona: 0");
+		lblPromedioVehiculos.setBounds(769, 520, 272, 21);
 		lblPromedioVehiculos.setFont(new Font("Tahoma", Font.PLAIN, 14));
-
 		lblPromedioVehiculos.setText("Promedio de vehículos por persona: " + String.format("%.2f", promedioVehiculos));
-
+		contentPane.add(lblPromedioVehiculos);
 	}
 
 	public JFreeChart getBarChart(JComboBox<String> departamentos, ArrayList<Persona> personas) {
