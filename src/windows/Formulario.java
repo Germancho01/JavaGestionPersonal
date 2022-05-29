@@ -95,15 +95,18 @@ public class Formulario extends JFrame {
 	private Integer idVehiculo;
 	private double manga, eslora, longitud;
 
+	// ---TextFields
 	private JTextField textFieldNombreVehiculo;
 	private JTextField textFieldColor;
 	private JTextField textFieldAtributo1;
 	private JTextField textFieldAtributo2;
 
+	// ---ComboBox
 	private JComboBox<String> comboBoxTipo;
 	private JComboBox<String> comboBoxPropietario;
 	private JComboBox<String> comboBoxPropietario_1;
 
+	// ---Table
 	private JTable tableVehiculos;
 	private JScrollPane scrollPaneVehiculos;
 	private DefaultTableModel modelVehiculos;
@@ -142,21 +145,20 @@ public class Formulario extends JFrame {
 
 		// --------------- Frame --------------------
 
-		JFrame frmFormulario = new JFrame(); // inicializar el frame
+		JFrame frmFormulario = new JFrame();
 		frmFormulario.getContentPane().setBackground(SystemColor.window);
-		frmFormulario.setTitle("Formulario"); // poner título al frame
-		// poner icono en el frame
+		frmFormulario.setTitle("Formulario");
 		frmFormulario.setIconImage(
 				Toolkit.getDefaultToolkit().getImage(Formulario.class.getResource("/images/logoAzulPerson.png")));
-		frmFormulario.getContentPane().setForeground(SystemColor.textHighlight); // color del JPane
-		frmFormulario.setBounds(0, 0, 677, 740); // tamaño del frame
-		frmFormulario.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // esconder ventana al apretar cerrar
-		frmFormulario.setLocationRelativeTo(null); // aparecer frame en el centro de la pantalla
-		frmFormulario.setVisible(true); // hacer visible el frame
+		frmFormulario.getContentPane().setForeground(SystemColor.textHighlight);
+		frmFormulario.setBounds(0, 0, 677, 740);
+		frmFormulario.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmFormulario.setLocationRelativeTo(null);
+		frmFormulario.setVisible(true);
 		frmFormulario.setResizable(false);
 		frmFormulario.getContentPane().setLayout(null);
 
-		// --------------- Panel --------------------
+		// --------------- Panel con perstañas principal--------------------
 
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setToolTipText("");
@@ -167,7 +169,7 @@ public class Formulario extends JFrame {
 		/*
 		 * 
 		 * 
-		 * Panel Personas
+		 * Panel Personas (pestaña de personas)
 		 * 
 		 * 
 		 * 
@@ -223,14 +225,11 @@ public class Formulario extends JFrame {
 		btnAgregar = new JButton("Agregar");
 		btnAgregar.setBounds(475, 184, 89, 23);
 		panelPersonas.add(btnAgregar);
-
-		// Agregar función al botón
 		btnAgregar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// ingresar datos con las excepciones de text fields no completados
+
 				try {
 					ingresarPersona(personas);
-
 				} catch (NumberFormatException e2) {
 					JOptionPane.showMessageDialog(null, "Revise que haya ingresado correctamente todos los datos.",
 							"ERROR", JOptionPane.ERROR_MESSAGE);
@@ -248,7 +247,6 @@ public class Formulario extends JFrame {
 		btnModificar = new JButton("Modificar");
 		btnModificar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
 				try {
 					modificarPersona(personas);
 				} catch (CellNoSelectedException e1) {
@@ -268,7 +266,6 @@ public class Formulario extends JFrame {
 		btnEliminar = new JButton("Eliminar");
 		btnEliminar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Eliminar registros con la excepción de celda no seleccionada
 				try {
 					eliminarPersona(personas);
 				} catch (CellNoSelectedException e1) {
@@ -285,10 +282,14 @@ public class Formulario extends JFrame {
 		btnEliminarTodo = new JButton("Eliminar Todo");
 		btnEliminarTodo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// Se limpian todas las tablas y el arrayList personas.
+				// Se actualizan los propietarios en los comboBox para coincidir con las
+				// personas en la lista.
+
 				limpiarTabla(0);
 				limpiarTabla(1);
 				limpiarTabla(2);
-				personas.clear(); // limpia el arrayList de personas
+				personas.clear();
 
 				actualizarPropietarios(personas);
 
@@ -312,7 +313,7 @@ public class Formulario extends JFrame {
 
 		// --------------- ComboBox Dia --------------------
 
-		// cargar array con la cantidad de días del mes
+		// Cargar array con los días del mes para ser ingresados en el comboBox
 		String[] dias = new String[31];
 		for (int i = 0; i < dias.length; i++) {
 			dias[i] = Integer.toString(i + 1);
@@ -323,9 +324,8 @@ public class Formulario extends JFrame {
 		panelPersonas.add(comboBoxDia);
 		comboBoxDia.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Obtener el dato seleccionado en el comboBoxDia
-				// el valor se almacena en la variable entera "dia", despues de pasar el dato
-				// tipo objeto a String y luego a Integer.
+
+				// Obtiene el dato seleccionado en el comboBox y lo almcaena en una variable
 				dia = Integer.parseInt(comboBoxDia.getSelectedItem().toString());
 			}
 		});
@@ -410,9 +410,14 @@ public class Formulario extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
+					// Al dar doble click sobre un registro
+					// la pestaña se cambia a la de vehículos
+					// los comboBox filtran los vehículos por la persona seleccionada
+
 					int fila = table.getSelectedRow();
 					tabbedPane.setSelectedIndex(1);
 					comboBoxPropietario_1.setSelectedIndex(fila + 1);
+					comboBoxPropietario.setSelectedIndex(fila);
 				}
 
 			}
@@ -434,7 +439,6 @@ public class Formulario extends JFrame {
 			}
 		});
 
-		// ancho por defecto de las columnas
 		table.getColumnModel().getColumn(0).setPreferredWidth(40);
 		table.getColumnModel().getColumn(1).setPreferredWidth(100);
 		table.getColumnModel().getColumn(2).setPreferredWidth(100);
@@ -442,13 +446,13 @@ public class Formulario extends JFrame {
 		table.getColumnModel().getColumn(4).setPreferredWidth(110);
 		table.getColumnModel().getColumn(5).setPreferredWidth(110);
 
-		scrollPane.setViewportView(table); // se agrega la tabla al scroll pane
+		scrollPane.setViewportView(table);
 
-		model = (DefaultTableModel) table.getModel(); // obtener el modelo de la tabla para poder añadir datos a la
-														// misma
+		model = (DefaultTableModel) table.getModel();
 
 		limpiarTabla(0);
 
+		// Se cargan todas las personas en la tabla
 		for (Persona persona : personas) {
 			persona.cargarPersona(model);
 		}
@@ -456,7 +460,7 @@ public class Formulario extends JFrame {
 		/*
 		 * 
 		 * 
-		 * Panel Vehículos
+		 * Panel Vehículos (pestaña de vehículos)
 		 * 
 		 * 
 		 */
@@ -520,6 +524,8 @@ public class Formulario extends JFrame {
 		comboBoxTipo = new JComboBox<String>();
 		comboBoxTipo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// Cambia los label de atributo según el tipo de vehículo ingresado
+
 				if (comboBoxTipo.getSelectedIndex() == 0) {
 					lblAtributo1.setText("Eslora ");
 					lblAtributo2.setText("Manga ");
@@ -562,7 +568,6 @@ public class Formulario extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					ingresarVehiculo(personas);
-
 				} catch (FieldNoCompletedException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
 				} catch (NumberFormatException e2) {
@@ -583,6 +588,9 @@ public class Formulario extends JFrame {
 		JButton btnModificar_1 = new JButton("Modificar");
 		btnModificar_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// Llama a diferentes métodos según la tabla en la que se encuentre el usuario.
+				// En la tabla de vehículos no es posible modificar datos.
+
 				if (tabbedPaneTablas.getSelectedIndex() == 1) {
 					try {
 						modificarBarco(personas);
@@ -594,7 +602,6 @@ public class Formulario extends JFrame {
 						modificarAvion(personas);
 					} catch (CellNoSelectedException | ItemNoSelectedException e1) {
 						JOptionPane.showMessageDialog(null, e1.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
-
 					}
 				}
 			}
@@ -608,6 +615,9 @@ public class Formulario extends JFrame {
 		JButton btnEliminar_1 = new JButton("Eliminar");
 		btnEliminar_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// Llama al método correspondiete dependiendo en la tabla que se encuentre el
+				// usuario.
+
 				try {
 					if (tabbedPaneTablas.getSelectedIndex() == 0) {
 						eliminarVehiculo(personas);
@@ -663,17 +673,22 @@ public class Formulario extends JFrame {
 		btnEstadsticas.setBounds(531, 636, 108, 23);
 		frmFormulario.getContentPane().add(btnEstadsticas);
 
-		// --------------- Barra de tareas --------------------
+		// --------------- Barra de menú --------------------
 
 		JMenuBar menuBar = new JMenuBar();
 		frmFormulario.setJMenuBar(menuBar);
 
-		JMenu mnNewMenu = new JMenu("Archivo");
-		menuBar.add(mnNewMenu);
+		JMenu mnArchivo = new JMenu("Archivo");
+		menuBar.add(mnArchivo);
 
-		JMenuItem mntmNewMenuItem_4 = new JMenuItem("Abrir");
-		mntmNewMenuItem_4.addActionListener(new ActionListener() {
+		JMenuItem mntmAbrir = new JMenuItem("Abrir");
+		mntmAbrir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// Se despliega un menú para seleccionar archivos.
+				// En caso de que un archivo sea seleccionado se obtiene la ruta del documento
+				// Se llama a la clase lista de personas con la ruta del archivo
+				// Se cargan todas las personas ingresadas en la lista.
+
 				JFileChooser fileChooser = new JFileChooser();
 				fileChooser.setCurrentDirectory(new File("."));
 				int response = fileChooser.showOpenDialog(null);
@@ -700,11 +715,18 @@ public class Formulario extends JFrame {
 
 			}
 		});
-		mnNewMenu.add(mntmNewMenuItem_4);
+		mnArchivo.add(mntmAbrir);
 
-		JMenuItem mntmNewMenuItem = new JMenuItem("Guardar");
-		mntmNewMenuItem.addActionListener(new ActionListener() {
+		JMenuItem mntmGuardar = new JMenuItem("Guardar");
+		mntmGuardar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// Se despliega un menú para guardar archivos.
+				// En caso de que se agrege un nombre de archivo y presione el botón aceptar
+				// se obtiene la ruta del documento.
+
+				// Se transforma el documento de texto al formato UTF-8
+				// Se guardan todas las personas en un documento .txt
+
 				JFileChooser fileChooser = new JFileChooser();
 				fileChooser.setCurrentDirectory(new File("."));
 
@@ -735,22 +757,25 @@ public class Formulario extends JFrame {
 				}
 			}
 		});
-		mnNewMenu.add(mntmNewMenuItem);
+		mnArchivo.add(mntmGuardar);
 
-		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Salir");
-		mntmNewMenuItem_3.addActionListener(new ActionListener() {
+		JMenuItem mntmSalir = new JMenuItem("Salir");
+		mntmSalir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
 			}
 		});
-		mnNewMenu.add(mntmNewMenuItem_3);
+		mnArchivo.add(mntmSalir);
 
-		JMenu mnNewMenu_2 = new JMenu("Apariencia");
-		menuBar.add(mnNewMenu_2);
+		JMenu mnApariencia = new JMenu("Apariencia");
+		menuBar.add(mnApariencia);
 
-		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Normal");
-		mntmNewMenuItem_1.addActionListener(new ActionListener() {
+		// Cambia el diseño de la interfaz utilizando la librería LookAndFeel
+
+		JMenuItem mntmNormal = new JMenuItem("Normal");
+		mntmNormal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+
 				try {
 					UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
 					frmFormulario.setVisible(false);
@@ -761,10 +786,10 @@ public class Formulario extends JFrame {
 				}
 			}
 		});
-		mnNewMenu_2.add(mntmNewMenuItem_1);
+		mnApariencia.add(mntmNormal);
 
-		JMenuItem mntmNewMenuItem_2_1 = new JMenuItem("Cl\u00E1sica");
-		mntmNewMenuItem_2_1.addActionListener(new ActionListener() {
+		JMenuItem mntmClasica = new JMenuItem("Cl\u00E1sica");
+		mntmClasica.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel");
@@ -776,10 +801,10 @@ public class Formulario extends JFrame {
 				}
 			}
 		});
-		mnNewMenu_2.add(mntmNewMenuItem_2_1);
+		mnApariencia.add(mntmClasica);
 
-		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Moderna");
-		mntmNewMenuItem_2.addActionListener(new ActionListener() {
+		JMenuItem mntmModerna = new JMenuItem("Moderna");
+		mntmModerna.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -791,10 +816,10 @@ public class Formulario extends JFrame {
 				}
 			}
 		});
-		mnNewMenu_2.add(mntmNewMenuItem_2);
+		mnApariencia.add(mntmModerna);
 
-		JMenuItem mntmNewMenuItem_6 = new JMenuItem("Nimbus");
-		mntmNewMenuItem_6.addActionListener(new ActionListener() {
+		JMenuItem mntmNimbus = new JMenuItem("Nimbus");
+		mntmNimbus.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
 				try {
@@ -808,19 +833,19 @@ public class Formulario extends JFrame {
 
 			}
 		});
-		mnNewMenu_2.add(mntmNewMenuItem_6);
+		mnApariencia.add(mntmNimbus);
 
-		JMenu mnNewMenu_1 = new JMenu("Ayuda");
-		menuBar.add(mnNewMenu_1);
+		JMenu mnAyuda = new JMenu("Ayuda");
+		menuBar.add(mnAyuda);
 
-		JMenuItem mntmNewMenuItem_5 = new JMenuItem("Acerca de");
-		mntmNewMenuItem_5.addActionListener(new ActionListener() {
+		JMenuItem mntmAcercade = new JMenuItem("Acerca de");
+		mntmAcercade.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String message = "Creado por el grupo TIX: \n\nAnna Benitez \nGermán Domínguez \nLeonardo Cutraro \nAgustina Martínez \nPedro Serna";
 				JOptionPane.showMessageDialog(null, message, "v2.0", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
-		mnNewMenu_1.add(mntmNewMenuItem_5);
+		mnAyuda.add(mntmAcercade);
 
 		// --------------- Panel Tablas Vehiculos --------------------
 
@@ -828,6 +853,9 @@ public class Formulario extends JFrame {
 		tabbedPaneTablas.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				// Si el usuario se encuentra en la pestaña vehículos se desactiva el botón
+				// modificar
+
 				if (tabbedPaneTablas.getSelectedIndex() == 0) {
 					btnModificar_1.setEnabled(false);
 				} else if (tabbedPaneTablas.getSelectedIndex() == 1) {
@@ -903,16 +931,6 @@ public class Formulario extends JFrame {
 
 		tableBarcos = new JTable();
 
-		tableBarcos.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				// int fila = tableBarcos.getSelectedRow();
-				if (e.getClickCount() == 2) {
-
-				}
-			}
-		});
-
 		tableBarcos.setModel(new DefaultTableModel(new Object[][] { { null, null, null, null, null }, },
 				new String[] { "ID", "Nombre", "Color", "Eslora", "Manga" }) {
 			Class[] columnTypes = new Class[] { String.class, String.class, String.class, String.class, String.class };
@@ -982,15 +1000,22 @@ public class Formulario extends JFrame {
 		modelAviones = (DefaultTableModel) tableAviones.getModel();
 
 		limpiarTabla(3);
+
+		filtroVehiculos(personas);
 	}
 
 	/*
 	 * 
-	 * Métodos
+	 * Métodos (métodos generales)
 	 * 
 	 */
 
-	// --------------- Método Limpiar Tabla --------------------
+	/*
+	 * --------------- Método Limpiar Tabla --------------------
+	 * 
+	 * Se borran todos los registros en la tabla dependiendo del argumento de
+	 * entrada. Como parametro de entrada recibe un entero y no retorna nada.
+	 */
 
 	public void limpiarTabla(int tabla) {
 		if (tabla == 0) {
@@ -1024,11 +1049,21 @@ public class Formulario extends JFrame {
 
 	/*
 	 * 
-	 * Métodos Panel Personas
+	 * Métodos Panel Personas (métodos usados en la pestaña de personas)
 	 * 
 	 */
 
-	// --------------- Método Ingresar Persona --------------------
+	/*
+	 * --------------- Método Ingresar Persona --------------------
+	 * 
+	 * Se crea una instancia de persona a partir de los datos ingresados en los
+	 * campos en la pestaña personas. Esta instancia es almacenada en el arrayList
+	 * personas. En caso de que no se rellenen todos los campos se lanza la
+	 * excepción correspondiente. La persona ingresada se carga a la tabla, se
+	 * resetean los campos y se actualizan los comboBox de propietario para que
+	 * coincida con la lista. El método recibe como parámetro un arrayList de
+	 * personas y no retorna nada.
+	 */
 
 	public void ingresarPersona(ArrayList<Persona> personas) throws FieldNoCompletedException {
 
@@ -1036,14 +1071,13 @@ public class Formulario extends JFrame {
 		ArrayList<Barco> barcos = new ArrayList<Barco>();
 		ArrayList<Avion> aviones = new ArrayList<Avion>();
 
-		// extraer datos de los textField y almacenarlo en variables
 		nombre = textFieldNombre.getText();
 		apellido = textFieldApellido.getText();
 		dptoResidencia = (String) comboBoxDptoResidencia.getSelectedItem();
-		cantHijos = Byte.parseByte(textFieldCantHijos.getText()); // se transforma el dato de tipo String a Byte
+		cantHijos = Byte.parseByte(textFieldCantHijos.getText());
 		idPersona = Persona.getId();
 
-		fecNacimiento = LocalDate.of(anio, mes, dia); // se genera una fecha LocalDate a partir de los datos ingresados
+		fecNacimiento = LocalDate.of(anio, mes, dia);
 
 		boolean estaVacio = nombre.isEmpty() || apellido.isEmpty() || dptoResidencia.isEmpty();
 
@@ -1051,7 +1085,6 @@ public class Formulario extends JFrame {
 			throw new FieldNoCompletedException();
 		}
 
-		// crear instancia de persona y la almacena en un arrayList
 		Persona persona = new Persona(idPersona, nombre, apellido, dptoResidencia, cantHijos, fecNacimiento, vehiculos,
 				barcos, aviones);
 
@@ -1059,12 +1092,16 @@ public class Formulario extends JFrame {
 
 		persona.cargarPersona(model);
 
-		// resetear los componentes
 		resetearCampos();
 		actualizarPropietarios(personas);
 	}
 
-	// --------------- Método Resetear Campos --------------------
+	/*
+	 * --------------- Método Resetear Campos --------------------
+	 * 
+	 * Se resetean todos los campos y comboBox en el formulario. El método no tiene
+	 * parámetros y no retorna nada.
+	 */
 
 	public void resetearCampos() {
 		textFieldNombre.setText("");
@@ -1076,7 +1113,14 @@ public class Formulario extends JFrame {
 		comboBoxAnio.setSelectedIndex(0);
 	}
 
-	// --------------- Método Modificar Datos Personas--------------------
+	/*
+	 * --------------- Método Modificar Datos Personas--------------------
+	 * 
+	 * Se modifican los datos de la persona dependiendo la fila seleccionada, en
+	 * caso de que no se seleccione una fila se lanza la excepción correspondiente.
+	 * Se actulizan los propietarios para que los datos coindidan con los listados
+	 * en el arrayList de personas.
+	 */
 
 	public void modificarPersona(ArrayList<Persona> personas)
 			throws CellNoSelectedException, FieldNoCompletedException {
@@ -1093,7 +1137,15 @@ public class Formulario extends JFrame {
 		actualizarPropietarios(personas);
 	}
 
-	// --------------- Método Eliminar Persona Seleccionada --------------------
+	/*
+	 * --------------- Método Eliminar Persona Seleccionada --------------------
+	 * 
+	 * Se elimina la persona seleccionada de la tabla y el arrayList de personas. Se
+	 * actualizan los propietarios y las tablas de vehículos para que coincidan con
+	 * la lista de personas. En caso de que no se seleccione ninguna fila se lanza
+	 * la excepción correspondiente. El método recibe un arrayList de personas y no
+	 * retorna nada.
+	 */
 
 	public void eliminarPersona(ArrayList<Persona> personas) throws CellNoSelectedException {
 		int fila = table.getSelectedRow();
@@ -1110,7 +1162,15 @@ public class Formulario extends JFrame {
 
 	}
 
-	// --------------- Método Filtros de Personas --------------------
+	/*
+	 * --------------- Método Filtros de Personas --------------------
+	 * 
+	 * Se limpia las tablas, luego se filtran las personas dependiendo si son
+	 * mayores de edad o si tienen hijos. Se realizan las diferentes combinaciones
+	 * posibles entre los checkBox. Y luego se cargan las personas correspondientes
+	 * en la tabla. El método recibe un arrayList de personas como parámetro y no
+	 * retorna nada.
+	 */
 
 	// filtros de los checkBox
 	public void filtros(ArrayList<Persona> personas) {
@@ -1160,7 +1220,20 @@ public class Formulario extends JFrame {
 	 * 
 	 */
 
-	// ----------- Método Ingresar Vehiculo ----------
+	/*
+	 * ----------- Método Ingresar Vehiculo ----------
+	 * 
+	 * Se crean una instancia de vehículo a partir de los datos ingresados en los
+	 * diferentes cambos del formulario en la pestaña vehículos. Dependiendo del
+	 * tipo de vehículo que se seleccione será el constructor a llamar. Además, el
+	 * vehículo es ingresado al array de vehículos, barcos y/o aviones de la persona
+	 * correspondiente. Se actualizan las tablas de vehículos y se vacían los
+	 * campos. En caso de que no se rellenen todos los campos se lanza la excepción
+	 * correspondiente.
+	 * 
+	 * El método tiene como parámetro de entrada un arrayList de personas y no
+	 * retorna ningún valor.
+	 */
 
 	private void ingresarVehiculo(ArrayList<Persona> personas) throws FieldNoCompletedException {
 		int i = comboBoxPropietario.getSelectedIndex();
@@ -1199,7 +1272,28 @@ public class Formulario extends JFrame {
 		vaciarCampos();
 	}
 
-	// --------------- Método Eliminar Todos los Vehiculo --------------------
+	/*
+	 * --------------- Método Eliminar Todos los Vehiculo --------------------
+	 * 
+	 * En caso de que la tabla sea la de vehículos y no se haya filtrado por
+	 * propietrario, se recorre la lista de personas y se borran todos los
+	 * vehículos, aviones y barcos asociado a la misma. En el caso de que se haya
+	 * filtrado por persona simplemente se borran los vehículos asociados a la
+	 * misma.
+	 * 
+	 * En caso de que la tabla sea de aviones o barcos y no se filtre por personas
+	 * se recorre la lista de personas, se recorren lso vehículos de la persona. En
+	 * caso de que la instancia del vehículo sea de tipo barco o avión (según
+	 * corresponda), se elimina el registro. En el caso de que se haya filtrado por
+	 * persona simplemente se recorren los vehículos de la persona seleccioanda y en
+	 * caso de que sea una instancia de tipo barco o avión (según corresponda) se
+	 * elimina el registro. Por último se actualizan las listas y tablas para que se
+	 * sincronicen todos los datos.
+	 * 
+	 * El método tiene como parámetro de entrada una lista de personas y no retorna
+	 * ningún valor.
+	 * 
+	 */
 
 	public void eliminarTodoVehiculos(ArrayList<Persona> personas) {
 		int propietario = comboBoxPropietario_1.getSelectedIndex() - 1;
@@ -1264,7 +1358,24 @@ public class Formulario extends JFrame {
 		filtroVehiculos(personas);
 	}
 
-	// --------------- Método Eliminar Vehiculo --------------------
+	/*
+	 * --------------- Método Eliminar Vehiculo Seleccionado--------------------
+	 * 
+	 * Se obtiene la fila seleccionada de la tabla vehículos, en caso de que no se
+	 * seleccione ninguna fila se lanza la excepción correspondiente. Se obtiene el
+	 * propietario del vehículo y se recorren todos los vehículos del mismo hasta
+	 * que la ID del vehículo sea igual a la ID de la tabla y se guarda su posición
+	 * dentro de la lista de vehículos de la persona correspondiente.
+	 * 
+	 * Para eliminar el vehículo de la lista de barcos o aviones se realiza el paso
+	 * anterior solo que se obtiene la posición dentro de la lista correspondiente.
+	 * 
+	 * Por último se elimina el vehículo en la lista de vehículos de esa persona y
+	 * se actualizan las tablas para que se sincronicen todos los datos.
+	 * 
+	 * El método tiene como parámetro de entrada un arrayList de personas y no
+	 * retorna ningún valor.
+	 */
 
 	public void eliminarVehiculo(ArrayList<Persona> personas) throws CellNoSelectedException {
 
@@ -1317,7 +1428,14 @@ public class Formulario extends JFrame {
 		filtroVehiculos(personas);
 	}
 
-	// --------------- Método Eliminar Barco --------------------
+	/*
+	 * --------------- Método Eliminar Barco Seleccioando--------------------
+	 * 
+	 * El método funciona igual que el método de eliminar un vehículo seleccionado
+	 * solo que en este caso la tabla en la que se obtiene la fila es en la de
+	 * barcos. Además no es necesario obtener el tipo de clase del vehículo ya que
+	 * solo tenemos barcos.
+	 */
 
 	public void eliminarBarco(ArrayList<Persona> personas) throws CellNoSelectedException {
 
@@ -1357,7 +1475,12 @@ public class Formulario extends JFrame {
 
 	}
 
-	// --------------- Método Eliminar Avion --------------------
+	/*
+	 * --------------- Método Eliminar Avión Seleccionado--------------------
+	 * 
+	 * Este método funciona igual que el método para eliminar un barco seleccionada
+	 * con la diferencia que la fila obtenida es de la tabla de aviones.
+	 */
 
 	public void eliminarAvion(ArrayList<Persona> personas) throws CellNoSelectedException {
 
@@ -1397,7 +1520,12 @@ public class Formulario extends JFrame {
 
 	}
 
-	// ----------- Método Vaciar Campos ----------
+	/*
+	 * ----------- Método Vaciar Campos ----------
+	 * 
+	 * Se vacían los campos del formulario en la pestaña de vehículos además se
+	 * setea la posición inicial del comboBox propietarios.
+	 */
 
 	private void vaciarCampos() {
 		textFieldAtributo1.setText("");
@@ -1408,7 +1536,13 @@ public class Formulario extends JFrame {
 
 	}
 
-	// ----------- Método Actualizar Propietarios en comboBox ----------
+	/*
+	 * ----------- Método Actualizar Propietarios en comboBox ----------
+	 * 
+	 * Se cargan los nombres y apellidos de las personas en los comboBox de la
+	 * pestaña vehículos. En el caso del comboBox que filtra los propietarios se
+	 * agregó este texto al mismo.
+	 */
 
 	public void actualizarPropietarios(ArrayList<Persona> personas) {
 
@@ -1425,7 +1559,16 @@ public class Formulario extends JFrame {
 		comboBoxPropietario_1.setModel(new DefaultComboBoxModel<String>(propietarios1));
 	}
 
-	// ----------- Método Filtro Vehiculos ----------
+	/*
+	 * ----------- Método Filtro Vehiculos ----------
+	 * 
+	 * Para filtrar los vehículos, en caso de que no se seleccione ningún
+	 * propietario en el comboBox se cargan todos los vehículos en las tablas. En
+	 * caso de que se seleccione una persona, se limpian las listas de vehículos,
+	 * barcos y aviones (general) y se cargan con los vehículos de la persona
+	 * seleccionada. Luego, se limpian las tablas y se cargan los vehículos de las
+	 * listas generales.
+	 */
 
 	public void filtroVehiculos(ArrayList<Persona> personas) {
 		int i = comboBoxPropietario_1.getSelectedIndex();
@@ -1473,7 +1616,14 @@ public class Formulario extends JFrame {
 		}
 	}
 
-	// ----------- Método Actualizar Tablas de Vehiculos ----------
+	/*
+	 * ----------- Método Actualizar Tablas de Vehiculos ----------
+	 * 
+	 * Para actualizar las tablas con los vehículos de todas las personas, primero
+	 * se limpian las tablas. Se cargan las listas con los vehículos, se ordenan las
+	 * mismas con respecto a las ID y por último se recorren las listas cargando los
+	 * vehículos.
+	 */
 
 	public void actualizarTablasVehiculos(ArrayList<Persona> personas) {
 		limpiarTabla(1);
@@ -1501,7 +1651,14 @@ public class Formulario extends JFrame {
 		}
 	}
 
-	// ----------- Método Actualizar Listas de Vehiculos ----------
+	/*
+	 * ----------- Método Actualizar Listas de Vehiculos ----------
+	 * 
+	 * Para actualizar las listas de vehículos con los vehículos de todas las
+	 * personas. Primero se deben limpiar las listas. Luego se recorren las listas
+	 * de vehículos de cada persona agregando las instancias del mismo a las listas
+	 * generales.
+	 */
 
 	public void actualizarListaVehiculos(ArrayList<Persona> personas) {
 
@@ -1525,7 +1682,12 @@ public class Formulario extends JFrame {
 		}
 	}
 
-	// ----------- Método Modificar Barco ----------
+	/*----------- Método Modificar Barco ---------- 
+	 * Se obtiene la fila seleccionada  en la tabla de barcos, 
+	 * en caso de que no se seleccione ninguna fila se lanza la excepción correspondiente. 
+	 * Se llama al método modificar datos del barco en la lista general
+	 * de barcos en la fila correspondiente.
+	 */
 
 	public void modificarBarco(ArrayList<Persona> personas) throws CellNoSelectedException, ItemNoSelectedException {
 
@@ -1535,41 +1697,36 @@ public class Formulario extends JFrame {
 			throw new CellNoSelectedException();
 		}
 
-		int propietario = comboBoxPropietario_1.getSelectedIndex() - 1;
+		barcos.get(fila).modificarDatos(tableBarcos);
 
-		if (propietario == -1) {
-			barcos.get(fila).modificarDatos(tableBarcos);
-
-		} else {
-			personas.get(propietario).getBarcos().get(fila).modificarDatos(tableBarcos);
-		}
-
-		actualizarTablasVehiculos(personas);
+		filtroVehiculos(personas);
 	}
 
-	// ----------- Método Modificar Avion ----------
+	/*
+	 * ----------- Método Modificar Avion ----------
+	 * 
+	 * Lo mismo que en método modificar barco solo que en la tabla de aviones.
+	 */
 	public void modificarAvion(ArrayList<Persona> personas) throws CellNoSelectedException, ItemNoSelectedException {
 
 		int fila = tableAviones.getSelectedRow(); // obtener celda seleccionada
-
-		int propietario = comboBoxPropietario_1.getSelectedIndex() - 1;
 
 		// Excepción en caso de que no se seleccione ninguna fila
 		if (fila < 0) {
 			throw new CellNoSelectedException();
 		}
 
-		if (propietario == -1) {
-			aviones.get(fila).modificarDatos(tableAviones);
+		aviones.get(fila).modificarDatos(tableAviones);
 
-		} else {
-			personas.get(propietario).getAviones().get(fila).modificarDatos(tableAviones);
-		}
-
-		actualizarTablasVehiculos(personas);
+		filtroVehiculos(personas);
 	}
 
-	// ----------- Método Ordenar Vehiculos ----------
+	/*
+	 * ----------- Método Ordenar Vehiculos ----------
+	 * 
+	 * En las diferentes listas se compara la ID del vehículo anterior con el
+	 * siguiente y ordena la misma de forma decreciente.
+	 */
 
 	public static void sortVehiculos(ArrayList<Vehiculo> vehiculos) {
 

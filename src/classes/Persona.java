@@ -42,7 +42,12 @@ public class Persona {
 		super();
 	}
 
-	// --------------- Método Cargar Persona --------------------
+	/*
+	 * --------------- Método Cargar Persona -------------------- Se cargan los
+	 * datos de la persona en un array de Strings y luego se lo pasa como parámetro
+	 * al método que agrega filas a la tabla. La función tiene como parámetro el
+	 * modelo por defecto de una tabla.
+	 */
 
 	public void cargarPersona(DefaultTableModel model) {
 
@@ -58,13 +63,17 @@ public class Persona {
 		model.addRow(datos);
 	}
 
-	// --------------- Método Modificar Datos --------------------
+	/*
+	 * --------------- Método Modificar Datos -------------------- Se modifican los
+	 * datos de la persona dependiendo la columna seleccionada, mostrando un mensaje
+	 * donde se pueden ingresar datos. Se lanzan diferentes exepciones para
+	 * verificar la calidad de los datos ingresados.
+	 */
 
 	public void modificarDatos(JTable table, int fila) throws FieldNoCompletedException {
 
 		int columna = table.getSelectedColumn();
 
-		// modificar los datos dependiendo de la columna seleccionada
 		if (columna == 1) {
 			String nuevoNombre = JOptionPane.showInputDialog("Ingrese nuevo nombre: ");
 

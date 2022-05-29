@@ -38,6 +38,8 @@ public class Dashboard extends JFrame {
 	 * Create the frame.
 	 */
 	public Dashboard(JComboBox<String> departamentos, ArrayList<Persona> personas) {
+
+		// --- Frame ---
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Dashboard.class.getResource("/images/logo_barras.png")));
 		setTitle("Estad\u00EDsticas");
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -49,33 +51,18 @@ public class Dashboard extends JFrame {
 		setLocationRelativeTo(null);
 		setContentPane(contentPane);
 
+		// Se cuentan la cantidad de vehículos ingresados recorriendo la lista de
+		// personas
+		// y sumando al contador el tamaño de la lista de vehículos de la persona.
 		int contadorVehiculos = 0;
 		for (Persona persona : personas) {
 			contadorVehiculos += persona.getVehiculos().size();
 		}
+
+		// Promedio vehículos
 		double promedioVehiculos = (double) contadorVehiculos / (double) personas.size();
 
-		// ------- Graficas ---------------
-
-		JFreeChart barChart = getBarChart(departamentos, personas);
-		contentPane.setLayout(null);
-
-		ChartPanel chartPanel = new ChartPanel(barChart);
-		chartPanel.setBackground(SystemColor.activeCaption);
-		chartPanel.setBounds(10, 11, 680, 659);
-		chartPanel.setPreferredSize(new Dimension(400, 200));
-		getContentPane().add(chartPanel);
-		chartPanel.setLayout(null);
-
-		JFreeChart pieChart = getPieChart(personas);
-		contentPane.setLayout(null);
-
-		ChartPanel chartPanel1 = new ChartPanel(pieChart);
-		chartPanel1.setBackground(SystemColor.activeCaption);
-		chartPanel1.setBounds(750, 68, 377, 336);
-		chartPanel1.setPreferredSize(new Dimension(400, 200));
-		getContentPane().add(chartPanel1);
-		chartPanel.setLayout(null);
+		// --- Labels ---
 
 		JLabel lblCantidadPersonas = new JLabel("Cantidad de personas ingresadas: " + personas.size());
 		lblCantidadPersonas.setBounds(769, 453, 272, 21);
@@ -92,8 +79,51 @@ public class Dashboard extends JFrame {
 		lblPromedioVehiculos.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblPromedioVehiculos.setText("Promedio de vehículos por persona: " + String.format("%.2f", promedioVehiculos));
 		contentPane.add(lblPromedioVehiculos);
+
+		// ------- Gráfica de barras ---------------
+
+		JFreeChart barChart = getBarChart(departamentos, personas);
+		contentPane.setLayout(null);
+
+		ChartPanel chartPanel = new ChartPanel(barChart);
+		chartPanel.setBackground(SystemColor.activeCaption);
+		chartPanel.setBounds(10, 11, 680, 659);
+		chartPanel.setPreferredSize(new Dimension(400, 200));
+		getContentPane().add(chartPanel);
+		chartPanel.setLayout(null);
+
+		// ------- Gráfica de torta ---------------
+
+		JFreeChart pieChart = getPieChart(personas);
+		contentPane.setLayout(null);
+
+		ChartPanel chartPanel1 = new ChartPanel(pieChart);
+		chartPanel1.setBackground(SystemColor.activeCaption);
+		chartPanel1.setBounds(750, 68, 377, 336);
+		chartPanel1.setPreferredSize(new Dimension(400, 200));
+		getContentPane().add(chartPanel1);
+		chartPanel.setLayout(null);
 	}
 
+	/*
+	 * Método crear un gráfico de barras con la cantidad de personas y vehículos por
+	 * departamento.
+	 * 
+	 * El método tiene como parámetros de entrada un comboBox con los datos de los
+	 * departamentos y una lista de personas.
+	 * 
+	 * Para graficar las personas por departamento. Se recorre la lista de personas
+	 * y guarda el índice del departamento de cada persona en una lista contador de
+	 * departamentos. Luego se recorre un array de enteros con 19 elementos y se
+	 * ingresa la frecuencia de cada departamento obtenida del contador de
+	 * departamentos. Después se grafican los datos de departamento y frecuencia.
+	 * 
+	 * Para graficar los vegículos por departamento. Se inicializa un array de
+	 * enteros con 19 valores. Luego se recorre la lista de personas y se suma la
+	 * cantidad de vehículos de la misma al array frecuenciaVehículos en el índice
+	 * del departamento correspondiente. Después se grafican los datos de
+	 * departamento y frecuencia vehículo.
+	 */
 	public JFreeChart getBarChart(JComboBox<String> departamentos, ArrayList<Persona> personas) {
 
 		ArrayList<Integer> contadorDepartamentos = new ArrayList<Integer>();
@@ -137,6 +167,16 @@ public class Dashboard extends JFrame {
 		return chart;
 	}
 
+	/*
+	 * Método crear un gráfico de tortas con el porcentaje de barcos y aviones.
+	 * 
+	 * Elmétodo tiene como parámetro de entrada la lista de personas.
+	 * 
+	 * Se recorre la lista de personas y se suma al contador de barcos con la
+	 * cantidad de barcos que tiene esa persona en la lista de barcos. Lo mismo
+	 * ocurre con los aviones. Luego se grafican los dos contadores con le etiqueta
+	 * correspondiente.
+	 */
 	public JFreeChart getPieChart(ArrayList<Persona> personas) {
 
 		var datos = new DefaultPieDataset();

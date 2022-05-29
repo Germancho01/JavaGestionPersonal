@@ -1,0 +1,35 @@
+Germán,Domínguez,Colonia,0,2001-08-22
+Roberto,Sanchez,Artigas,1,1993-03-13
+Carlos,Domínguez,Soriano,0,1998-04-30
+María,Perez,Treinta y Tres,3,1987-08-19
+Agustina,Machuca,Colonia,0,2001-08-01
+Lucas,Ebert,Colonia,0,2001-11-16
+Jose,Wendorf,Rivera,3,1963-10-14
+Brett,Kierkegaard,San José,3,1969-06-16
+Robert,DeSena,Rocha,3,1942-11-20
+Amond,Kung,San José,0,2001-05-28
+Ernesto,DeRousse,Cerro Largo,1,1978-12-07
+Joss,Webb,Durazno,1,2003-04-21
+André,Cisneros,Treinta y Tres,2,1981-11-08
+Castaño,Huehnergard,San José,1,2000-05-18
+Marty,Mcglasson,Paysandú,1,2008-08-24
+Daniel,Parnes,Paysandú,2,2016-04-06
+Hamza,Fuentes,Río Negro,0,1958-03-01
+Seth,Burner,Paysandú,2,2011-01-17
+Courtney,Carey,Flores,2,2005-03-25
+Adam,Hughesdavies,Colonia,2,1990-08-23
+Ivan,Kung,Montevideo,1,1954-11-24
+Kristian,Calabrese,Río Negro,0,1999-02-08
+John,StOmer,Lavalleja,1,1981-10-09
+Ali,Nuzzo,Artigas,0,1966-05-18
+Harley,Barrant,Treinta y Tres,3,2016-11-03
+Lawrence,Revlin,Treinta y Tres,3,1959-12-10
+Carlos,Munozporras,Rivera,1,2003-12-25
+Jamal,Malova,Rivera,0,2011-01-14
+George,Christensen,Lavalleja,0,2017-10-18
+Samuel,Breslaw,Salto,3,2001-01-03
+Ahmad,Hutchings,Montevideo,3,2015-08-16
+Jasan,Cisneros,Tacuarembó,3,2016-01-05
+Jeffrey,Cunningham,Flores,0,1960-02-19
+Dewey,Moody,Florida,2,1994-04-19
+Edward,Atwater,Durazno,2,2014-07-20
